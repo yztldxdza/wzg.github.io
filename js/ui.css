@@ -1,0 +1,13 @@
+.index-img {
+/* 动画时间 */
+transition: .4s;
+/* 放大后，左右两侧有两条小白边，加 border 可以抵消 */
+border: 5px solid transparent !important;
+}
+.index-card:hover .index-img {
+transform: scale(1.05);
+/* 放大倍数 */
+}
+.twikoo .tk-submit .el-textarea__inner {
+    min-height: 150px !important;
+}
