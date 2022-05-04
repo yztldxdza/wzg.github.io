@@ -37,15 +37,15 @@
   <meta name="author" content="Dambisa Moyo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="为什么会有这个网站？我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法，没想到做这个网站用到技术几乎都是我没有接触过的。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立). 用到的技术 node.js+git的底层 bug：在安装完gi">
+    <meta name="description" content="为什么会有这个网站？我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法。 没想到做这个网站用到技术几乎都是我没有接触过的ε(┬┬_┬┬)3。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立)(..•˘_˘•..)。 以后也会慢慢在这个网">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Hexo的个人博客网站">
 <meta property="og:url" content="https://yztldxdz.top/2022/05/02/hello-world/index.html">
 <meta property="og:site_name" content="王振国的个人博客">
-<meta property="og:description" content="为什么会有这个网站？我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法，没想到做这个网站用到技术几乎都是我没有接触过的。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立). 用到的技术 node.js+git的底层 bug：在安装完gi">
+<meta property="og:description" content="为什么会有这个网站？我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法。 没想到做这个网站用到技术几乎都是我没有接触过的ε(┬┬_┬┬)3。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立)(..•˘_˘•..)。 以后也会慢慢在这个网">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-02T01:53:37.823Z">
-<meta property="article:modified_time" content="2022-05-03T12:58:59.565Z">
+<meta property="article:modified_time" content="2022-05-04T06:57:08.535Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -86,6 +86,7 @@
 
   
 <link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+<link rel="stylesheet" href="/css/code-folding-linenumber.css">
 
 
 
@@ -226,7 +227,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      552 字
+      1.4k 字
     </span>
   
 
@@ -235,7 +236,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5 分钟
+      12 分钟
     </span>
   
 
@@ -267,32 +268,48 @@
             <h1 style="display: none">基于Hexo的个人博客网站</h1>
             
             <div class="markdown-body">
-              <h2 id="为什么会有这个网站？"><a href="#为什么会有这个网站？" class="headerlink" title="为什么会有这个网站？"></a>为什么会有这个网站？</h2><p>我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法，没想到做这个网站用到技术几乎都是我没有接触过的。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立).</p>
+              <h2 id="为什么会有这个网站？"><a href="#为什么会有这个网站？" class="headerlink" title="为什么会有这个网站？"></a>为什么会有这个网站？</h2><p>我是一名大二在校生，刚刚自学完JavaWeb，看到别人做的各种各样好看的网站，就也有了做一个网站的想法。</p>
+<p>没想到做这个网站用到技术几乎都是我没有接触过的ε(┬┬_┬┬)3。不过域名也买了服务器也买了与其放着不如拿来用用，我从五一做到今天花了整整两天时间才搭好现在的框架，还有很多功能没有实现。希望这个学期放假前能够完善(flag已立)(..•˘_˘•..)。</p>
+<p>以后也会慢慢在这个网站上分享自己学到的知识╭(●&#96;∀′●)╯</p>
 <h2 id="用到的技术"><a href="#用到的技术" class="headerlink" title="用到的技术"></a>用到的技术</h2><ol>
-<li><p>node.js+git的底层</p>
-<p>bug：在安装完git后打算把Bolg文件夹建在E盘，建了半天也没成功，只好默认在C盘</p>
+<li><h5 id="node-js-git的底层"><a href="#node-js-git的底层" class="headerlink" title="node.js+git的底层"></a>node.js+git的底层</h5><p>bug：在安装完git后打算把Bolg文件夹建在E盘，建了半天也没成功，只好默认在C盘</p>
 <p>原因：现在看来可能是当时没用管理员权限启动git导致</p>
 </li>
-<li><p>hexo的主题</p>
-<p>bug：在初始化hexo的时候，一直初始化失败</p>
+<li><h5 id="hexo初始化"><a href="#hexo初始化" class="headerlink" title="hexo初始化"></a>hexo初始化</h5><p>bug：在初始化hexo的时候，一直初始化失败</p>
 <p>原因：不会使用git切换目录，其实也是使用cd+路径的方法，不过路径有些不同：&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;myblog，进入博客路径进行初始化</p>
 </li>
-<li><p>GitHub的仓库部署+ssh验证</p>
-<p>bug：在本地实现主题后，部署到GitHub上没有显示css和js</p>
+<li><h5 id="GitHub的仓库部署-ssh验证"><a href="#GitHub的仓库部署-ssh验证" class="headerlink" title="GitHub的仓库部署+ssh验证"></a>GitHub的仓库部署+ssh验证</h5><p>bug：在本地实现主题后，部署到GitHub上没有显示css和js</p>
 <p>原因：在博客路径下的_config.yml中的url中没有设置好链接，应该是：URL：访问网站的链接</p>
 </li>
-<li><p>微博图床+LeanCloud和访问统计</p>
+<li><h5 id="Fluid主题设置"><a href="#Fluid主题设置" class="headerlink" title="Fluid主题设置"></a>Fluid主题设置</h5><p>没有理解官方的操作手册上的步骤，应该是把thems目录下的 _config.yml复制到博客目录下并改名为 _config_fluid.yml，此后的操作便可以直接在该文件中操作，实现平滑升级，不过我没有配置，我的所有操作还是在thems中_config.yml中进行的</p>
 </li>
-<li><p>阿里云服务器+DNS解析+SSL证书</p>
+<li><h5 id="微博图床-LeanCloud的评论系统"><a href="#微博图床-LeanCloud的评论系统" class="headerlink" title="微博图床+LeanCloud的评论系统"></a>微博图床+LeanCloud的评论系统</h5><p>将页面顶部的大图放到微博上生成url链接，而不是从本地目录下导入</p>
+<p>bug：配置好相应的参数后没有显示评论模块</p>
+<p>原因：不理解博客目录下各个文件夹的意思，可能是配置错了文件或位置，也可能引入文件错误</p>
 </li>
-<li><p>nginx实现https</p>
+<li><h5 id="关于页的生成和自定义社交图标"><a href="#关于页的生成和自定义社交图标" class="headerlink" title="关于页的生成和自定义社交图标"></a>关于页的生成和自定义社交图标</h5><p>其实关于页应该在安装号主题后就立刻初始化生成的，我直到设置完了前面的一切才发现，关于页还没初始化。我只好把主题删了重新初始化，现在看来或许不用删。</p>
+<p>自定义图标用的是阿里的矢量图标</p>
 </li>
-</ol>
-<h2 id="准备实现的功能"><a href="#准备实现的功能" class="headerlink" title="准备实现的功能"></a>准备实现的功能</h2><ol>
-<li>网站运行时间</li>
-<li>评论</li>
-<li>通知</li>
-<li>看板娘</li>
+<li><h5 id="页脚增加网站运行时长和版权声明优化"><a href="#页脚增加网站运行时长和版权声明优化" class="headerlink" title="页脚增加网站运行时长和版权声明优化"></a>页脚增加网站运行时长和版权声明优化</h5><p>增加网站运行时长的时候也是设置好了但没有效果，应该也是引入文件错误</p>
+</li>
+<li><h5 id="网页标题栏设置"><a href="#网页标题栏设置" class="headerlink" title="网页标题栏设置"></a>网页标题栏设置</h5><p>离开网站和返回网站的标题变化</p>
+</li>
+<li><h5 id="阿里云服务器-DNS解析-SSL证书"><a href="#阿里云服务器-DNS解析-SSL证书" class="headerlink" title="阿里云服务器+DNS解析+SSL证书"></a>阿里云服务器+DNS解析+SSL证书</h5><p>我的服务器是去年双十一的时候白嫖当时也不知道服务器能干啥，也不会用，后来又在阿里云上买了个域名。具备了搭建博客的基本条件</p>
+<p>建立映射关系：将GitHub和阿里云链接到同一页面</p>
+<p>备案：提交上各种证明材料然后等</p>
+</li>
+<li><h5 id="nginx实现https"><a href="#nginx实现https" class="headerlink" title="nginx实现https"></a>nginx实现https</h5><p>首先在阿里云上申请免费的ssl证书，然后下载证书文件上传到nginx中进行相应的配置</p>
+<p>我是在宝塔上安装的nginx，路径和网上教程的路径不同，我一直以为改个路径就好了结果卡在这3个小时</p>
+<p>其实直接按照教程上的路径按照配置就行，不过这样来说我的服务器上就会有两个nginx，好像也没什么影响</p>
+</li>
+<li><h5 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h5><p>hexo-neat：提高网站的响应速度</p>
+<p>hexo-browsersync：改动js，css，md等文件时会实时同步网页</p>
+</li>
+<li><h5 id="自动化部署"><a href="#自动化部署" class="headerlink" title="自动化部署"></a>自动化部署</h5><p>简而言之，就是远端部署不在本地执行，在 GitHub 上进行。</p>
+<p>本地预览命令：hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</p>
+<p>远端部署命令：hexo cl &amp;&amp; hexo g -d</p>
+<p>将这两条指令设置到quicker中</p>
+</li>
 </ol>
 
             </div>
@@ -580,6 +597,7 @@
 <script src="/js/diy/love.js"></script>
 <script src="/js/diy/xiantiao.js"></script>
 <script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
 
 
 
