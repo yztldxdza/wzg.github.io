@@ -44,7 +44,7 @@
 <meta property="og:description" content="Spring5 框架新功能 整个 Spring5 框架的代码基于 Java8，运行时兼容 JDK9，许多不建议使用的类和方法在代码库中删除了。 1、Spring 5.0 框架自带了通用的日志封装 （1）Spring5 已经移除 Log4jConfigListener，官方建议使用 Log4j2  （2）Spring5 框架整合 Log4j2  第一步 引入 jar 包  第二步 创建 log4j2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-08T07:20:47.000Z">
-<meta property="article:modified_time" content="2022-05-08T07:29:36.442Z">
+<meta property="article:modified_time" content="2022-05-21T02:59:00.273Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -341,7 +341,7 @@
 <p> a）Java8 及其之前版本是提供的观察者模式两个类 Observer 和 Observable实现</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ObserverDemo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Observable</span> &#123;<br> <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br> <span class="hljs-type">ObserverDemo</span> <span class="hljs-variable">observer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObserverDemo</span>();<br> <span class="hljs-comment">//添加观察者</span><br> observer.addObserver((o,arg)-&gt;&#123;<br>	 System.out.println(<span class="hljs-string">&quot;发生变化&quot;</span>);<br> &#125;);<br> observer.addObserver((o,arg)-&gt;&#123;<br> 	 System.out.println(<span class="hljs-string">&quot;手动被观察者通知，准备改变&quot;</span>);<br> &#125;);<br>  <span class="hljs-comment">//这里必须进行两个方法调用才可以响应！！</span><br> observer.setChanged(); <span class="hljs-comment">//数据变化</span><br> observer.notifyObservers(); <span class="hljs-comment">//通知</span><br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>后面还有一部分关于Web新特性，等我学完SpringMVC回来补上</p>
+<p>后面还有一部分关于Web新特性，等我学完SpringBoot回来补上</p>
 
               
             </div>
