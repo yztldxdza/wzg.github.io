@@ -1,0 +1,1118 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="用户注册1 用户-创建数据表1.使用use命令先选中store数据库。 1USE store;  2.在store数据库中创建t_user用户数据表。 12345678910111213141516CREATE TABLE t_user (	uid INT AUTO_INCREMENT COMMENT &amp;#x27;用户id&amp;#x27;,	username VARCHAR(20) NOT NULL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电脑商城项目02用户注册登录和资料修改">
+<meta property="og:url" content="https://yztldxdz.top/2022/07/22/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE02%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95%E5%92%8C%E8%B5%84%E6%96%99%E4%BF%AE%E6%94%B9/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="用户注册1 用户-创建数据表1.使用use命令先选中store数据库。 1USE store;  2.在store数据库中创建t_user用户数据表。 12345678910111213141516CREATE TABLE t_user (	uid INT AUTO_INCREMENT COMMENT &amp;#x27;用户id&amp;#x27;,	username VARCHAR(20) NOT NULL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit02-用户注册登录/img/1.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit02-用户注册登录/img/2.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit02-用户注册登录/img/4.png">
+<meta property="article:published_time" content="2022-07-22T07:31:36.000Z">
+<meta property="article:modified_time" content="2022-07-30T07:35:58.268Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit02-用户注册登录/img/1.png">
+  
+  
+  
+  <title>电脑商城项目02用户注册登录和资料修改 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="电脑商城项目02用户注册登录和资料修改"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-22 15:31" pubdate>
+          2022年7月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          43k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          359 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">电脑商城项目02用户注册登录和资料修改</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="用户注册"><a href="#用户注册" class="headerlink" title="用户注册"></a>用户注册</h2><h3 id="1-用户-创建数据表"><a href="#1-用户-创建数据表" class="headerlink" title="1 用户-创建数据表"></a>1 用户-创建数据表</h3><p>1.使用use命令先选中store数据库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">USE store;<br></code></pre></td></tr></table></figure>
+
+<p>2.在store数据库中创建t_user用户数据表。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE t_user (<br>	uid INT AUTO_INCREMENT COMMENT &#x27;用户id&#x27;,<br>	username VARCHAR(20) NOT NULL UNIQUE COMMENT &#x27;用户名&#x27;,<br>	password CHAR(32) NOT NULL COMMENT &#x27;密码&#x27;,<br>	salt CHAR(36) COMMENT &#x27;盐值&#x27;,<br>	phone VARCHAR(20) COMMENT &#x27;电话号码&#x27;,<br>	email VARCHAR(30) COMMENT &#x27;电子邮箱&#x27;,<br>	gender INT COMMENT &#x27;性别:0-女，1-男&#x27;,<br>	avatar VARCHAR(50) COMMENT &#x27;头像&#x27;,<br>	is_delete INT COMMENT &#x27;是否删除：0-未删除，1-已删除&#x27;,<br>	created_user VARCHAR(20) COMMENT &#x27;日志-创建人&#x27;,<br>	created_time DATETIME COMMENT &#x27;日志-创建时间&#x27;,<br>	modified_user VARCHAR(20) COMMENT &#x27;日志-最后修改执行人&#x27;,<br>	modified_time DATETIME COMMENT &#x27;日志-最后修改时间&#x27;,<br>	PRIMARY KEY (uid)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-用户-创建实体类"><a href="#2-用户-创建实体类" class="headerlink" title="2 用户-创建实体类"></a>2 用户-创建实体类</h3><p>1.项目中许多实体类都会有日志相关的四个属性，所以在创建实体类之前，应先创建这些实体类的基类，将4个日志属性声明在基类中。在com.cy.store.entity包下创建BaseEntity类，作为实体类的基类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.entity;<br><span class="hljs-keyword">import</span> java.io.Serializable;<br><span class="hljs-keyword">import</span> java.util.Date;<br><br><span class="hljs-comment">/** 实体类的基类 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseEntity</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">private</span> String createdUser;<br>    <span class="hljs-keyword">private</span> Date createdTime;<br>    <span class="hljs-keyword">private</span> String modifiedUser;<br>    <span class="hljs-keyword">private</span> Date modifiedTime;<br><br>    <span class="hljs-comment">// Generate: Getter and Setter、toString()</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为这个基类的作用就是用于被其它实体类继承的，所以应声明为抽象类。</p>
+</blockquote>
+<p>2.创建com.cy.store.entity.User用户数据的实体类，继承自BaseEntity类，在类中声明与数据表中对应的属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.entity;<br><span class="hljs-keyword">import</span> java.io.Serializable;<br><span class="hljs-keyword">import</span> java.util.Objects;<br><br><span class="hljs-comment">/** 用户数据的实体类 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseEntity</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">private</span> Integer uid;<br>    <span class="hljs-keyword">private</span> String username;<br>    <span class="hljs-keyword">private</span> String password;<br>    <span class="hljs-keyword">private</span> String salt;<br>    <span class="hljs-keyword">private</span> String phone;<br>    <span class="hljs-keyword">private</span> String email;<br>    <span class="hljs-keyword">private</span> Integer gender;<br>    <span class="hljs-keyword">private</span> String avatar;<br>    <span class="hljs-keyword">private</span> Integer isDelete;<br><br>	<span class="hljs-comment">// Generate: Getter and Setter、Generate hashCode() and equals()、toString()</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-用户-注册-持久层"><a href="#3-用户-注册-持久层" class="headerlink" title="3 用户-注册-持久层"></a>3 用户-注册-持久层</h3><h4 id="3-1-准备工作"><a href="#3-1-准备工作" class="headerlink" title="3.1 准备工作"></a>3.1 准备工作</h4><p>1.在src&#x2F;test&#x2F;java下的com.cy.store.StoreApplicationTests测试类中编写并执行“获取数据库连接”的单元测试，以检查数据库连接的配置是否正确。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> DataSource dataSource;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">getConnection</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>	System.out.println(dataSource.getConnection());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.执行src&#x2F;test&#x2F;java下的com.cy.toreApplicationTests测试类中的contextLoads()测试方法，以检查测试环境是否正常。</p>
+<h4 id="3-2-规划需要执行的SQL语句"><a href="#3-2-规划需要执行的SQL语句" class="headerlink" title="3.2 规划需要执行的SQL语句"></a>3.2 规划需要执行的SQL语句</h4><p>1.用户注册的本质是向用户表中插入数据，需要执行的SQL语句大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">INSERT INTO t_user (除了uid以外的字段列表) VALUES (匹配的值列表)<br></code></pre></td></tr></table></figure>
+
+<p>2.由于数据表中用户名字段被设计为UNIQUE，在执行插入数据之前，还应该检查该用户名是否已经被注册，因此需要有“根据用户名查询用户数据”的功能。需要执行的SQL语句大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT * FROM t_user WHERE username=?<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-接口与抽象方法"><a href="#3-3-接口与抽象方法" class="headerlink" title="3.3 接口与抽象方法"></a>3.3 接口与抽象方法</h4><p>1.创建com.cy.store.mapper.UserMapper接口，并在接口中添加抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.mapper;<br><span class="hljs-keyword">import</span> com.cy.store.entity.User;<br><br><span class="hljs-comment">/** 处理用户数据操作的持久层接口 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">UserMapper</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 插入用户数据</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> user 用户数据</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 受影响的行数</span><br><span class="hljs-comment">     */</span><br>    Integer <span class="hljs-title function_">insert</span><span class="hljs-params">(User user)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 根据用户名查询用户数据</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> username 用户名</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 匹配的用户数据，如果没有匹配的数据，则返回null</span><br><span class="hljs-comment">     */</span><br>    User <span class="hljs-title function_">findByUsername</span><span class="hljs-params">(String username)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.由于这是项目中第一次创建持久层接口，还应在StoreApplication启动类之前添加@MapperScan(“com.cy.store.mapper”)注解，以配置接口文件的位置。</p>
+<blockquote>
+<p>MyBatis与Spring整合后需要实现实体和数据表的映射关系。实现实体和数据表的映射关系可以在Mapper接口上添加@Mapper注解。但建议以后直接在SpringBoot启动类中加@MapperScan(“mapper包”) 注解，这样会比较方便，不需要对每个Mapper都添加@Mapper注解。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@MapperScan(&quot;com.cy.store.mapper&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StoreApplication</span> &#123;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>		SpringApplication.run(StoreApplication.class, args);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-4-配置SQL映射"><a href="#3-4-配置SQL映射" class="headerlink" title="3.4 配置SQL映射"></a>3.4 配置SQL映射</h4><p>1.在src&#x2F;main&#x2F;resources下创建mapper文件夹，并在该文件夹下创建UserMapper.xml映射文件，进行以上两个抽象方法的映射配置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span></span><br><span class="hljs-meta">        <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="hljs-meta">        <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.cy.store.mapper&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;UserEntityMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;com.cy.store.entity.User&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;uid&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;uid&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;is_delete&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;isDelete&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;created_user&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;createdUser&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;created_time&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;createdTime&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;modified_user&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;modifiedUser&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;modified_time&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;modifiedTime&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 插入用户数据：Integer insert(User user) --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insert&quot;</span> <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;uid&quot;</span>&gt;</span><br>        INSERT INTO<br>            t_user (username, password, salt, phone, email, gender, avatar, is_delete, created_user, created_time, modified_user, modified_time)<br>        VALUES<br>        (#&#123;username&#125;, #&#123;password&#125;, #&#123;salt&#125;, #&#123;phone&#125;, #&#123;email&#125;, #&#123;gender&#125;, #&#123;avatar&#125;, #&#123;isDelete&#125;, #&#123;createdUser&#125;, #&#123;createdTime&#125;, #&#123;modifiedUser&#125;, #&#123;modifiedTime&#125;)<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 根据用户名查询用户数据：User findByUsername(String username) --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;findByUsername&quot;</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">&quot;UserEntityMap&quot;</span>&gt;</span><br>        SELECT<br>            *<br>        FROM<br>            t_user<br>        WHERE<br>            username = #&#123;username&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.由于这是项目中第一次使用SQL映射，所以需要在application.properties中添加mybatis.mapper-locations属性的配置，以指定XML文件的位置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">mybatis.mapper-locations</span>=<span class="hljs-string">classpath:mapper/*.xml</span><br></code></pre></td></tr></table></figure>
+
+<p>3.完成后及时执行单元测试，检查以上开发的功能是否可正确运行。在src&#x2F;test&#x2F;java下创建com.cy.store.mapper.UserMapperTests单元测试类，在测试类的声明之前添加@RunWith(SpringRunner.class)和@SpringBootTest注解，并在测试类中声明持久层对象，通过自动装配来注入值。</p>
+<blockquote>
+<p>@RunWith(SpringRunner.class)注解是一个测试启动器，可以加载SpringBoot测试注解。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.mapper;<br><span class="hljs-keyword">import</span> org.junit.runner.RunWith;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.boot.test.context.SpringBootTest;<br><span class="hljs-keyword">import</span> org.springframework.test.context.junit4.SpringRunner;<br><br><span class="hljs-comment">// @RunWith(SpringRunner.class)注解是一个测试启动器，可以加载Springboot测试注解</span><br><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserMapperTests</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserMapper userMapper;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.如果在第四步自动装配userMapper时，报“Could not autowire. No beans of ‘UserMapper’ type found”错，无法进行自动装配。解决方案是，将Autowiring for bean class选项下的Severity设置为Warning即可。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit02-用户注册登录\img\1.png" srcset="/img/loading.gif" lazyload></p>
+<p>5.然后编写两个测试方法，对以上完成的两个功能进行单元测试。</p>
+<blockquote>
+<p>单元测试方法必须为public修饰，方法的返回值类型必须为void，方法不能有参数列表，并且方法被@Test注解修饰。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>    user.setUsername(<span class="hljs-string">&quot;user01&quot;</span>);<br>    user.setPassword(<span class="hljs-string">&quot;123456&quot;</span>);<br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.insert(user);<br>    System.out.println(<span class="hljs-string">&quot;rows=&quot;</span> + rows);<br>&#125;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findByUsername</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;user01&quot;</span>;<br>    <span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUsername(username);<br>    System.out.println(result);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果出现org.apache.ibatis.binding.BindingException: Invalid bound statement (not found)异常可能原因：</p>
+<p>1.在resources文件加下创建的mapper文件夹类型没有正确选择（eclipse选择Folder，idea选择Directory）。</p>
+<p>2.映射文件的mapper标签的namespace属性没有正确映射到dao层接口，或者application.properties中的属性mybatis.mapper-locations没有正确配置xml映射文件。</p>
+</blockquote>
+<h3 id="4-用户-注册-业务层"><a href="#4-用户-注册-业务层" class="headerlink" title="4 用户-注册-业务层"></a>4 用户-注册-业务层</h3><h4 id="4-1-业务的定位"><a href="#4-1-业务的定位" class="headerlink" title="4.1 业务的定位"></a>4.1 业务的定位</h4><p>1.业务：一套完整的数据处理过程，通常表现为用户认为的一个功能，但是在开发时对应多项数据操作。在项目中，通过业务控制每个“功能”（例如注册、登录等）的处理流程和相关逻辑。</p>
+<p>2.流程：先做什么，再做什么。例如：注册时，需要先判断用户名是否被占用，再决定是否完成注册。</p>
+<p>3.逻辑：能干什么，不能干什么。例如：注册时，如果用户名被占用，则不允许注册；反之，则允许注册。</p>
+<p>4.业务的主要作用是保障数据安全和数据的完整性、有效性。</p>
+<h4 id="4-2-规划异常"><a href="#4-2-规划异常" class="headerlink" title="4.2 规划异常"></a>4.2 规划异常</h4><p><strong>1.关于异常</strong></p>
+<p>1.请列举你认识的不少于十种异常：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-built_in">Throwable</span><br>	<span class="hljs-built_in">Error</span><br>		<span class="hljs-title function_ invoke__">OutOfMemoryError</span>(OOM)<br>	<span class="hljs-built_in">Exception</span><br>		SQLException<br>		IOException<br>			FileNotFoundException<br>		<span class="hljs-built_in">RuntimeException</span><br>			NullPointerException<br>			ArithmeticException<br>			ClassCastException<br>			IndexOutOfBoundsException<br>				ArrayIndexOutOfBoundsException<br>				StringIndexOutOfBoundsException<br></code></pre></td></tr></table></figure>
+
+<p>2.异常的处理方式和处理原则：</p>
+<p>异常的处理方式有：捕获处理(try…catch…finally)，声明抛出(throw&#x2F;throws)。如果当前方法适合处理，则捕获处理；如果当前方法不适合处理，则声明抛出。</p>
+<p><strong>2.异常规划</strong></p>
+<p>1.为了便于统一管理自定义异常，应先创建com.cy.store.service.ex.ServiceException自定义异常的基类异常，继承自RuntimeException类，并从父类生成子类的五个构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.ex;<br><br><span class="hljs-comment">/** 业务异常的基类 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">RuntimeException</span> &#123;<br>	<span class="hljs-comment">// Override Methods...  </span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.当用户进行注册时，可能会因为用户名被占用而导致无法正常注册，此时需要抛出用户名被占用的异常，因此可以设计一个用户名重复的com.cy.store.service.ex.UsernameDuplicateException异常类，继承自ServiceException类，并从父类生成子类的五个构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.ex;<br><br><span class="hljs-comment">/** 用户名重复的异常 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UsernameDuplicateException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>    <span class="hljs-comment">// Override Methods...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.在用户进行注册时，会执行数据库的INSERT操作，该操作也是有可能失败的。则创建cn.tedu.store.service.ex.InsertException&#96;异常类，继承自ServiceException类，并从父类生成子类的5个构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.ex;<br><br><span class="hljs-comment">/** 插入数据的异常 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InsertException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>    <span class="hljs-comment">// Override Methods...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.所有的自定义异常，都应是RuntimeException的子孙类异常。项目中目前异常的继承结构是见下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">RuntimeException<br>	-- ServiceException<br>		-- UsernameDuplicateException<br>		-- InsertException<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-3-接口与抽象方法"><a href="#4-3-接口与抽象方法" class="headerlink" title="4.3 接口与抽象方法"></a>4.3 接口与抽象方法</h4><p>1.先创建com.cy.store.service.IUserService业务层接口，并在接口中添加抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service;<br><span class="hljs-keyword">import</span> com.cy.store.entity.User;<br><br><span class="hljs-comment">/** 处理用户数据的业务层接口 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IUserService</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 用户注册</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> user 用户数据</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.创建业务层接口目的是为了解耦。关于业务层的抽象方法的设计原则。</p>
+<pre><code class="hljs">1.仅以操作成功为前提来设计返回值类型，不考虑操作失败的情况；
+2.方法名称可以自定义，通常与用户操作的功能相关；
+3.方法的参数列表根据执行的具体业务功能来确定，需要哪些数据就设计哪些数据。通常情况下，参数需要足以调用持久层对应的相关功能；同时还要满足参数是客户端可以传递给控制器的；
+4.方法中使用抛出异常的方式来表示操作失败。
+</code></pre>
+<h4 id="4-4-实现抽象方法"><a href="#4-4-实现抽象方法" class="headerlink" title="4.4 实现抽象方法"></a>4.4 实现抽象方法</h4><p>1.创建com.cy.store.service.impl.UserServiceImpl业务层实现类，并实现IUserService接口。在类之前添加@Service注解，并在类中添加持久层UserMapper对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.impl;<br><span class="hljs-keyword">import</span> com.cy.store.entity.User;<br><span class="hljs-keyword">import</span> com.cy.store.mapper.UserMapper;<br><span class="hljs-keyword">import</span> com.cy.store.service.IUserService;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-comment">/** 处理用户数据的业务层实现类 */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IUserService</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserMapper userMapper;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span> &#123;<br>        <span class="hljs-comment">// TODO</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.UserServiceImpl类需要重写IUserService接口中的抽象方法，实现步骤大致是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span> &#123;<br>	<span class="hljs-comment">// 根据参数user对象获取注册的用户名</span><br>	<span class="hljs-comment">// 调用持久层的User findByUsername(String username)方法，根据用户名查询用户数据</span><br>	<span class="hljs-comment">// 判断查询结果是否不为null</span><br>	<span class="hljs-comment">// 是：表示用户名已被占用，则抛出UsernameDuplicateException异常</span><br>	<br>	<span class="hljs-comment">// 创建当前时间对象</span><br>	<span class="hljs-comment">// 补全数据：加密后的密码</span><br>	<span class="hljs-comment">// 补全数据：盐值</span><br>	<span class="hljs-comment">// 补全数据：isDelete(0)</span><br>	<span class="hljs-comment">// 补全数据：4项日志属性</span><br><br>	<span class="hljs-comment">// 表示用户名没有被占用，则允许注册</span><br>	<span class="hljs-comment">// 调用持久层Integer insert(User user)方法，执行注册并获取返回值(受影响的行数)</span><br>	<span class="hljs-comment">// 判断受影响的行数是否不为1</span><br>	<span class="hljs-comment">// 是：插入数据时出现某种错误，则抛出InsertException异常</span><br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.reg()方法的具体实现过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IUserService</span> &#123;<br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">private</span> UserMapper userMapper;<br>	<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span> &#123;<br>		<span class="hljs-comment">// 根据参数user对象获取注册的用户名</span><br>		<span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> user.getUsername();<br>		<span class="hljs-comment">// 调用持久层的User findByUsername(String username)方法，根据用户名查询用户数据</span><br>		<span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUsername(username);<br>		<span class="hljs-comment">// 判断查询结果是否不为null</span><br>		<span class="hljs-keyword">if</span> (result != <span class="hljs-literal">null</span>) &#123;<br>			<span class="hljs-comment">// 是：表示用户名已被占用，则抛出UsernameDuplicateException异常</span><br>			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UsernameDuplicateException</span>(<span class="hljs-string">&quot;尝试注册的用户名[&quot;</span> + username + <span class="hljs-string">&quot;]已经被占用&quot;</span>);<br>		&#125;<br>		<br>		<span class="hljs-comment">// 创建当前时间对象</span><br>		<span class="hljs-type">Date</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();<br>		<span class="hljs-comment">// 补全数据：加密后的密码</span><br>		<span class="hljs-type">String</span> <span class="hljs-variable">salt</span> <span class="hljs-operator">=</span> UUID.randomUUID().toString().toUpperCase();<br>		<span class="hljs-type">String</span> <span class="hljs-variable">md5Password</span> <span class="hljs-operator">=</span> getMd5Password(user.getPassword(), salt);<br>		user.setPassword(md5Password);<br>		<span class="hljs-comment">// 补全数据：盐值</span><br>		user.setSalt(salt);<br>		<span class="hljs-comment">// 补全数据：isDelete(0)</span><br>		user.setIsDelete(<span class="hljs-number">0</span>);<br>		<span class="hljs-comment">// 补全数据：4项日志属性</span><br>		user.setCreatedUser(username);<br>		user.setCreatedTime(now);<br>		user.setModifiedUser(username);<br>		user.setModifiedTime(now);<br>		<br>		<span class="hljs-comment">// 表示用户名没有被占用，则允许注册</span><br>		<span class="hljs-comment">// 调用持久层Integer insert(User user)方法，执行注册并获取返回值(受影响的行数)</span><br>		<span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.insert(user);<br>		<span class="hljs-comment">// 判断受影响的行数是否不为1</span><br>		<span class="hljs-keyword">if</span> (rows != <span class="hljs-number">1</span>) &#123;<br>			<span class="hljs-comment">// 是：插入数据时出现某种错误，则抛出InsertException异常</span><br>			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InsertException</span>(<span class="hljs-string">&quot;添加用户数据出现未知错误，请联系系统管理员&quot;</span>);<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * 执行密码加密</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> password 原始密码</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> salt 盐值</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@return</span> 加密后的密文</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">private</span> String <span class="hljs-title function_">getMd5Password</span><span class="hljs-params">(String password, String salt)</span> &#123;<br>		<span class="hljs-comment">/*</span><br><span class="hljs-comment">		 * 加密规则：</span><br><span class="hljs-comment">		 * 1、无视原始密码的强度</span><br><span class="hljs-comment">		 * 2、使用UUID作为盐值，在原始密码的左右两侧拼接</span><br><span class="hljs-comment">		 * 3、循环加密3次</span><br><span class="hljs-comment">		 */</span><br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) &#123;<br>			password = DigestUtils.md5DigestAsHex((salt + password + salt).getBytes()).toUpperCase();<br>		&#125;<br>		<span class="hljs-keyword">return</span> password;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.完成后在src&#x2F;test&#x2F;java下创建com.cy.store.service.UserServiceTests测试类，编写并执行用户注册业务层的单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceTests</span> &#123;<br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">private</span> IUserService iUserService;<br>	<br>	<span class="hljs-meta">@Test</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reg</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>			user.setUsername(<span class="hljs-string">&quot;lower&quot;</span>);<br>			user.setPassword(<span class="hljs-string">&quot;123456&quot;</span>);<br>			user.setGender(<span class="hljs-number">1</span>);<br>			user.setPhone(<span class="hljs-string">&quot;17858802974&quot;</span>);<br>			user.setEmail(<span class="hljs-string">&quot;lower@tedu.cn&quot;</span>);<br>			user.setAvatar(<span class="hljs-string">&quot;xxxx&quot;</span>);<br>			iUserService.reg(user);<br>			System.out.println(<span class="hljs-string">&quot;注册成功！&quot;</span>);<br>		&#125; <span class="hljs-keyword">catch</span> (ServiceException e) &#123;<br>			System.out.println(<span class="hljs-string">&quot;注册失败！&quot;</span> + e.getClass().getSimpleName());<br>            System.out.println(e.getMessage());<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-5-密码加密介绍"><a href="#4-5-密码加密介绍" class="headerlink" title="4.5 密码加密介绍"></a>4.5 密码加密介绍</h4><p>密码加密可以有效的防止数据泄密后带来的账号安全问题。通常，程序员不需要考虑加密过程中使用的算法，因为已经存在非常多成熟的加密算法可以直接使用。但是所有的加密算法都不适用于对密码进行加密，因为加密算法都是可以进行逆向运算的。即：如果能够获取加密过程中所有的参数，就可以根据密文得到原文。</p>
+<p>对密码进行加密时，需使用消息摘要算法。消息摘要算法的特点是：</p>
+<pre><code class="hljs">1.原文相同时，使用相同的摘要算法得到的摘要数据一定相同；
+2.使用相同的摘要算法进行运算，无论原文的长度是多少，得到的摘要数据长度是固定的；
+3.如果摘要数据相同，则原文几乎相同，但也可能不同，可能性极低。
+</code></pre>
+<p>不同的原文，在一定的概率上能够得到相同的摘要数据，发生这种现象时称为碰撞。</p>
+<p>以MD5算法为例，运算得到的结果是128位的二进制数。在密码的应用领域中，通常会限制密码长度的最小值和最大值，可是密码的种类是有限的，发生碰撞在概率上可以认为是不存在的。</p>
+<p>常见的摘要算法有SHA(Secure Hash Argorithm)家族和MD(Message Digest)系列的算法。</p>
+<p>关于MD5算法的破解主要来自两方面。一个是王小云教授的破解，学术上的破解其实是研究消息摘要算法的碰撞，也就是更快的找到两个不同的原文却对应相同的摘要，并不是假想中的“根据密文逆向运算得到原文”。另一个是所谓的“在线破解”，是使用数据库记录大量的原文与摘要的对应关系，当尝试“破解”时本质上是查询这个数据库，根据摘要查询原文。</p>
+<p>为进一步保障密码安全，需满足以下加密规则：</p>
+<pre><code class="hljs">1.要求用户使用安全强度更高的原始密码；
+2.加盐；
+3.多重加密；
+4.综合以上所有应用方式。
+</code></pre>
+<h3 id="5-用户-注册-控制器"><a href="#5-用户-注册-控制器" class="headerlink" title="5 用户-注册-控制器"></a>5 用户-注册-控制器</h3><h4 id="5-1-创建响应结果类"><a href="#5-1-创建响应结果类" class="headerlink" title="5.1 创建响应结果类"></a>5.1 创建响应结果类</h4><p>创建com.cy.store.util.JsonResult响应结果类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.util;<br><span class="hljs-keyword">import</span> java.io.Serializable;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 响应结果类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &lt;E&gt; 响应数据的类型</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JsonResult</span>&lt;E&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-comment">/** 状态码 */</span><br>    <span class="hljs-keyword">private</span> Integer state;<br>    <span class="hljs-comment">/** 状态描述信息 */</span><br>    <span class="hljs-keyword">private</span> String message;<br>    <span class="hljs-comment">/** 数据 */</span><br>    <span class="hljs-keyword">private</span> E data;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">JsonResult</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">JsonResult</span><span class="hljs-params">(Integer state)</span> &#123;<br>        <span class="hljs-built_in">super</span>();<br>        <span class="hljs-built_in">this</span>.state = state;<br>    &#125;<br><br>    <span class="hljs-comment">/** 出现异常时调用 */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">JsonResult</span><span class="hljs-params">(Throwable e)</span> &#123;<br>        <span class="hljs-built_in">super</span>();<br>        <span class="hljs-comment">// 获取异常对象中的异常信息</span><br>        <span class="hljs-built_in">this</span>.message = e.getMessage();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">JsonResult</span><span class="hljs-params">(Integer state, E data)</span> &#123;<br>        <span class="hljs-built_in">super</span>();<br>        <span class="hljs-built_in">this</span>.state = state;<br>        <span class="hljs-built_in">this</span>.data = data;<br>    &#125;<br><br>    <span class="hljs-comment">// Generate: Getter and Setter</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-2-设计请求"><a href="#5-2-设计请求" class="headerlink" title="5.2 设计请求"></a>5.2 设计请求</h4><p>设计用户提交的请求，并设计响应的方式：</p>
+<pre><code class="hljs">请求路径：/users/reg
+请求参数：User user
+请求类型：POST
+响应结果：JsonResult&lt;Void&gt;
+</code></pre>
+<h4 id="5-3-处理请求"><a href="#5-3-处理请求" class="headerlink" title="5.3 处理请求"></a>5.3 处理请求</h4><p>1.创建com.cy.store.controller.UserController控制器类，在类的声明之前添加@RestController和@RequestMapping(“users”)注解，在类中添加IUserService业务对象并使用@Autowired注解修饰。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.controller;<br><span class="hljs-keyword">import</span> com.cy.store.service.IUserService;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/** 处理用户相关请求的控制器类 */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;users&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IUserService userService;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.然后在类中添加处理请求的用户注册方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;reg&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span> &#123;<br>    <span class="hljs-comment">// 创建返回值</span><br>    JsonResult&lt;Void&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;();<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 调用业务对象执行注册</span><br>        userService.reg(user);<br>        <span class="hljs-comment">// 响应成功</span><br>        result.setState(<span class="hljs-number">200</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (UsernameDuplicateException e) &#123;<br>        <span class="hljs-comment">// 用户名被占用</span><br>        result.setState(<span class="hljs-number">4000</span>);<br>        result.setMessage(<span class="hljs-string">&quot;用户名已经被占用&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (InsertException e) &#123;<br>        <span class="hljs-comment">// 插入数据异常</span><br>        result.setState(<span class="hljs-number">5000</span>);<br>        result.setMessage(<span class="hljs-string">&quot;注册失败，请联系系统管理员&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后启动项目，打开浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/reg?username=controller&amp;password=123456%E8%AF%B7%E6%B1%82%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/users/reg?username=controller&amp;password=123456请求进行测试。</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    state<span class="hljs-punctuation">:</span> <span class="hljs-number">200</span><span class="hljs-punctuation">,</span><br>    message<span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span><span class="hljs-punctuation">,</span><br>    data<span class="hljs-punctuation">:</span> <span class="hljs-keyword">null</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="5-4-控制器层的调整"><a href="#5-4-控制器层的调整" class="headerlink" title="5.4 控制器层的调整"></a>5.4 控制器层的调整</h4><p>1.然后创建提供控制器类的基类com.cy.store.controller.BaseController，在其中定义表示响应成功的状态码及统一处理异常的方法。</p>
+<blockquote>
+<p>@ExceptionHandler注解用于统一处理方法抛出的异常。当我们使用这个注解时，需要定义一个异常的处理方法，再给这个方法加上@ExceptionHandler注解，这个方法就会处理类中其他方法（被@RequestMapping注解）抛出的异常。@ExceptionHandler注解中可以添加参数，参数是某个异常类的class，代表这个方法专门处理该类异常。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.controller;<br><span class="hljs-keyword">import</span> com.cy.store.service.ex.InsertException;<br><span class="hljs-keyword">import</span> com.cy.store.service.ex.ServiceException;<br><span class="hljs-keyword">import</span> com.cy.store.service.ex.UsernameDuplicateException;<br><span class="hljs-keyword">import</span> com.cy.store.util.JsonResult;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;<br><br><span class="hljs-comment">/** 控制器类的基类 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseController</span> &#123;<br>    <span class="hljs-comment">/** 操作成功的状态码 */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">OK</span> <span class="hljs-operator">=</span> <span class="hljs-number">200</span>;<br><br>    <span class="hljs-comment">/** <span class="hljs-doctag">@ExceptionHandler</span>用于统一处理方法抛出的异常 */</span><br>    <span class="hljs-meta">@ExceptionHandler(ServiceException.class)</span><br>    <span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">handleException</span><span class="hljs-params">(Throwable e)</span> &#123;<br>        JsonResult&lt;Void&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(e);<br>        <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UsernameDuplicateException) &#123;<br>            result.setState(<span class="hljs-number">4000</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> InsertException) &#123;<br>            result.setState(<span class="hljs-number">5000</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.最后简化UserController控制器类中的用户注册reg()方法的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/** 处理用户相关请求的控制器类 */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;users&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IUserService userService;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;reg&quot;)</span><br>    <span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">reg</span><span class="hljs-params">(User user)</span> &#123;<br>        <span class="hljs-comment">// 调用业务对象执行注册</span><br>        userService.reg(user);<br>        <span class="hljs-comment">// 返回</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(OK);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后启动项目，打开浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/reg?username=controller&amp;password=123456%E8%AF%B7%E6%B1%82%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/users/reg?username=controller&amp;password=123456请求进行测试。</a></p>
+<h3 id="6-用户-注册-前端页面"><a href="#6-用户-注册-前端页面" class="headerlink" title="6 用户-注册-前端页面"></a>6 用户-注册-前端页面</h3><p>1.将电脑商城前端资源页面pages文件夹下的静态资源：bootstrap3、css、images、js、web、index.html相关的资源复制到项目src&#x2F;main&#x2F;resources&#x2F;static文件夹下。如图所示。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit02-用户注册登录\img\2.png" srcset="/img/loading.gif" lazyload></p>
+<p>2.在register.html页面中body标签内部的最后，添加script标签用于编写JavaScript程序。请求的url中需要添加项目的访问名称。</p>
+<blockquote>
+<p>serialize()方法通过序列化表单值，创建URL编码文本字符串。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    $(<span class="hljs-string">&quot;#btn-reg&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>($(<span class="hljs-string">&quot;#form-reg&quot;</span>).<span class="hljs-title function_">serialize</span>());<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/reg&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>            <span class="hljs-attr">data</span>: $(<span class="hljs-string">&quot;#form-reg&quot;</span>).<span class="hljs-title function_">serialize</span>(),<br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;json&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;注册成功！&quot;</span>);<br>                    <span class="hljs-comment">// location.href = &quot;login.html&quot;;</span><br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;注册失败！&quot;</span> + json.<span class="hljs-property">message</span>);<br>                &#125;<br>            &#125;<br>        &#125;);<br>	&#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后启动项目，打开浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/web/register.html%E9%A1%B5%E9%9D%A2%E5%B9%B6%E8%BF%9B%E8%A1%8C%E6%B3%A8%E5%86%8C%E3%80%82">http://localhost:8080/web/register.html页面并进行注册。</a></p>
+<blockquote>
+<p>注意：由于没有验证数据，即使没有填写用户名或密码，也可以注册成功。</p>
+</blockquote>
+<h2 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h2><h3 id="1-用户-登录-持久层"><a href="#1-用户-登录-持久层" class="headerlink" title="1 用户-登录-持久层"></a>1 用户-登录-持久层</h3><h4 id="1-1-规划需要执行的SQL语句"><a href="#1-1-规划需要执行的SQL语句" class="headerlink" title="1.1 规划需要执行的SQL语句"></a>1.1 规划需要执行的SQL语句</h4><p>用户登录功能需要执行的SQL语句是根据用户名查询用户数据，再判断密码是否正确。SQL语句大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT * FROM t_user WHERE username=?<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>说明</strong>：以上SQL语句对应的后台开发已经完成，无需再次开发。</p>
+</blockquote>
+<h4 id="1-2-接口与抽象方法"><a href="#1-2-接口与抽象方法" class="headerlink" title="1.2 接口与抽象方法"></a>1.2 接口与抽象方法</h4><blockquote>
+<p><strong>说明</strong>：无需再次开发。</p>
+</blockquote>
+<h4 id="1-3-配置SQL映射"><a href="#1-3-配置SQL映射" class="headerlink" title="1.3 配置SQL映射"></a>1.3 配置SQL映射</h4><blockquote>
+<p><strong>说明</strong>：无需再次开发。</p>
+</blockquote>
+<h3 id="2-用户-登录-业务层"><a href="#2-用户-登录-业务层" class="headerlink" title="2 用户-登录-业务层"></a>2 用户-登录-业务层</h3><h4 id="2-1-规划异常"><a href="#2-1-规划异常" class="headerlink" title="2.1 规划异常"></a>2.1 规划异常</h4><p>1.如果用户名不存在则登录失败，抛出com.cy.store.service.ex.UserNotFoundException异常，并从父类生成子类的五个构造方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.ex;<br><br><span class="hljs-comment">/** 用户数据不存在的异常 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserNotFoundException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>    <span class="hljs-comment">// Override Methods...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.如果用户的isDelete字段的值为1，则表示当前用户数据被标记为“已删除”，需进行登录失败操作同时抛出UserNotFoundException。</p>
+<p>3.如果密码错误则进行登录失败操作，同时抛出com.cy.store.service.ex.PasswordNotMatchException异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.service.ex;<br><br><span class="hljs-comment">/** 密码验证失败的异常 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PasswordNotMatchException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>    <span class="hljs-comment">// Override Methods...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.创建以上UserNotFoundException和PasswordNotMatchException异常类，以上异常类应继承自ServiceException类。</p>
+<h4 id="2-2-接口与抽象方法"><a href="#2-2-接口与抽象方法" class="headerlink" title="2.2 接口与抽象方法"></a>2.2 接口与抽象方法</h4><p>在IUserService接口中添加登录功能的抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用户登录</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> username 用户名</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> password 密码</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 登录成功的用户数据</span><br><span class="hljs-comment"> */</span><br>User <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password)</span>;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当登录成功后需要获取该用户的id，以便于后续识别该用户的身份，并且还需要获取该用户的用户名、头像等数据，用于显示在软件的界面中，需使用可以封装用于id、用户名和头像的数据的类型来作为登录方法的返回值类型。</p>
+</blockquote>
+<h4 id="2-3-实现抽象方法"><a href="#2-3-实现抽象方法" class="headerlink" title="2.3 实现抽象方法"></a>2.3 实现抽象方法</h4><p>1.在UserServiceImpl类中添加login(String username, String password)方法并分析业务逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> User <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUsername()方法，根据参数username查询用户数据</span><br>	<br>	<span class="hljs-comment">// 判断查询结果是否为null</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>	<br>	<span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>	<br>	<span class="hljs-comment">// 从查询结果中获取盐值</span><br>	<span class="hljs-comment">// 调用getMd5Password()方法，将参数password和salt结合起来进行加密</span><br>	<span class="hljs-comment">// 判断查询结果中的密码，与以上加密得到的密码是否不一致</span><br>	<span class="hljs-comment">// 是：抛出PasswordNotMatchException异常</span><br>	<br>	<span class="hljs-comment">// 创建新的User对象</span><br>	<span class="hljs-comment">// 将查询结果中的uid、username、avatar封装到新的user对象中</span><br>	<span class="hljs-comment">// 返回新的user对象</span><br>	<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.login(String username, String password)方法中代码的具体实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> User <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password)</span> &#123;<br>    <span class="hljs-comment">// 调用userMapper的findByUsername()方法，根据参数username查询用户数据</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUsername(username);<br>    <span class="hljs-comment">// 判断查询结果是否为null</span><br>    <span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在的错误&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>    <span class="hljs-keyword">if</span> (result.getIsDelete() == <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在的错误&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 从查询结果中获取盐值</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">salt</span> <span class="hljs-operator">=</span> result.getSalt();<br>    <span class="hljs-comment">// 调用getMd5Password()方法，将参数password和salt结合起来进行加密</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">md5Password</span> <span class="hljs-operator">=</span> getMd5Password(password, salt);<br>    <span class="hljs-comment">// 判断查询结果中的密码，与以上加密得到的密码是否不一致</span><br>    <span class="hljs-keyword">if</span> (!result.getPassword().equals(md5Password)) &#123;<br>        <span class="hljs-comment">// 是：抛出PasswordNotMatchException异常</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PasswordNotMatchException</span>(<span class="hljs-string">&quot;密码验证失败的错误&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 创建新的User对象</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>    <span class="hljs-comment">// 将查询结果中的uid、username、avatar封装到新的user对象中</span><br>    user.setUid(result.getUid());<br>    user.setUsername(result.getUsername());<br>    user.setAvatar(result.getAvatar());<br>    <span class="hljs-comment">// 返回新的user对象</span><br>    <span class="hljs-keyword">return</span> user;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后在UserServiceTests中编写并完成单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">login</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;lower&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">password</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;123456&quot;</span>;<br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> iUserService.login(username, password);<br>        System.out.println(<span class="hljs-string">&quot;登录成功！&quot;</span> + user);<br>    &#125; <span class="hljs-keyword">catch</span> (ServiceException e) &#123;<br>        System.out.println(<span class="hljs-string">&quot;登录失败！&quot;</span> + e.getClass().getSimpleName());<br>        System.out.println(e.getMessage());<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：不要使用错误的数据尝试登录，例如早期通过持久层测试新增用户的数据，将这些数据从表中删除。</p>
+</blockquote>
+<h3 id="3-用户-登录-控制器"><a href="#3-用户-登录-控制器" class="headerlink" title="3 用户-登录-控制器"></a>3 用户-登录-控制器</h3><h4 id="3-1-处理异常"><a href="#3-1-处理异常" class="headerlink" title="3.1 处理异常"></a>3.1 处理异常</h4><p>处理用户登录功能时，在业务层抛出了UserNotFoundException和PasswordNotMatchException异常，而这两个异常均未被处理过。则应在BaseController类的处理异常的方法中，添加这两个分支进行处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ExceptionHandler(ServiceException.class)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">handleException</span><span class="hljs-params">(Throwable e)</span> &#123;<br>	JsonResult&lt;Void&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(e);<br>	<span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UsernameDuplicateException) &#123;<br>		result.setState(<span class="hljs-number">4000</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UserNotFoundException) &#123;<br>		result.setState(<span class="hljs-number">4001</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> PasswordNotMatchException) &#123;<br>		result.setState(<span class="hljs-number">4002</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> InsertException) &#123;<br>		result.setState(<span class="hljs-number">5000</span>);<br>	&#125;<br>	<span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-设计请求"><a href="#3-2-设计请求" class="headerlink" title="3.2 设计请求"></a>3.2 设计请求</h4><p>设计用户提交的请求，并设计响应的方式：</p>
+<pre><code class="hljs">请求路径：/users/login
+请求参数：String username, String password
+请求类型：POST
+响应结果：JsonResult&lt;User&gt;
+</code></pre>
+<h4 id="3-3-处理请求"><a href="#3-3-处理请求" class="headerlink" title="3.3 处理请求"></a>3.3 处理请求</h4><p>1.在UserController类中添加处理登录请求的login(String username, String password)方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;login&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;User&gt; <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password)</span> &#123;<br>	<span class="hljs-comment">// 调用业务对象的方法执行登录，并获取返回值</span><br>	<br>	<span class="hljs-comment">// 将以上返回值和状态码OK封装到响应结果中并返回</span><br>	<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.处理登录请求的login(String username, String password)方法代码具体实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;login&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;User&gt; <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password)</span> &#123;<br>	<span class="hljs-comment">// 调用业务对象的方法执行登录，并获取返回值</span><br>	<span class="hljs-type">User</span> <span class="hljs-variable">data</span> <span class="hljs-operator">=</span> userService.login(username, password);<br>	<span class="hljs-comment">// 将以上返回值和状态码OK封装到响应结果中并返回</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;User&gt;(OK, data);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>4.完成后启动项目，访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/login?username=Tom&amp;password=1234%E8%AF%B7%E6%B1%82%E8%BF%9B%E8%A1%8C%E7%99%BB%E5%BD%95%E3%80%82">http://localhost:8080/users/login?username=Tom&amp;password=1234请求进行登录。</a></p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit02-用户注册登录\img\4.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-用户-登录-前端页面"><a href="#4-用户-登录-前端页面" class="headerlink" title="4 用户-登录-前端页面"></a>4 用户-登录-前端页面</h3><p>1.在login.html页面中body标签内部的最后，添加script标签用于编写JavaScript程序。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    $(<span class="hljs-string">&quot;#btn-login&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>    $.<span class="hljs-title function_">ajax</span>(&#123;<br>        <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/login&quot;</span>,<br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">data</span>: $(<span class="hljs-string">&quot;#form-login&quot;</span>).<span class="hljs-title function_">serialize</span>(),<br>        <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;json&quot;</span>,<br>        <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) &#123;<br>            <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;登录成功！&quot;</span>);<br>                location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;index.html&quot;</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;登录失败！&quot;</span> + json.<span class="hljs-property">message</span>);<br>            &#125;<br>        &#125;<br>    &#125;);<br>&#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>2.完成后启动项目，打开浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/web/login.html%E9%A1%B5%E9%9D%A2%E5%B9%B6%E8%BF%9B%E8%A1%8C%E7%99%BB%E5%BD%95%E3%80%82">http://localhost:8080/web/login.html页面并进行登录。</a></p>
+<h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><p>在Spring MVC中拦截请求是通过处理器拦截器HandlerInterceptor来实现的，它拦截的目标是请求的地址。在Spring MVC中定义一个拦截器，需要实现HandlerInterceptor接口。</p>
+<h3 id="1-HandlerInterceptor"><a href="#1-HandlerInterceptor" class="headerlink" title="1 HandlerInterceptor"></a>1 HandlerInterceptor</h3><h4 id="1-1-preHandle-方法"><a href="#1-1-preHandle-方法" class="headerlink" title="1.1 preHandle()方法"></a>1.1 preHandle()方法</h4><p>该方法将在请求处理之前被调用。SpringMVC中的Interceptor是链式的调用，在一个应用或一个请求中可以同时存在多个Interceptor。每个Interceptor的调用会依据它的声明顺序依次执行，而且最先执行的都是Interceptor中的preHandle()方法，所以可以在这个方法中进行一些前置初始化操作或者是对当前请求的一个预处理，也可以在这个方法中进行一些判断来决定请求是否要继续进行下去。该方法的返回值是布尔值类型，当返回false时，表示请求结束，后续的Interceptor和Controller都不会再执行；当返回值true时，就会继续调用下一个Interceptor的preHandle方法，如果已经是最后一个Interceptor的时，就会调用当前请求的Controller方法。</p>
+<h4 id="1-2-postHandle-方法"><a href="#1-2-postHandle-方法" class="headerlink" title="1.2  postHandle()方法"></a>1.2  postHandle()方法</h4><p>该方法将在当前请求进行处理之后，也就是Controller方法调用之后执行，但是它会在DispatcherServlet进行视图返回渲染之前被调用，所以我们可以在这个方法中对Controller处理之后的ModelAndView对象进行操作。postHandle方法被调用的方向跟preHandle是相反的，也就是说先声明的Interceptor的postHandle方法反而会后执行。如果当前Interceptor的preHandle()方法返回值为false，则此方法不会被调用。</p>
+<h4 id="1-3-afterCompletion-方法"><a href="#1-3-afterCompletion-方法" class="headerlink" title="1.3 afterCompletion()方法"></a>1.3 afterCompletion()方法</h4><p>该方法将在整个当前请求结束之后，也就是在DispatcherServlet渲染了对应的视图之后执行。这个方法的主要作用是用于进行资源清理工作。如果当前Interceptor的preHandle()方法返回值为false，则此方法不会被调用。</p>
+<h3 id="2-WebMvcConfigurer"><a href="#2-WebMvcConfigurer" class="headerlink" title="2 WebMvcConfigurer"></a>2 WebMvcConfigurer</h3><p>在SpringBoot项目中，如果想要自定义一些Interceptor、ViewResolver、MessageConverter，该如何实现呢？在SpringBoot 1.5版本都是靠重写WebMvcConfigurerAdapter类中的方法来添加自定义拦截器、视图解析器、消息转换器等。而在SpringBoot 2.0版本之后，该类被标记为@Deprecated。因此我们只能靠实现WebMvcConfigurer接口来实现。</p>
+<p>WebMvcConfigurer接口中的核心方法之一addInterceptors(InterceptorRegistry registry)方法表示添加拦截器。主要用于进行用户登录状态的拦截，日志的拦截等。</p>
+<ul>
+<li><p>addInterceptor：需要一个实现HandlerInterceptor接口的拦截器实例</p>
+</li>
+<li><p>addPathPatterns：用于设置拦截器的过滤路径规则；addPathPatterns(“&#x2F;**”)对所有请求都拦截</p>
+</li>
+<li><p>excludePathPatterns：用于设置不需要拦截的过滤规则</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">WebMvcConfigurer</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addInterceptors</span><span class="hljs-params">(InterceptorRegistry registry)</span> &#123;<br>   	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-项目添加拦截器功能"><a href="#3-项目添加拦截器功能" class="headerlink" title="3 项目添加拦截器功能"></a>3 项目添加拦截器功能</h3><p>1.分析：项目中很多操作都是需要先登录才可以执行的，如果在每个请求处理之前都编写代码检查Session中有没有登录信息，是不现实的。所以应使用拦截器解决该问题。</p>
+<p>2.创建拦截器类com.cy.store.interceptor.LoginInterceptor，并实现org.springframework.web.servlet.HandlerInterceptor接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.interceptor;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.HandlerInterceptor;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletRequest;<br><span class="hljs-keyword">import</span> javax.servlet.http.HttpServletResponse;<br><br><span class="hljs-comment">/** 定义处理器拦截器 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">HandlerInterceptor</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">preHandle</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">if</span> (request.getSession().getAttribute(<span class="hljs-string">&quot;uid&quot;</span>) == <span class="hljs-literal">null</span>) &#123;<br>            response.sendRedirect(<span class="hljs-string">&quot;/web/login.html&quot;</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.创建LoginInterceptorConfigurer拦截器的配置类并实现org.springframework.web.servlet.config.annotation.WebMvcConfigurer接口，配置类需要添加@Configruation注解修饰。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store.config;<br><span class="hljs-keyword">import</span> com.cy.store.interceptor.LoginInterceptor;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.HandlerInterceptor;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.config.annotation.InterceptorRegistry;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurer;<br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-comment">/** 注册处理器拦截器 */</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginInterceptorConfigurer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">WebMvcConfigurer</span> &#123;<br>    <span class="hljs-comment">/** 拦截器配置 */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addInterceptors</span><span class="hljs-params">(InterceptorRegistry registry)</span> &#123;<br>        <span class="hljs-comment">// 创建拦截器对象</span><br>        <span class="hljs-type">HandlerInterceptor</span> <span class="hljs-variable">interceptor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LoginInterceptor</span>();<br><br>        <span class="hljs-comment">// 白名单</span><br>        List&lt;String&gt; patterns = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;();<br>        patterns.add(<span class="hljs-string">&quot;/bootstrap3/**&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/css/**&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/images/**&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/js/**&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/web/register.html&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/web/login.html&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/web/index.html&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/web/product.html&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/users/reg&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/users/login&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/districts/**&quot;</span>);<br>        patterns.add(<span class="hljs-string">&quot;/products/**&quot;</span>);<br><br>        <span class="hljs-comment">// 通过注册工具添加拦截器</span><br>        registry.addInterceptor(interceptor).addPathPatterns(<span class="hljs-string">&quot;/**&quot;</span>).excludePathPatterns(patterns);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p>1.重新构建login()方法，登录成功后将uid和username存入到HttpSession对象中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;login&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;User&gt; <span class="hljs-title function_">login</span><span class="hljs-params">(String username, String password, HttpSession session)</span> &#123;<br>    <span class="hljs-comment">// 调用业务对象的方法执行登录，并获取返回值</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">data</span> <span class="hljs-operator">=</span> userService.login(username, password);<br><br>    <span class="hljs-comment">//登录成功后，将uid和username存入到HttpSession中</span><br>    session.setAttribute(<span class="hljs-string">&quot;uid&quot;</span>, data.getUid());<br>    session.setAttribute(<span class="hljs-string">&quot;username&quot;</span>, data.getUsername());<br>    <span class="hljs-comment">// System.out.println(&quot;Session中的uid=&quot; + getUidFromSession(session));</span><br>    <span class="hljs-comment">// System.out.println(&quot;Session中的username=&quot; + getUsernameFromSession(session));</span><br><br>    <span class="hljs-comment">// 将以上返回值和状态码OK封装到响应结果中并返回</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;User&gt;(OK, data);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.在父类BaseController中添加从HttpSession对象中获取uid和username的方法，以便于后续快捷的获取这两个属性的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 从HttpSession对象中获取uid</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> session HttpSession对象</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 当前登录的用户的id</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> Integer <span class="hljs-title function_">getUidFromSession</span><span class="hljs-params">(HttpSession session)</span> &#123;<br>	<span class="hljs-keyword">return</span> Integer.valueOf(session.getAttribute(<span class="hljs-string">&quot;uid&quot;</span>).toString());<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 从HttpSession对象中获取用户名</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> session HttpSession对象</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 当前登录的用户名</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> String <span class="hljs-title function_">getUsernameFromSession</span><span class="hljs-params">(HttpSession session)</span> &#123;<br>	<span class="hljs-keyword">return</span> session.getAttribute(<span class="hljs-string">&quot;username&quot;</span>).toString();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><h3 id="1-用户-修改密码-持久层"><a href="#1-用户-修改密码-持久层" class="headerlink" title="1 用户-修改密码-持久层"></a>1 用户-修改密码-持久层</h3><h4 id="1-1-规划需要执行的SQL语句-1"><a href="#1-1-规划需要执行的SQL语句-1" class="headerlink" title="1.1 规划需要执行的SQL语句"></a>1.1 规划需要执行的SQL语句</h4><p>用户修改密码时需要执行的SQL语句大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">UPDATE t_user SET password=?, modified_user=?, modified_time=? WHERE uid=?<br></code></pre></td></tr></table></figure>
+
+<p>在执行修改密码之前，还应检查用户数据是否存在、并检查用户数据是否被标记为“已删除”、并检查原密码是否正确，这些检查都可以通过查询用户数据来辅助完成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT * FROM t_user WHERE uid=?<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-接口与抽象方法-1"><a href="#1-2-接口与抽象方法-1" class="headerlink" title="1.2 接口与抽象方法"></a>1.2 接口与抽象方法</h4><p>在UserMapper接口添加updatePasswordByUid(Integer uid,String password,String modifiedUser,Date modifiedTime)抽象方法。</p>
+<blockquote>
+<p>用注解来简化xml配置时，@Param注解的作用是给参数命名，参数命名后就能根据名字得到参数值，正确的将参数传入sql语句中。@Param(“参数名”)注解中的参数名需要和sql语句中的#{参数名}的参数名保持一致。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据uid更新用户的密码</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 用户的id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> password 新密码</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> modifiedUser 最后修改执行人</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> modifiedTime 最后修改时间</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 受影响的行数</span><br><span class="hljs-comment"> */</span><br>Integer <span class="hljs-title function_">updatePasswordByUid</span><span class="hljs-params">(</span><br><span class="hljs-params">		<span class="hljs-meta">@Param(&quot;uid&quot;)</span> Integer uid, </span><br><span class="hljs-params">		<span class="hljs-meta">@Param(&quot;password&quot;)</span> String password, </span><br><span class="hljs-params">		<span class="hljs-meta">@Param(&quot;modifiedUser&quot;)</span> String modifiedUser, </span><br><span class="hljs-params">		<span class="hljs-meta">@Param(&quot;modifiedTime&quot;)</span> Date modifiedTime)</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据用户id查询用户数据</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 用户id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 匹配的用户数据，如果没有匹配的用户数据，则返回null</span><br><span class="hljs-comment"> */</span><br>User <span class="hljs-title function_">findByUid</span><span class="hljs-params">(Integer uid)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3-配置SQL映射-1"><a href="#1-3-配置SQL映射-1" class="headerlink" title="1.3 配置SQL映射"></a>1.3 配置SQL映射</h4><p>1.在UserMapper.xml中配置updatePasswordByUid()、findByUid()抽象方法的映射。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 根据uid更新用户的密码：</span><br><span class="hljs-comment">	 Integer updatePasswordByUid(</span><br><span class="hljs-comment">		@Param(&quot;uid&quot;) Integer uid, </span><br><span class="hljs-comment">		@Param(&quot;password&quot;) String password, </span><br><span class="hljs-comment">		@Param(&quot;modifiedUser&quot;) String modifiedUser, </span><br><span class="hljs-comment">		@Param(&quot;modifiedTime&quot;) Date modifiedTime) --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updatePasswordByUid&quot;</span>&gt;</span><br>	UPDATE<br>		t_user <br>	SET<br>		password = #&#123;password&#125;,<br>		modified_user = #&#123;modifiedUser&#125;,<br>		modified_time = #&#123;modifiedTime&#125; <br>	WHERE<br>		uid = #&#123;uid&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- 根据用户id查询用户数据：User findByUid(Integer uid) --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;findByUid&quot;</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">&quot;UserEntityMap&quot;</span>&gt;</span><br>	SELECT<br>		*<br>	FROM<br>		t_user<br>	WHERE<br>		uid = #&#123;uid&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.在UserMapperTests中编写并执行单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">updatePasswordByUid</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> <span class="hljs-number">7</span>;<br>	<span class="hljs-type">String</span> <span class="hljs-variable">password</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;123456&quot;</span>;<br>	<span class="hljs-type">String</span> <span class="hljs-variable">modifiedUser</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;超级管理员&quot;</span>;<br>	<span class="hljs-type">Date</span> <span class="hljs-variable">modifiedTime</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();<br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updatePasswordByUid(uid, password, modifiedUser, modifiedTime);<br>	System.out.println(<span class="hljs-string">&quot;rows=&quot;</span> + rows);<br>&#125;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findByUid</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> <span class="hljs-number">7</span>;<br>	<span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>	System.out.println(result);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-用户-修改密码-业务层"><a href="#2-用户-修改密码-业务层" class="headerlink" title="2 用户-修改密码-业务层"></a>2 用户-修改密码-业务层</h3><h4 id="2-1-规划异常-1"><a href="#2-1-规划异常-1" class="headerlink" title="2.1 规划异常"></a>2.1 规划异常</h4><p>1.用户在修改密码前，需要检查用户数据是否存在及是否被标记为“已删除”。如果检查不通过则应抛出UserNotFoundException异常。</p>
+<p>2.用户修改密码时，可能会因为输入的原密码错误导致修改失败，则应抛出PasswordNotMatchException异常。</p>
+<p>3.在执行修改密码时，如果返回的受影响行数与预期值不同，则应抛出UpdateException异常。</p>
+<p>4.创建com.cy.store.service.ex.UpdateException异常类，继承自ServiceException类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/** 更新数据的异常 */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpdateException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>	<span class="hljs-comment">// Override Methods...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-接口与抽象方法-1"><a href="#2-2-接口与抽象方法-1" class="headerlink" title="2.2 接口与抽象方法"></a>2.2 接口与抽象方法</h4><p>在IUserService中添加changePassword(Integer uid, String username, String oldPassword, String newPassword)抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 修改密码</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 当前登录的用户id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> username 用户名</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> oldPassword 原密码</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> newPassword 新密码</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changePassword</span><span class="hljs-params">(Integer uid, String username, String oldPassword, String newPassword)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-实现抽象方法-1"><a href="#2-3-实现抽象方法-1" class="headerlink" title="2.3 实现抽象方法"></a>2.3 实现抽象方法</h4><p>1.在UserServiceImpl类中实现changePassword()抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changePassword</span><span class="hljs-params">(Integer uid, String username, String oldPassword, String newPassword)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-comment">// 检查查询结果是否为null</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 检查查询结果中的isDelete是否为1</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 从查询结果中取出盐值</span><br>	<span class="hljs-comment">// 将参数oldPassword结合盐值加密，得到oldMd5Password</span><br>	<span class="hljs-comment">// 判断查询结果中的password与oldMd5Password是否不一致</span><br>	<span class="hljs-comment">// 是：抛出PasswordNotMatchException异常</span><br><br>	<span class="hljs-comment">// 将参数newPassword结合盐值加密，得到newMd5Password</span><br>	<span class="hljs-comment">// 创建当前时间对象</span><br>	<span class="hljs-comment">// 调用userMapper的updatePasswordByUid()更新密码，并获取返回值</span><br>	<span class="hljs-comment">// 判断以上返回的受影响行数是否不为1</span><br>	<span class="hljs-comment">// 是：抛了UpdateException异常</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.changePassword()方法的具体代码。</p>
+<blockquote>
+<p>String中的equals与contentEquals方法，都可以用来比较String对象内容是否相同。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changePassword</span><span class="hljs-params">(Integer uid, String username, String oldPassword, String newPassword)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>	<span class="hljs-comment">// 检查查询结果是否为null</span><br>	<span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br>	<br>	<span class="hljs-comment">// 检查查询结果中的isDelete是否为1</span><br>	<span class="hljs-keyword">if</span> (result.getIsDelete().equals(<span class="hljs-number">1</span>)) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br>	<br>	<span class="hljs-comment">// 从查询结果中取出盐值</span><br>	<span class="hljs-type">String</span> <span class="hljs-variable">salt</span> <span class="hljs-operator">=</span> result.getSalt();<br>	<span class="hljs-comment">// 将参数oldPassword结合盐值加密，得到oldMd5Password</span><br>	<span class="hljs-type">String</span> <span class="hljs-variable">oldMd5Password</span> <span class="hljs-operator">=</span> getMd5Password(oldPassword, salt);<br>	<span class="hljs-comment">// 判断查询结果中的password与oldMd5Password是否不一致</span><br>	<span class="hljs-keyword">if</span> (!result.getPassword().contentEquals(oldMd5Password)) &#123;<br>		<span class="hljs-comment">// 是：抛出PasswordNotMatchException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PasswordNotMatchException</span>(<span class="hljs-string">&quot;原密码错误&quot;</span>);<br>	&#125;<br>	<br>	<span class="hljs-comment">// 将参数newPassword结合盐值加密，得到newMd5Password</span><br>	<span class="hljs-type">String</span> <span class="hljs-variable">newMd5Password</span> <span class="hljs-operator">=</span> getMd5Password(newPassword, salt);<br>	<span class="hljs-comment">// 创建当前时间对象</span><br>	<span class="hljs-type">Date</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();<br>	<span class="hljs-comment">// 调用userMapper的updatePasswordByUid()更新密码，并获取返回值</span><br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updatePasswordByUid(uid, newMd5Password, username, now);<br>	<span class="hljs-comment">// 判断以上返回的受影响行数是否不为1</span><br>	<span class="hljs-keyword">if</span> (rows != <span class="hljs-number">1</span>) &#123;<br>		<span class="hljs-comment">// 是：抛出UpdateException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UpdateException</span>(<span class="hljs-string">&quot;更新用户数据时出现未知错误，请联系系统管理员&quot;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.在UserServiceTests中编写并执行单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changePassword</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;lower&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">oldPassword</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;123456&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">newPassword</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;888888&quot;</span>;<br>        userService.changePassword(uid, username, oldPassword, newPassword);<br>        System.out.println(<span class="hljs-string">&quot;密码修改成功！&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (ServiceException e) &#123;<br>        System.out.println(<span class="hljs-string">&quot;密码修改失败！&quot;</span> + e.getClass().getSimpleName());<br>        System.out.println(e.getMessage());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-用户-修改密码-控制器"><a href="#3-用户-修改密码-控制器" class="headerlink" title="3 用户-修改密码-控制器"></a>3 用户-修改密码-控制器</h3><h4 id="3-1-处理异常-1"><a href="#3-1-处理异常-1" class="headerlink" title="3.1 处理异常"></a>3.1 处理异常</h4><p>在用户修改密码的业务中抛出了新的UpdateException异常，需要在BaseController类中进行处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ExceptionHandler(ServiceException.class)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">handleException</span><span class="hljs-params">(Throwable e)</span> &#123;<br>	JsonResult&lt;Void&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(e);<br>	<span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UsernameDuplicateException) &#123;<br>		result.setState(<span class="hljs-number">4000</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UserNotFoundException) &#123;<br>		result.setState(<span class="hljs-number">4001</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> PasswordNotMatchException) &#123;<br>		result.setState(<span class="hljs-number">4002</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> InsertException) &#123;<br>		result.setState(<span class="hljs-number">5000</span>);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> UpdateException) &#123;<br>		result.setState(<span class="hljs-number">5001</span>);<br>	&#125;<br>	<span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-设计请求-1"><a href="#3-2-设计请求-1" class="headerlink" title="3.2 设计请求"></a>3.2 设计请求</h4><p>设计用户提交的请求，并设计响应的方式。</p>
+<pre><code class="hljs">请求路径：/users/change_password
+请求参数：String oldPassword, String newPassword, HttpSession session
+请求类型：POST
+响应结果：JsonResult&lt;Void&gt;
+</code></pre>
+<h4 id="3-3-处理请求-1"><a href="#3-3-处理请求-1" class="headerlink" title="3.3 处理请求"></a>3.3 处理请求</h4><p>1.在UserController类中添加处理请求的changePassword(String oldPassword, String newPassword, HttpSession session)方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;change_password&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">changePassword</span><span class="hljs-params">(String oldPassword, String newPassword, HttpSession session)</span> &#123;<br>	<span class="hljs-comment">// 调用session.getAttribute(&quot;&quot;)获取uid和username</span><br>	<span class="hljs-comment">// 调用业务对象执行修改密码</span><br>	<span class="hljs-comment">// 返回成功</span><br>	<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.实现UserController控制器中的修改密码方法的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;change_password&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">changePassword</span><span class="hljs-params">(String oldPassword, String newPassword, HttpSession session)</span> &#123;<br>	<span class="hljs-comment">// 调用session.getAttribute(&quot;&quot;)获取uid和username</span><br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> getUidFromSession(session);<br>	<span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> getUsernameFromSession(session);<br>	<span class="hljs-comment">// 调用业务对象执行修改密码</span><br>	iUserService.changePassword(uid, username, oldPassword, newPassword);<br>	<span class="hljs-comment">// 返回成功</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(OK);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.启动项目先登录，再访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/change_password?oldPassword=xx&amp;newPassword=xx%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/users/change_password?oldPassword=xx&amp;newPassword=xx进行测试。</a></p>
+<h3 id="4-用户-修改密码-前端页面"><a href="#4-用户-修改密码-前端页面" class="headerlink" title="4 用户-修改密码-前端页面"></a>4 用户-修改密码-前端页面</h3><p>1.在password.html页面中body标签内部的最后，添加script标签用于编写JavaScript程序。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    $(<span class="hljs-string">&quot;#btn-change-password&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/change_password&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>            <span class="hljs-attr">data</span>: $(<span class="hljs-string">&quot;#form-change-password&quot;</span>).<span class="hljs-title function_">serialize</span>(),<br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;json&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;修改成功！&quot;</span>);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;修改失败！&quot;</span> + json.<span class="hljs-property">message</span>);<br>                &#125;<br>            &#125;<br>        &#125;);<br>	&#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>2.启动项目先登录，再访问<a target="_blank" rel="noopener" href="http://localhost:8080/web/password.html%E9%A1%B5%E9%9D%A2%E5%B9%B6%E8%BF%9B%E8%A1%8C%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81%E3%80%82">http://localhost:8080/web/password.html页面并进行修改密码。</a></p>
+<blockquote>
+<p>问题：如果无法正常将数据传递给后台，重启动系统和IDEA开发工具，登陆后便可修改密码。</p>
+</blockquote>
+<p>3.问题：在操作前端页面时用户进入修改密码页面，长时间停留在当前页面未进行任何操作，将导致登录信息过期。此时点击修改按钮时，仍会向&#x2F;users&#x2F;change_password发送请求，会被拦截器重定向到登录页面。由于整个过程是由$.ajax()函数采用异步的方式处理的，所以重定向也是由异步任务完成的，在页面中没有任何表现就会出现“用户登录信息超时后点击按钮没有任何反应”的问题。</p>
+<blockquote>
+<p>解决方案：可以在password.html页面的$.ajax()中补充error属性的配置，该属性的值是一个回调函数。当服务器未正常响应状态码时，例如出现302、400、404、405、500等状态码时，将会调用该函数。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">error</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) &#123;<br>    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;您的登录信息已经过期，请重新登录！HTTP响应码：&quot;</span> + xhr.<span class="hljs-property">status</span>);<br>    location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;login.html&quot;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="个人资料"><a href="#个人资料" class="headerlink" title="个人资料"></a>个人资料</h2><h3 id="1-用户-个人资料-持久层"><a href="#1-用户-个人资料-持久层" class="headerlink" title="1 用户-个人资料-持久层"></a>1 用户-个人资料-持久层</h3><h4 id="1-1-规划需要执行的SQL语句-2"><a href="#1-1-规划需要执行的SQL语句-2" class="headerlink" title="1.1 规划需要执行的SQL语句"></a>1.1 规划需要执行的SQL语句</h4><p>1.执行修改用户个人资料的SQL语句大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">UPDATE t_user SET phone=?, email=?, gender=?, modified_user=?, modified_time=? WHERE uid=?<br></code></pre></td></tr></table></figure>
+
+<p>2.在执行修改用户资料之前，当用户刚打开修改资料的页面时，就应把当前登录的用户信息显示到页面中。显示用户资料可以通过：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT * FROM t_user WHERE uid=?<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>说明：</strong></p>
+<p>1.该查询功能已经实现，无需再次开发；</p>
+<p>2.在执行修改用户资料之前，还应检查用户数据是否存在、是否标记为“已删除”，也可以通过以上查询来实现。</p>
+</blockquote>
+<h4 id="1-2-接口与抽象方法-2"><a href="#1-2-接口与抽象方法-2" class="headerlink" title="1.2 接口与抽象方法"></a>1.2 接口与抽象方法</h4><p>在UserMapper接口中添加updateInfoByUid(User user)方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据uid更新用户资料</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> user 封装了用户id和新个人资料的对象</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 受影响的行数</span><br><span class="hljs-comment"> */</span><br>Integer <span class="hljs-title function_">updateInfoByUid</span><span class="hljs-params">(User user)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3-配置SQL映射-2"><a href="#1-3-配置SQL映射-2" class="headerlink" title="1.3 配置SQL映射"></a>1.3 配置SQL映射</h4><p>1.在UserMapper.xml中配置Integer updateInfoByUid(User user)抽象方法的映射。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 根据uid更新用户个人资料：Integer updateInfoByUid(User user) --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateInfoByUid&quot;</span>&gt;</span><br>	UPDATE<br>		t_user <br>	SET<br>		<span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;phone != null&quot;</span>&gt;</span>phone = #&#123;phone&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;email != null&quot;</span>&gt;</span>email = #&#123;email&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;gender != null&quot;</span>&gt;</span>gender = #&#123;gender&#125;,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>		modified_user = #&#123;modifiedUser&#125;,<br>		modified_time = #&#123;modifiedTime&#125;<br>	WHERE<br>		uid = #&#123;uid&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.在UserMapperTests中编写并执行单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">updateInfoByUid</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>    user.setUid(<span class="hljs-number">20</span>);<br>    user.setPhone(<span class="hljs-string">&quot;17858802222&quot;</span>);<br>    user.setEmail(<span class="hljs-string">&quot;admin@cy.com&quot;</span>);<br>    user.setGender(<span class="hljs-number">1</span>);<br>    user.setModifiedUser(<span class="hljs-string">&quot;系统管理员&quot;</span>);<br>    user.setModifiedTime(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updateInfoByUid(user);<br>    System.out.println(<span class="hljs-string">&quot;rows=&quot;</span> + rows);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-用户-个人资料-业务层"><a href="#2-用户-个人资料-业务层" class="headerlink" title="2 用户-个人资料-业务层"></a>2 用户-个人资料-业务层</h3><h4 id="2-1-规划异常-2"><a href="#2-1-规划异常-2" class="headerlink" title="2.1 规划异常"></a>2.1 规划异常</h4><p>1.关于用户修改个人资料是由两个功能组成的。</p>
+<ul>
+<li><p>打开页面时显示当前登录的用户的信息；</p>
+</li>
+<li><p>点击修改按钮时更新用户的信息。</p>
+</li>
+</ul>
+<p>2.关于打开页面时显示当前登录的用户的信息，可能会因为用户数据不存在、用户被标记为“已删除”而无法正确的显示页面，则抛出UserNotFoundException异常。</p>
+<p>3.关于点击修改按钮时更新用户的信息，在执行修改资料之前仍需再次检查用户数据是否存在、用户是否被标记为“已删除”，则可能抛出UserNotFoundException异常。并且在执行修改资料过程中，还可能抛出UpdateException异常。</p>
+<h4 id="2-2-接口与抽象方法-2"><a href="#2-2-接口与抽象方法-2" class="headerlink" title="2.2 接口与抽象方法"></a>2.2 接口与抽象方法</h4><p>在IUserService接口中添加两个抽象方法，分别对应以上两个功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 获取当前登录的用户的信息</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 当前登录的用户的id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> 当前登录的用户的信息</span><br><span class="hljs-comment"> */</span><br>User <span class="hljs-title function_">getByUid</span><span class="hljs-params">(Integer uid)</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 修改用户资料</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 当前登录的用户的id</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> username 当前登录的用户名</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> user 用户的新的数据</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">changeInfo</span><span class="hljs-params">(Integer uid, String username, User user)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-实现抽象方法-2"><a href="#2-3-实现抽象方法-2" class="headerlink" title="2.3 实现抽象方法"></a>2.3 实现抽象方法</h4><p>1.在UserServiceImpl实现类中实现getByUid(Integer uid)和changeInfo(Integer uid, String username, User user)以上两个抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> User <span class="hljs-title function_">getByUid</span><span class="hljs-params">(Integer uid)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-comment">// 判断查询结果是否为null</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 创建新的User对象</span><br>	<span class="hljs-comment">// 将以上查询结果中的username/phone/email/gender封装到新User对象中</span><br><br>	<span class="hljs-comment">// 返回新的User对象</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changeInfo</span><span class="hljs-params">(Integer uid, String username, User user)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-comment">// 判断查询结果是否为null</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>	<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br><br>	<span class="hljs-comment">// 向参数user中补全数据：uid</span><br>	<span class="hljs-comment">// 向参数user中补全数据：modifiedUser(username)</span><br>	<span class="hljs-comment">// 向参数user中补全数据：modifiedTime(new Date())</span><br>	<span class="hljs-comment">// 调用userMapper的updateInfoByUid(User user)方法执行修改，并获取返回值</span><br>	<span class="hljs-comment">// 判断以上返回的受影响行数是否不为1</span><br>	<span class="hljs-comment">// 是：抛出UpdateException异常</span><br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.getByUid(Integer uid)和changeInfo(Integer uid, String username, User user)方法的具体代码实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> User <span class="hljs-title function_">getByUid</span><span class="hljs-params">(Integer uid)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>	<span class="hljs-comment">// 判断查询结果是否为null</span><br>	<span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br> <br>	<span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>	<span class="hljs-keyword">if</span> (result.getIsDelete().equals(<span class="hljs-number">1</span>)) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br><br>	<span class="hljs-comment">// 创建新的User对象</span><br>	<span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>	<span class="hljs-comment">// 将以上查询结果中的username/phone/email/gender封装到新User对象中</span><br>	user.setUsername(result.getUsername());<br>	user.setPhone(result.getPhone());<br>	user.setEmail(result.getEmail());<br>	user.setGender(result.getGender());<br>	<br>	<span class="hljs-comment">// 返回新的User对象</span><br>	<span class="hljs-keyword">return</span> user;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changeInfo</span><span class="hljs-params">(Integer uid, String username, User user)</span> &#123;<br>	<span class="hljs-comment">// 调用userMapper的findByUid()方法，根据参数uid查询用户数据</span><br>	<span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>	<span class="hljs-comment">// 判断查询结果是否为null</span><br>	<span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br><br>	<span class="hljs-comment">// 判断查询结果中的isDelete是否为1</span><br>	<span class="hljs-keyword">if</span> (result.getIsDelete().equals(<span class="hljs-number">1</span>)) &#123;<br>		<span class="hljs-comment">// 是：抛出UserNotFoundException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>	&#125;<br><br>	<span class="hljs-comment">// 向参数user中补全数据：uid</span><br>	user.setUid(uid);<br>	<span class="hljs-comment">// 向参数user中补全数据：modifiedUser(username)</span><br>	user.setModifiedUser(username);<br>	<span class="hljs-comment">// 向参数user中补全数据：modifiedTime(new Date())</span><br>	user.setModifiedTime(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>	<span class="hljs-comment">// 调用userMapper的updateInfoByUid(User user)方法执行修改，并获取返回值</span><br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updateInfoByUid(user);<br>	<span class="hljs-comment">// 判断以上返回的受影响行数是否不为1</span><br>	<span class="hljs-keyword">if</span> (rows != <span class="hljs-number">1</span>) &#123;<br>		<span class="hljs-comment">// 是：抛出UpdateException异常</span><br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UpdateException</span>(<span class="hljs-string">&quot;更新用户数据时出现未知错误，请联系系统管理员&quot;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.在UserServiceTests类中进行单元测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">getByUid</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> <span class="hljs-number">20</span>;<br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> iUserService.getByUid(uid);<br>        System.out.println(user);<br>    &#125; <span class="hljs-keyword">catch</span> (ServiceException e) &#123;<br>        System.out.println(e.getClass().getSimpleName());<br>        System.out.println(e.getMessage());<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changeInfo</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> <span class="hljs-number">20</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;数据管理员&quot;</span>;<br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>        user.setPhone(<span class="hljs-string">&quot;15512328888&quot;</span>);<br>        user.setEmail(<span class="hljs-string">&quot;admin03@cy.cn&quot;</span>);<br>        user.setGender(<span class="hljs-number">2</span>);<br>        iUserService.changeInfo(uid, username, user);<br>        System.out.println(<span class="hljs-string">&quot;OK.&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (ServiceException e) &#123;<br>        System.out.println(e.getClass().getSimpleName());<br>        System.out.println(e.getMessage());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-用户-个人资料-控制器"><a href="#3-用户-个人资料-控制器" class="headerlink" title="3 用户-个人资料-控制器"></a>3 用户-个人资料-控制器</h3><h4 id="3-1-处理异常-2"><a href="#3-1-处理异常-2" class="headerlink" title="3.1 处理异常"></a>3.1 处理异常</h4><blockquote>
+<p><strong>说明</strong>：无需再次开发。</p>
+</blockquote>
+<h4 id="3-2-设计请求-2"><a href="#3-2-设计请求-2" class="headerlink" title="3.2 设计请求"></a>3.2 设计请求</h4><p>1.设计用户提交显示当前登录的用户信息的请求，并设计响应的方式。</p>
+<pre><code class="hljs">请求路径：/users/get_by_uid
+请求参数：HttpSession session
+请求类型：GET
+响应结果：JsonResult&lt;User&gt;
+</code></pre>
+<p>2.设计用户提交执行修改用户信息的请求，并设计响应的方式。</p>
+<pre><code class="hljs">请求路径：/users/change_info
+请求参数：User user, HttpSession session
+请求类型：POST
+响应结果：JsonResult&lt;Void&gt;
+</code></pre>
+<h4 id="3-3-处理请求-2"><a href="#3-3-处理请求-2" class="headerlink" title="3.3 处理请求"></a>3.3 处理请求</h4><p><strong>1.处理获取用户信息请求</strong></p>
+<p>1.在UserController类中添加处理请求的getByUid()方法，并导入org.springframework.web.bind.annotation.GetMapping包。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;get_by_uid&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;User&gt; <span class="hljs-title function_">getByUid</span><span class="hljs-params">(HttpSession session)</span> &#123;<br>	<span class="hljs-comment">// 从HttpSession对象中获取uid</span><br>	<span class="hljs-comment">// 调用业务对象执行获取数据</span><br>	<span class="hljs-comment">// 响应成功和数据</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.getByUid(HttpSession session)方法中具体代码实现为。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;get_by_uid&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;User&gt; <span class="hljs-title function_">getByUid</span><span class="hljs-params">(HttpSession session)</span> &#123;<br>    <span class="hljs-comment">// 从HttpSession对象中获取uid</span><br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> getUidFromSession(session);<br>    <span class="hljs-comment">// 调用业务对象执行获取数据</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">data</span> <span class="hljs-operator">=</span> userService.getByUid(uid);<br>    <span class="hljs-comment">// 响应成功和数据</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;User&gt;(OK, data);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后启动项目，打开浏览器先登录，再访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/get_by_uid%E8%AF%B7%E6%B1%82%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/users/get_by_uid请求进行测试。</a></p>
+<p><strong>2.处理修改用户个人信息请求</strong></p>
+<p>1.在UserController类中添加处理请求的changeInfo(User user, HttpSession session)方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;change_info&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">changeInfo</span><span class="hljs-params">(User user, HttpSession session)</span> &#123;<br>	<span class="hljs-comment">// 从HttpSession对象中获取uid和username</span><br>	<span class="hljs-comment">// 调用业务对象执行修改用户资料</span><br>	<span class="hljs-comment">// 响应成功</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.changeInfo(User user, HttpSession session)方法中具体代码实现为。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;change_info&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">changeInfo</span><span class="hljs-params">(User user, HttpSession session)</span> &#123;<br>	<span class="hljs-comment">// 从HttpSession对象中获取uid和username</span><br>	<span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> getUidFromSession(session);<br>	<span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> getUsernameFromSession(session);<br>	<span class="hljs-comment">// 调用业务对象执行修改用户资料</span><br>	userService.changeInfo(uid, username, user);<br>	<span class="hljs-comment">// 响应成功</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;Void&gt;(OK);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.完成后启动项目，打开浏览器先登录，再访问<a target="_blank" rel="noopener" href="http://localhost:8080/users/change_info?phone=17858800000&amp;email=admin07@cy.com&amp;gender=1%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/users/change_info?phone=17858800000&amp;email=admin07@cy.com&amp;gender=1进行测试。</a></p>
+<h3 id="4-用户-个人资料-前端页面"><a href="#4-用户-个人资料-前端页面" class="headerlink" title="4 用户-个人资料-前端页面"></a>4 用户-个人资料-前端页面</h3><p>1.在userdata.html页面中body标签内部的最后，添加script标签用于编写JavaScript程序。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br>    $(<span class="hljs-variable language_">document</span>).<span class="hljs-title function_">ready</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/get_by_uid&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;GET&quot;</span>,<br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;json&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;username=&quot;</span> + json.<span class="hljs-property">data</span>.<span class="hljs-property">username</span>);<br>                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;phone=&quot;</span> + json.<span class="hljs-property">data</span>.<span class="hljs-property">phone</span>);<br>                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;email=&quot;</span> + json.<span class="hljs-property">data</span>.<span class="hljs-property">email</span>);<br>                    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;gender=&quot;</span> + json.<span class="hljs-property">data</span>.<span class="hljs-property">gender</span>);<br><br>                    $(<span class="hljs-string">&quot;#username&quot;</span>).<span class="hljs-title function_">val</span>(json.<span class="hljs-property">data</span>.<span class="hljs-property">username</span>);<br>                    $(<span class="hljs-string">&quot;#phone&quot;</span>).<span class="hljs-title function_">val</span>(json.<span class="hljs-property">data</span>.<span class="hljs-property">phone</span>);<br>                    $(<span class="hljs-string">&quot;#email&quot;</span>).<span class="hljs-title function_">val</span>(json.<span class="hljs-property">data</span>.<span class="hljs-property">email</span>);<br><br>                    <span class="hljs-keyword">let</span> radio = json.<span class="hljs-property">data</span>.<span class="hljs-property">gender</span> == <span class="hljs-number">0</span> ? $(<span class="hljs-string">&quot;#gender-female&quot;</span>) : $(<span class="hljs-string">&quot;#gender-male&quot;</span>);<br>                    radio.<span class="hljs-title function_">prop</span>(<span class="hljs-string">&quot;checked&quot;</span>, <span class="hljs-string">&quot;checked&quot;</span>);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;获取用户信息失败！&quot;</span> + json.<span class="hljs-property">message</span>);<br>                &#125;<br>            &#125;<br>        &#125;);<br>	&#125;);<br><br>    $(<span class="hljs-string">&quot;#btn-change-info&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) &#123;<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/change_info&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>            <span class="hljs-attr">data</span>: $(<span class="hljs-string">&quot;#form-change-info&quot;</span>).<span class="hljs-title function_">serialize</span>(),<br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;json&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;修改成功！&quot;</span>);<br>                    location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;login.html&quot;</span>;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;修改失败！&quot;</span> + json.<span class="hljs-property">message</span>);<br>                &#125;<br>            &#125;,<br>            <span class="hljs-attr">error</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">xhr</span>) &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;您的登录信息已经过期，请重新登录！HTTP响应码：&quot;</span> + xhr.<span class="hljs-property">status</span>);<br>                location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;login.html&quot;</span>;<br>            &#125;<br>        &#125;);<br>    &#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>2.完成后启动项目，打开浏览器先登录，再访问<a target="_blank" rel="noopener" href="http://localhost:8080/web/userdata.html%E9%A1%B5%E9%9D%A2%E5%B9%B6%E8%BF%9B%E8%A1%8C%E7%94%A8%E6%88%B7%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%E7%9A%84%E4%BF%AE%E6%94%B9%E6%B5%8B%E8%AF%95%E3%80%82">http://localhost:8080/web/userdata.html页面并进行用户个人资料的修改测试。</a></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>电脑商城项目02用户注册登录和资料修改</div>
+      <div>https://yztldxdz.top/2022/07/22/电脑商城项目02用户注册登录和资料修改/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月22日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/24/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE03%E5%A4%B4%E5%83%8F%E4%B8%8A%E4%BC%A0%E5%92%8C%E6%96%B0%E5%A2%9E%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80/" title="电脑商城项目03头像上传和新增收货地址">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">电脑商城项目03头像上传和新增收货地址</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/18/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE01%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="电脑商城项目01系统概述与环境搭建">
+                        <span class="hidden-mobile">电脑商城项目01系统概述与环境搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

@@ -1,0 +1,1035 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="上传头像错误方法:把文件存到数据库中,需要图片时访问数据库,数据库将文件解析为字节流返回,最后写到本地的某一个文件.这种方法太耗费资源和时间了 正确方法:将对应的文件保存在操作系统上,然后再把这个文件路径记录下来,因为在记录路径的时候是非常便捷和方便的,将来如果要打开这个文件可以依据这个路径找到这个文件,所以说在数据库中保存该文件的路径即可. 稍微大一点的公司都会将所有的静态资源(图片,文件,其他">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电脑商城项目03头像上传和新增收货地址">
+<meta property="og:url" content="https://yztldxdz.top/2022/07/24/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE03%E5%A4%B4%E5%83%8F%E4%B8%8A%E4%BC%A0%E5%92%8C%E6%96%B0%E5%A2%9E%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="上传头像错误方法:把文件存到数据库中,需要图片时访问数据库,数据库将文件解析为字节流返回,最后写到本地的某一个文件.这种方法太耗费资源和时间了 正确方法:将对应的文件保存在操作系统上,然后再把这个文件路径记录下来,因为在记录路径的时候是非常便捷和方便的,将来如果要打开这个文件可以依据这个路径找到这个文件,所以说在数据库中保存该文件的路径即可. 稍微大一点的公司都会将所有的静态资源(图片,文件,其他">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-24T07:36:53.000Z">
+<meta property="article:modified_time" content="2022-07-30T07:48:41.402Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>电脑商城项目03头像上传和新增收货地址 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="电脑商城项目03头像上传和新增收货地址"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-24 15:36" pubdate>
+          2022年7月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          31k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          256 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">电脑商城项目03头像上传和新增收货地址</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="上传头像"><a href="#上传头像" class="headerlink" title="上传头像"></a>上传头像</h2><p>错误方法:把文件存到数据库中,需要图片时访问数据库,数据库将文件解析为字节流返回,最后写到本地的某一个文件.这种方法太耗费资源和时间了</p>
+<p>正确方法:将对应的文件保存在操作系统上,然后再把这个文件路径记录下来,因为在记录路径的时候是非常便捷和方便的,将来如果要打开这个文件可以依据这个路径找到这个文件,所以说在数据库中保存该文件的路径即可.</p>
+<p>稍微大一点的公司都会将所有的静态资源(图片,文件,其他资源文件)放到某台电脑上,再把这台电脑作为一台单独的服务器使用</p>
+<h3 id="1-上传头像-持久层"><a href="#1-上传头像-持久层" class="headerlink" title="1.上传头像-持久层"></a>1.上传头像-持久层</h3><h4 id="1-1SQL语句的规划"><a href="#1-1SQL语句的规划" class="headerlink" title="1.1SQL语句的规划"></a>1.1SQL语句的规划</h4><p>更新用户avatar字段的sql语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">update</span> t_user <span class="hljs-keyword">set</span> avatar<span class="hljs-operator">=</span>?,modified_user<span class="hljs-operator">=</span>?,modified_time<span class="hljs-operator">=</span>? <span class="hljs-keyword">where</span> uid<span class="hljs-operator">=</span>?<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2设计接口和抽象方法"><a href="#1-2设计接口和抽象方法" class="headerlink" title="1.2设计接口和抽象方法"></a>1.2设计接口和抽象方法</h4><p>在UserMapper接口中定义一个抽象方法用于修改用户的头像</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/** 根据用户uid修改用户的头像*/</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 注解<span class="hljs-doctag">@Param</span>(&quot;SQL映射文件中#&#123;&#125;占位符的变量名&quot;),解决的问题:</span><br><span class="hljs-comment"> * 当SQL语句的占位符和映射的接口方法参数名不一致时,需要将某个参数强行注入到某个</span><br><span class="hljs-comment"> * 占位符变量上时,可以使用<span class="hljs-doctag">@Param</span>这个注解来标注映射的关系</span><br><span class="hljs-comment"> * */</span><br>Integer <span class="hljs-title function_">updateAvatarByUid</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;uid&quot;)</span> Integer iddddd,//<span class="hljs-meta">@Param(&quot;参数名&quot;)</span>注解中的参数名需要和sql语句中</span><br><span class="hljs-params">                          //的#&#123;参数名&#125;的参数名保持一致.该处表示iddddd中的变量值要注入到sql语句的uid中</span><br><span class="hljs-params">                          String avatar,</span><br><span class="hljs-params">                          String modifiedUser,</span><br><span class="hljs-params">                          Date modifiedTime)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-3编写映射"><a href="#1-3编写映射" class="headerlink" title="1.3编写映射"></a>1.3编写映射</h4><p>UserMapper.xml文件中编写映射的SQL语句</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateAvatarByUid&quot;</span>&gt;</span><br>    update t_user<br>    set<br>        avatar = #&#123;avatar&#125;,<br>        modified_user = #&#123;modifiedUser&#125;,<br>        modified_time = #&#123;modifiedTime&#125;<br>    where<br>        uid = #&#123;uid&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-4单元测试"><a href="#1-4单元测试" class="headerlink" title="1.4单元测试"></a>1.4单元测试</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">updateAvatarByUid</span><span class="hljs-params">()</span> &#123;<br>    userMapper.updateAvatarByUid(<br>        <span class="hljs-number">11</span>,<br>        <span class="hljs-string">&quot;abc&quot;</span>,<br>        <span class="hljs-string">&quot;mxy&quot;</span>,<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-上传头像-业务层"><a href="#2-上传头像-业务层" class="headerlink" title="2.上传头像-业务层"></a>2.上传头像-业务层</h3><h4 id="2-1规划异常"><a href="#2-1规划异常" class="headerlink" title="2.1规划异常"></a>2.1规划异常</h4><ul>
+<li>用户数据不存在,找不到对应的用户数据</li>
+<li>更新的时候,出现未知异常</li>
+</ul>
+<blockquote>
+<p>无需重复开发</p>
+</blockquote>
+<h4 id="2-2设计接口和抽象方法及实现"><a href="#2-2设计接口和抽象方法及实现" class="headerlink" title="2.2设计接口和抽象方法及实现"></a>2.2设计接口和抽象方法及实现</h4><p>1.先分析一下业务层接口需要哪些参数:那就需要看持久层接口要的有什么参数:</p>
+<p>uid,avatar,modifiedUser,modifiedTime,其中modifiedTime是在方法中创建的,uid和modifiedUser从session中获取,但是session对象是在控制层的并不会出现在业务层,所以业务层要保留这两个参数,以便控制层可以传递过来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 修改用户的头像</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> uid 用户uid</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> avatar 用户头像的路径</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> username 用户名称</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">changeAvatar</span><span class="hljs-params">(Integer uid,</span><br><span class="hljs-params">                  String avatar,</span><br><span class="hljs-params">                  String username)</span>;<span class="hljs-comment">//业务层一般叫username而不叫modifiedUser,因</span><br>                                    <span class="hljs-comment">// 为业务层并没有直接和数据库关联</span><br></code></pre></td></tr></table></figure>
+
+<p>2.编写业务层的更新用户头像的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changeAvatar</span><span class="hljs-params">(Integer uid, String avatar, String username)</span> &#123;<br>    <span class="hljs-comment">//查询当前的用户数据是否存在</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>    <span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span> || result.getIsDelete() == <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UsernameNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>    &#125;<br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> userMapper.updateAvatarByUid(uid, avatar, username, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>    <span class="hljs-keyword">if</span> (rows!=<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UpdateException</span>(<span class="hljs-string">&quot;更新用户头像时产生未知异常&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3单元测试"><a href="#2-3单元测试" class="headerlink" title="2.3单元测试"></a>2.3单元测试</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">changeAvatar</span><span class="hljs-params">()</span> &#123;<br>    userService.changeAvatar(<span class="hljs-number">11</span>,<span class="hljs-string">&quot;222&quot;</span>,<span class="hljs-string">&quot;mmm&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-上传头像-控制层"><a href="#3-上传头像-控制层" class="headerlink" title="3.上传头像-控制层"></a>3.上传头像-控制层</h3><p><em>文件上传过程中产生的异常太多了,再比如文件类型不匹配或文件被损坏</em></p>
+<h4 id="3-1规划异常"><a href="#3-1规划异常" class="headerlink" title="3.1规划异常"></a>3.1规划异常</h4><blockquote>
+<p>客户端传递文件给服务器,服务器的控制端controller接收文件,接收时可能抛出异常,因为用户传过来的文件有可能超出了我们的大小限制</p>
+<p>该异常能放在业务层抛出吗?没必要的,因为此时数据是从控制层往下传的,所以控制层产生的异常直接在这一层(控制层)抛就可以了</p>
+</blockquote>
+<p>上传文件时的异常都是文件异常,所以可以先创建一个文件异常类的基类FileUploadException并使其继承RuntimeException</p>
+<p>文件异常基类的子类有:</p>
+<ul>
+<li>FileEmptyException:文件为空的异常(没有选择上传的文件就提交了表单,或选择的文件是0字节的空文件)</li>
+<li>FileSizeException:文件大小超出限制</li>
+<li>FileTypeException:文件类型异常(上传的文件类型超出了限制)</li>
+<li>FileUploadIOException:文件读写异常</li>
+<li>FileStateException:文件状态异常(上穿文件时该文件正在打开状态)</li>
+</ul>
+<p>在controller包下创子包ex,在ex包里面创建文件异常类的基类和上述五个文件异常类,创建的六个类都重写其父类的五个构造方法</p>
+<h4 id="3-2处理异常"><a href="#3-2处理异常" class="headerlink" title="3.2处理异常"></a>3.2处理异常</h4><p>在基类BaseController中进行编写和统一处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> FileEmptyException) &#123;<br>    result.setState(<span class="hljs-number">6000</span>);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> FileSizeException) &#123;<br>    result.setState(<span class="hljs-number">6001</span>);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> FileTypeException) &#123;<br>    result.setState(<span class="hljs-number">6002</span>);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> FileStateException) &#123;<br>    result.setState(<span class="hljs-number">6003</span>);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> FileUploadIOException) &#123;<br>    result.setState(<span class="hljs-number">6004</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>异常统一处理方法的修饰符@ExceptionHandler(ServiceException.class)表明我们现在创建的FileUploadException异常类不会被拦截到该方法中,点进@ExceptionHandler注解可以发现传参可以传数组类型,所以可以将异常统一处理方法上的注解改为:</p>
+<p>@ExceptionHandler({ServiceException.class,FileUploadException.class})</p>
+<h4 id="3-3设计请求"><a href="#3-3设计请求" class="headerlink" title="3.3设计请求"></a>3.3设计请求</h4><ul>
+<li>&#x2F;users&#x2F;change_avatar</li>
+<li>POST(GET请求提交数据只有2KB左右)</li>
+<li>HttpSession session(获取uid和username),MultipartFile file</li>
+<li>JsonResult<String>(不能是JsonResult<Void>:如果上传头像后浏览别的页面,然后再回到上传头像的页面就展示不出来了,所以图片一旦上传成功,就要保存该图片在服务器的哪个位置,这样的话一旦检测到进入上传头像的页面就可以通过保存的路径拿到图片,最后展示在页面上)</li>
+</ul>
+<h4 id="3-4处理请求"><a href="#3-4处理请求" class="headerlink" title="3.4处理请求"></a>3.4处理请求</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;change_avatar&quot;)</span><br><span class="hljs-keyword">public</span> JsonResult&lt;String&gt; <span class="hljs-title function_">changeAvatar</span><span class="hljs-params">(HttpSession session,</span><br><span class="hljs-params">                                       MultipartFile file)</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 1.参数名为什么必须用file:在upload.html页面的147行&lt;input type=</span><br><span class="hljs-comment">     * &quot;file&quot; name=&quot;file&quot;&gt;中的name=&quot;file&quot;,所以必须有一个方法的参数名</span><br><span class="hljs-comment">     * 为file用于接收前端传递的该文件.如果想要参数名和前端的name不一</span><br><span class="hljs-comment">     * 样:<span class="hljs-doctag">@RequestParam</span>(&quot;file&quot;)MultipartFile ffff:把表单中name=</span><br><span class="hljs-comment">     * &quot;file&quot;的控件值传递到变量ffff上</span><br><span class="hljs-comment">     * 2.参数类型为什么必须是MultipartFile:这是springmvc中封装的一个</span><br><span class="hljs-comment">     * 包装接口,如果类型是MultipartFile并且参数名和前端上传文件的name</span><br><span class="hljs-comment">     * 相同,则会自动把整体的数据包传递给file</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-comment">//判断文件是否为null</span><br>    <span class="hljs-keyword">if</span> (file.isEmpty()) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileEmptyException</span>(<span class="hljs-string">&quot;文件为空&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (file.getSize()&gt;AVATAR_MAX_SIZE) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileSizeException</span>(<span class="hljs-string">&quot;文件超出限制&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//判断文件的类型是否是我们规定的后缀类型</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">contentType</span> <span class="hljs-operator">=</span> file.getContentType();<br>    <span class="hljs-comment">//如果集合包含某个元素则返回值为true</span><br>    <span class="hljs-keyword">if</span> (!AVATAR_TYPE.contains(contentType)) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileTypeException</span>(<span class="hljs-string">&quot;文件类型不支持&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">//上传的文件路径:.../upload/文件名.png</span><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * session.getServletContext()获取当前Web应用程序的上下文</span><br><span class="hljs-comment">     * 对象(每次启动tomcat都会创建一个新的上下文对象)</span><br><span class="hljs-comment">     * getRealPath(&quot;/upload&quot;)的/代表当前web应用程序的根目录,通过该相</span><br><span class="hljs-comment">     * 对路径获取绝对路径,返回一个路径字符串,如果不能进行映射返回null,单</span><br><span class="hljs-comment">     * 斜杠可要可不要</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span><br>            session.getServletContext().getRealPath(<span class="hljs-string">&quot;/upload&quot;</span>);<br>    System.out.println(parent);<span class="hljs-comment">//调试用</span><br><br>    <span class="hljs-comment">//File对象指向这个路径,通过判断File是否存在得到该路径是否存在</span><br>    <span class="hljs-type">File</span> <span class="hljs-variable">dir</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(parent);<br>    <span class="hljs-keyword">if</span> (!dir.exists()) &#123;<span class="hljs-comment">//检测目录是否存在</span><br>        dir.mkdirs();<span class="hljs-comment">//创建当前目录</span><br>    &#125;<br><br>    <span class="hljs-comment">//获取这个文件名称(文件名+后缀,如avatar01.png,不包含父目录结构)用UUID</span><br>    <span class="hljs-comment">// 工具生成一个新的字符串作为文件名(好处:避免了因文件名重复发生的覆盖)</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">originalFilename</span> <span class="hljs-operator">=</span> file.getOriginalFilename();<br>    System.out.println(<span class="hljs-string">&quot;OriginalFilename=&quot;</span>+originalFilename);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> originalFilename.lastIndexOf(<span class="hljs-string">&quot;.&quot;</span>);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">suffix</span> <span class="hljs-operator">=</span> originalFilename.substring(index);<br>    <span class="hljs-comment">//filename形如SAFS1-56JHIOHI-HIUGHUI-5565TYRF.png</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">filename</span> <span class="hljs-operator">=</span><br>            UUID.randomUUID().toString().toUpperCase()+suffix;<br><br>    <span class="hljs-comment">//在dir目录下创建filename文件(此时是空文件)</span><br>    <span class="hljs-type">File</span> <span class="hljs-variable">dest</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(dir, filename);<br><br>    <span class="hljs-comment">//java可以把一个文件的数据直接写到同类型的文件中,这里将参数file中的数据写入到空文件dest中</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        file.transferTo(dest);<span class="hljs-comment">//transferTo是一个封装的方法,用来将file文件中的数据写入到dest文件</span><br><br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 先捕获FileStateException再捕获IOException是</span><br><span class="hljs-comment">         * 因为后者包含前者,如果先捕获IOException那么</span><br><span class="hljs-comment">         * FileStateException就永远不可能会被捕获</span><br><span class="hljs-comment">         */</span><br>    &#125; <span class="hljs-keyword">catch</span> (FileStateException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileStateException</span>(<span class="hljs-string">&quot;文件状态异常&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>        <span class="hljs-comment">//这里不用打印e,而是用自己写的FileUploadIOException类并</span><br>        <span class="hljs-comment">// 抛出文件读写异常</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileUploadIOException</span>(<span class="hljs-string">&quot;文件读写异常&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> getUidFromSession(session);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> getUsernameFromSession(session);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">avatar</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/upload/&quot;</span>+filename;<br>    userService.changeAvatar(uid,avatar,username);<br>    <span class="hljs-comment">//返回用户头像的路径给前端页面,将来用于头像展示使用</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;&gt;(OK,avatar);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-上传头像-前端页面"><a href="#4-上传头像-前端页面" class="headerlink" title="4.上传头像-前端页面"></a>4.上传头像-前端页面</h3><p>1.在upload.html的上传头像的表单加上三个属性:</p>
+<ul>
+<li>action&#x3D;“&#x2F;users&#x2F;change_avatar”</li>
+<li>method&#x3D;“post”(get请求提交数据只有2KB左右)</li>
+<li>enctype&#x3D;“multipart&#x2F;form-data”(如果直接使用表单进行文件的上传,需要给表单加该属性,这样不会将目标文件的数据结构做修改后再上传,这不同于字符串,字符串随意切割修改也能拼在一起,但文件不行)</li>
+</ul>
+<p>2.确认<input type=“file” name=“file”>的type和name以及&lt;input type&#x3D;“submit” class&#x3D;“btn btn-primary” value&#x3D;“上传” &#x2F;&gt;中的type</p>
+<h3 id="5-前端页面优化——修复bug"><a href="#5-前端页面优化——修复bug" class="headerlink" title="5.前端页面优化——修复bug"></a>5.前端页面优化——修复bug</h3><h4 id="5-1更改默认的大小限制"><a href="#5-1更改默认的大小限制" class="headerlink" title="5.1更改默认的大小限制"></a>5.1更改默认的大小限制</h4><p>springmvc默认为1MB文件可以进行上传,如果刚好是1024<em>1024&#x3D;1048576 bytes则会报代码错误,自己在控制层设置的public static final int AVATAR_MAX_SIZE &#x3D; 10</em>1024*1024;需要在不超过原有大小的情况下才会起作用,所以要手动修改springmvc默认上传文件的大小</p>
+<p>方式1:直接在配置文件application.properties中进行配置:</p>
+<ul>
+<li>spring.servlet.multipart.max-file-size&#x3D;10MB(表示上传的文件最大是多大)</li>
+<li>spring.servlet.multipart.max-request-size&#x3D;15MB(整个文件是放在了request中发送给服务器的,请求当中还会有消息头等其他携带的信息,这里设置请求最大为15MB)</li>
+</ul>
+<p>方式2:采用java代码的形式来设置文件的上传大小的限制:</p>
+<p>1.该代码必须在主类中进行配置,因为主类是最早加载的,而配置文件必须是最早加载的</p>
+<p>2.在主类中定义一个方法,方法名无所谓,但方法需要用@bean修饰,表示该方法返回值是一个bean对象,并且该bean对象被bean修饰,也就是这个方法返回了一个对象,然后把该对象交给bean管理,类似spring中的bean标签,含义是一样的,只是这里改为了注解</p>
+<p>3.用@Configuration修饰主类使@bean注解生效,但其实@SpringBootApplication是@SpringBootConfiguration,@EnableAutoConfiguration,@ComponentScan三个注解的合并,所以可以不需要@Configuration</p>
+<p>4.方法返回值是MultipartConfigElement类型,表示所要配置的目标的元素</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> MultipartConfigElement <span class="hljs-title function_">getMultipartConfigElement</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//1.创建一个配置的工厂类对象</span><br>    <span class="hljs-type">MultipartConfigFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MultipartConfigFactory</span>();<br><br>    <span class="hljs-comment">//2.设置需要创建的对象的相关信息</span><br>    factory.setMaxFileSize(DataSize.of(<span class="hljs-number">10</span>, DataUnit.MEGABYTES));<br>    factory.setMaxRequestSize(DataSize.of(<span class="hljs-number">15</span>,DataUnit.MEGABYTES));<br><br>    <span class="hljs-comment">//3.通过工厂类创建MultipartConfigElement对象</span><br>    <span class="hljs-keyword">return</span> factory.createMultipartConfig();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-2上传后显示头像"><a href="#5-2上传后显示头像" class="headerlink" title="5.2上传后显示头像"></a>5.2上传后显示头像</h4><p>上传头像成功后不能显示头像.</p>
+<p>在页面中通过ajax请求来提交文件,提交完成后返回了json串,解析出json串中的data数据设置到img标签的src属性上</p>
+<p>1.删掉在upload.html的上传头像的表单中加的三个属性:action&#x3D;“&#x2F;users&#x2F;change_avatar”,method&#x3D;“post”,enctype&#x3D;“multipart&#x2F;form-data”.加上id属性:id&#x3D;“form-change-avatar”</p>
+<p>2.把153行的input标签里面的type&#x3D;”submit”改为type&#x3D;“button”(因为submit按钮不能添加事件,所以要改为普通的按钮)并加上属性id&#x3D;“btn-change-avatar”</p>
+<blockquote>
+<p>1.serialize():可以将表单数据自动拼接成key&#x3D;value的结构提交给服务器,一般提交的是普通的控件类型中的数据(type&#x3D;text&#x2F;password&#x2F;radio&#x2F;checkbox等等)</p>
+<p>2.FormData类:将表单中数据保持原有的结构进行数据提交.文件类型的数据可以使用FormData对象进行存储</p>
+<p>使用方法:new FormData($(“form”)[0]);</p>
+<p>这行代码的含义是将id&#x3D;”form”的表单的第一个元素的整体值作为创建FormData对象的数据</p>
+<p>3.虽然我们把文件的数据保护下来了,但是ajax默认处理数据时按照字符串的形式进行处理,以及默认会采用字符串的形式进行数据提交.手动关闭这两个功能:</p>
+<ul>
+<li>processData: false,&#x2F;&#x2F;处理数据的形式,关闭处理数据</li>
+<li>contentType: false,&#x2F;&#x2F;提交数据的形式,关闭默认提交数据的形式</li>
+</ul>
+</blockquote>
+<p>下面给提交表单加上事件:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br>    $(<span class="hljs-string">&quot;#btn-change-avatar&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/users/change_avatar&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>            <span class="hljs-attr">data</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormData</span>($(<span class="hljs-string">&quot;#form-change-avatar&quot;</span>)[<span class="hljs-number">0</span>]),<br>            <span class="hljs-attr">processData</span>: <span class="hljs-literal">false</span>,<span class="hljs-comment">//处理数据的形式,关闭处理数据</span><br>            <span class="hljs-attr">contentType</span>: <span class="hljs-literal">false</span>,<span class="hljs-comment">//提交数据的形式,关闭默认提交数据的形式</span><br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;JSON&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;头像修改成功&quot;</span>)<br>                    <span class="hljs-comment">//将服务器端返回的头像地址设置到img标签的src属性上</span><br>                    <span class="hljs-comment">//attr(属性,属性值)用来给某个属性设值</span><br>                    $(<span class="hljs-string">&quot;#img-avatar&quot;</span>).<span class="hljs-title function_">attr</span>(<span class="hljs-string">&quot;src&quot;</span>,json.<span class="hljs-property">data</span>);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;头像修改失败&quot;</span>)<br>                &#125;<br>            &#125;,<br>            <span class="hljs-attr">error</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;修改头像时产生未知的异常!&quot;</span>+xhr.<span class="hljs-property">message</span>);<br>            &#125;<br>        &#125;);<br>    &#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-3登录后显示头像"><a href="#5-3登录后显示头像" class="headerlink" title="5.3登录后显示头像"></a>5.3登录后显示头像</h4><p>将头像上传后会显示头像,但是关闭浏览器后再进入个人头像页面就不会显示头像了,因为只有点击”上传”才能发送ajax请求并显示头像.</p>
+<p>可以在每次用户登录成功后将avatar保存在cookie中,登录的业务层返回给控制层user对象,该对象包含uid,username,avatar.所以要在登录页面login.html中将服务器返回的头像路径设置到cookie中,然后每次检测到用户打开上传头像页面,在这个页面中通过ready()方法来自动读取cookie中头像路径并设到src属性上</p>
+<p>1.需要在login.html页面头部导入cookie.js文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script src=<span class="hljs-string">&quot;../bootstrap3/js/jquery.cookie.js&quot;</span> type=<span class="hljs-string">&quot;text/javascript&quot;</span> charset=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>2.调用cookie方法保存路径</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">$.<span class="hljs-title function_">cookie</span>(key,value,time);<span class="hljs-comment">//time单位:天</span><br></code></pre></td></tr></table></figure>
+
+<p>在ajax请求原有的代码上加$.cookie(“avatar”,json.data.avatar,{expires: 7});</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>    <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>        location.<span class="hljs-property">href</span> = <span class="hljs-string">&quot;index.html&quot;</span>;<br>        $.<span class="hljs-title function_">cookie</span>(<span class="hljs-string">&quot;avatar&quot;</span>,json.<span class="hljs-property">data</span>.<span class="hljs-property">avatar</span>,&#123;<span class="hljs-attr">expires</span>: <span class="hljs-number">7</span>&#125;);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;登录失败&quot;</span>)<br>    &#125;<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>3.需要在upload.html获取cookie中的值,所以要在页面头部导入cookie.js文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script src=<span class="hljs-string">&quot;../bootstrap3/js/jquery.cookie.js&quot;</span> type=<span class="hljs-string">&quot;text/javascript&quot;</span> charset=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>4.在upload.html的script标签中加ready()自动读取cookie数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">$(<span class="hljs-variable language_">document</span>).<span class="hljs-title function_">ready</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-keyword">var</span> avatar = $.<span class="hljs-title function_">cookie</span>(<span class="hljs-string">&quot;avatar&quot;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(avatar);<span class="hljs-comment">//调试用</span><br>    $(<span class="hljs-string">&quot;#img-avatar&quot;</span>).<span class="hljs-title function_">attr</span>(<span class="hljs-string">&quot;src&quot;</span>,avatar);<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-4显示最新头像"><a href="#5-4显示最新头像" class="headerlink" title="5.4显示最新头像"></a>5.4显示最新头像</h4><p>上传头像后不重新登录而是浏览其他页面,然后再进入个人头像页面时展示的头像是上次上传的,因为此时cookie中的值是上次上传的头像的路径,所以需要上传头像后使用同名覆盖更改cookie中路径</p>
+<p>在ajax函数的success属性值的if语句加:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">$.<span class="hljs-title function_">cookie</span>(<span class="hljs-string">&quot;avatar&quot;</span>,json.<span class="hljs-property">data</span>,&#123;<span class="hljs-attr">expires</span>: <span class="hljs-number">7</span>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>完善后重启服务测试,结果若和预测的不一样,则参考项目环境搭建-&gt;项目测试-&gt;测试静态资源能否正常加载里面的四种解决方法</p>
+<h2 id="新增收货地址"><a href="#新增收货地址" class="headerlink" title="新增收货地址"></a>新增收货地址</h2><h3 id="1-创建数据表"><a href="#1-创建数据表" class="headerlink" title="1.创建数据表"></a>1.创建数据表</h3><p>1.选中数据表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">use store<br></code></pre></td></tr></table></figure>
+
+<p>2.在store数据库中创建t_address表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> t_address (<br>	aid <span class="hljs-type">INT</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;收货地址id&#x27;</span>,<br>	uid <span class="hljs-type">INT</span> COMMENT <span class="hljs-string">&#x27;归属的用户id&#x27;</span>,<br>	`name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) COMMENT <span class="hljs-string">&#x27;收货人姓名&#x27;</span>,<br>	province_name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">15</span>) COMMENT <span class="hljs-string">&#x27;省-名称&#x27;</span>,<br>	province_code <span class="hljs-type">CHAR</span>(<span class="hljs-number">6</span>) COMMENT <span class="hljs-string">&#x27;省-行政代号&#x27;</span>,<br>	city_name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">15</span>) COMMENT <span class="hljs-string">&#x27;市-名称&#x27;</span>,<br>	city_code <span class="hljs-type">CHAR</span>(<span class="hljs-number">6</span>) COMMENT <span class="hljs-string">&#x27;市-行政代号&#x27;</span>,<br>	area_name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">15</span>) COMMENT <span class="hljs-string">&#x27;区-名称&#x27;</span>,<br>	area_code <span class="hljs-type">CHAR</span>(<span class="hljs-number">6</span>) COMMENT <span class="hljs-string">&#x27;区-行政代号&#x27;</span>,<br>	zip <span class="hljs-type">CHAR</span>(<span class="hljs-number">6</span>) COMMENT <span class="hljs-string">&#x27;邮政编码&#x27;</span>,<br>	address <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) COMMENT <span class="hljs-string">&#x27;详细地址&#x27;</span>,<br>	phone <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) COMMENT <span class="hljs-string">&#x27;手机&#x27;</span>,<br>	tel <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) COMMENT <span class="hljs-string">&#x27;固话&#x27;</span>,<br>	tag <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">6</span>) COMMENT <span class="hljs-string">&#x27;标签&#x27;</span>,<br>	is_default <span class="hljs-type">INT</span> COMMENT <span class="hljs-string">&#x27;是否默认：0-不默认，1-默认&#x27;</span>,<br>	created_user <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) COMMENT <span class="hljs-string">&#x27;创建人&#x27;</span>,<br>	created_time DATETIME COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	modified_user <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) COMMENT <span class="hljs-string">&#x27;修改人&#x27;</span>,<br>	modified_time DATETIME COMMENT <span class="hljs-string">&#x27;修改时间&#x27;</span>,<br>	<span class="hljs-keyword">PRIMARY</span> KEY (aid)<br>) ENGINE<span class="hljs-operator">=</span>INNODB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br></code></pre></td></tr></table></figure>
+
+<p>注意name是关键字,所以需要用&#96;&#96;</p>
+<h3 id="2-创建收货地址的实体类"><a href="#2-创建收货地址的实体类" class="headerlink" title="2.创建收货地址的实体类"></a>2.创建收货地址的实体类</h3><p>在entity包下创建实体类Address继承BaseEntity类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**收货地址额实体类*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Address</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseEntity</span> &#123;<br>    <span class="hljs-keyword">private</span> Integer aid;<br>    <span class="hljs-keyword">private</span> Integer uid;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String provinceName;<br>    <span class="hljs-keyword">private</span> String provinceCode;<br>    <span class="hljs-keyword">private</span> String cityName;<br>    <span class="hljs-keyword">private</span> String cityCode;<br>    <span class="hljs-keyword">private</span> String areaName;<br>    <span class="hljs-keyword">private</span> String areaCode;<br>    <span class="hljs-keyword">private</span> String zip;<br>    <span class="hljs-keyword">private</span> String address;<br>    <span class="hljs-keyword">private</span> String phone;<br>    <span class="hljs-keyword">private</span> String tel;<br>    <span class="hljs-keyword">private</span> String tag;<br>    <span class="hljs-keyword">private</span> Integer isDefault;<br> <span class="hljs-comment">/**</span><br><span class="hljs-comment"> * get,set</span><br><span class="hljs-comment"> * equals和hashCode</span><br><span class="hljs-comment"> * toString</span><br><span class="hljs-comment"> */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-新增收货地址-持久层"><a href="#3-新增收货地址-持久层" class="headerlink" title="3.新增收货地址-持久层"></a>3.新增收货地址-持久层</h3><h4 id="3-1各功能的开发顺序"><a href="#3-1各功能的开发顺序" class="headerlink" title="3.1各功能的开发顺序"></a>3.1各功能的开发顺序</h4><p>当前收货地址功能模块:</p>
+<ul>
+<li>第一个页面:列表的展示,修改,删除,设置默认</li>
+<li>第二个页面:新增收货地址</li>
+</ul>
+<p>开发顺序:新增收货地址-&gt;列表的展示-&gt;设置默认收货地址-&gt;删除收货地址-&gt;修改收货地址</p>
+<h4 id="3-2规划需要执行的SQL语句"><a href="#3-2规划需要执行的SQL语句" class="headerlink" title="3.2规划需要执行的SQL语句"></a>3.2规划需要执行的SQL语句</h4><p>1.新增收货地址对应的是插入语句:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> t_address (aid以外的所有字段) <span class="hljs-keyword">values</span> (字段值)<br></code></pre></td></tr></table></figure>
+
+<p>2.大部分平台都会规定一个用户的收货地址数量,这里规定最多20个.那么在插入用户新的地址之前就要先做查询操作.如果查询到的是刚好20,这并不是一个java语法的异常,可以认为是业务控制的异常,这个异常随后在service抛,在controller捕获</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> t_address <span class="hljs-keyword">where</span> uid<span class="hljs-operator">=</span>?<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3设计接口和抽象方法"><a href="#3-3设计接口和抽象方法" class="headerlink" title="3.3设计接口和抽象方法"></a>3.3设计接口和抽象方法</h4><p>创建接口AddressMapper,在这个接口中定义上面两个SQL语句抽象方法定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**收货地址持久层的接口*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">AddressMapper</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 插入用户的收货地址数据</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> address 收货地址数据</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 受影响的行数</span><br><span class="hljs-comment">     */</span><br>    Integer <span class="hljs-title function_">insert</span> <span class="hljs-params">(Address address)</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 根据用户的uid统计收货地址数量</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> uid 用户的uid</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 当前用户的收货地址总数</span><br><span class="hljs-comment">     */</span><br>    Integer <span class="hljs-title function_">countByUid</span><span class="hljs-params">(Integer uid)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-4编写映射"><a href="#3-4编写映射" class="headerlink" title="3.4编写映射"></a>3.4编写映射</h4><p>1.快速创建一个AddressMapper.xml映射文件:</p>
+<ul>
+<li>鼠标放在UserMapper.xml文件上并ctrl+c,再把鼠标放到mapper文件夹上ctrl+v,在弹出的窗口中把UserMapper改为AddressMapper.</li>
+<li>进入AddressMapper.xml文件将mapper标签下的代码全部删除并修改mapper标签属性值为namespace&#x3D;“com.cy.store.mapper.AddressMapper”</li>
+</ul>
+<p>结果如下所示:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span></span><br><span class="hljs-meta">        <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="hljs-meta">        <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.cy.store.mapper.AddressMapper&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.在mapper标签中配置Address类属性与数据库中表的字段映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;AddressEntityMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;com.cy.store.entity.Address&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;aid&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;aid&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;province_name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;provinceName&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;province_code&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;provinceCode&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;city_name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;cityName&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;city_code&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;cityCode&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;area_name&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;areaName&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;area_code&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;areaCode&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;is_default&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;isDefault&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;created_user&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;createdUser&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;created_time&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;createdTime&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;modified_user&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;modifiedUser&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;modified_time&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;modifiedTime&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>判断该映射是否配置成功:按着ctrl并点击type&#x3D;”com.cy.store.entity.Address”中的Address,如果能跳转到Address类说明映射成功</p>
+<p>3.在AddressMapper.xml中配置以上两个抽象方法的映射</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-operator">&lt;</span><span class="hljs-keyword">insert</span> id<span class="hljs-operator">=</span>&quot;insert&quot; useGeneratedKeys<span class="hljs-operator">=</span>&quot;true&quot; keyProperty<span class="hljs-operator">=</span>&quot;aid&quot;<span class="hljs-operator">&gt;</span><br>    <span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> t_address (<br>        uid, `name`, province_name, province_code, city_name, city_code, area_name, area_code, zip,<br>        address, phone, tel,tag, is_default, created_user, created_time, modified_user, modified_time<br>    ) <span class="hljs-keyword">VALUES</span> (<br>        #&#123;uid&#125;, #&#123;name&#125;, #&#123;provinceName&#125;, #&#123;provinceCode&#125;, #&#123;cityName&#125;, #&#123;cityCode&#125;, #&#123;areaName&#125;,<br>        #&#123;areaCode&#125;, #&#123;zip&#125;, #&#123;address&#125;, #&#123;phone&#125;, #&#123;tel&#125;, #&#123;tag&#125;, #&#123;isDefault&#125;, #&#123;createdUser&#125;,<br>        #&#123;createdTime&#125;, #&#123;modifiedUser&#125;, #&#123;modifiedTime&#125;<br>    )<br><span class="hljs-operator">&lt;</span><span class="hljs-operator">/</span><span class="hljs-keyword">insert</span><span class="hljs-operator">&gt;</span><br><br><span class="hljs-operator">&lt;</span><span class="hljs-operator">!</span><span class="hljs-comment">--resultType=&quot;java.lang.Integer&quot;不写会报错,因为Integer不是基本数据类型--&gt;</span><br><span class="hljs-operator">&lt;</span><span class="hljs-keyword">select</span> id<span class="hljs-operator">=</span>&quot;countByUid&quot;  resultType<span class="hljs-operator">=</span>&quot;java.lang.Integer&quot;<span class="hljs-operator">&gt;</span><br>    <span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> t_address <span class="hljs-keyword">where</span> uid<span class="hljs-operator">=</span>#&#123;uid&#125;<br><span class="hljs-operator">&lt;</span><span class="hljs-operator">/</span><span class="hljs-keyword">select</span><span class="hljs-operator">&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-5单元测试"><a href="#3-5单元测试" class="headerlink" title="3.5单元测试"></a>3.5单元测试</h4><p>在test下的mapper文件夹下创建AddressMapperTests测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddressMapperTests</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> AddressMapper addressMapper;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Address</span> <span class="hljs-variable">address</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Address</span>();<br>        address.setUid(<span class="hljs-number">11</span>);<br>        address.setPhone(<span class="hljs-string">&quot;133336&quot;</span>);<br>        address.setName(<span class="hljs-string">&quot;女朋友&quot;</span>);<br>        addressMapper.insert(address);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">countByUid</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> addressMapper.countByUid(<span class="hljs-number">11</span>);<br>        System.out.println(count);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-新增收货地址-业务层"><a href="#4-新增收货地址-业务层" class="headerlink" title="4.新增收货地址-业务层"></a>4.新增收货地址-业务层</h3><h4 id="4-1规划异常"><a href="#4-1规划异常" class="headerlink" title="4.1规划异常"></a>4.1规划异常</h4><ul>
+<li><p>插入数据时用户不存在(被管理员误删等等),抛UsernameNotFoundException异常(已经有了,不需要重复创建)</p>
+</li>
+<li><p>当用户插入的地址是第一条时,需要将当前地址作为默认收货地址</p>
+<p>实现办法:如果查询到统计总数为0则将当前地址的is_default值设置为1</p>
+</li>
+<li><p>如果查询的结果&gt;&#x3D;20,这时需要抛出业务控制的异常AddressCountLimitException</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**收货地址总数超出限制的异常(20条)*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddressCountLimitException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceException</span> &#123;<br>    <span class="hljs-comment">/**重写ServiceException的所有构造方法*/</span><br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>插入数据时产生未知的异常InsertException(已经有了,不需要重复创建)</p>
+</li>
+</ul>
+<h4 id="4-2设计接口和抽象方法及实现"><a href="#4-2设计接口和抽象方法及实现" class="headerlink" title="4.2设计接口和抽象方法及实现"></a>4.2设计接口和抽象方法及实现</h4><p>1.创建一个IAddressService接口,在接口中定义业务的抽象方法</p>
+<p>因为mapper层接口该功能模块定义了两个抽象方法,所以就要在service层接口该功能模块也定义两个抽象方法?不是这样的,要看mapper层的这两个方法是依赖关系还是独立关系,如果某一个抽象方法依赖于另一个抽象方法,那就需要在业务层将这两个方法整合到一个方法中.一句话来说就是:一个功能模块可能需要多条sql语句</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**收货地址的业务层接口*/</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IAddressService</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *这三个参数的由来:</span><br><span class="hljs-comment">     * 1.首先肯定要有address</span><br><span class="hljs-comment">     * 2.业务层需要根据uid查询该用户收货地址总数及新建地址时给字段uid赋值</span><br><span class="hljs-comment">     * 但新建收货地址的表单中并没有哪个控件让输入用户uid,所以需要控制层将uid传给业务层</span><br><span class="hljs-comment">     * 3.业务层在创建/修改收货地址时需要同时修改数据库中创建人/修改人的字段</span><br><span class="hljs-comment">     * 但新建收货地址的表单中并没有哪个控件让输入用户username,所以需要控制层将username传给业务层</span><br><span class="hljs-comment">     * 注意:&gt; 可以用HttpSession session代替Integer uid, String username,但</span><br><span class="hljs-comment">     * 这样写的话就需要把BaseController类下获取uid,username的方法重新封装到一个</span><br><span class="hljs-comment">     * 类中并让IAddressServiceImp实现类继承该类,这样就需要微调一下代码逻辑,太麻</span><br><span class="hljs-comment">     * 烦,并且,最好每一层只处理该层需要做的事情,session对象是控制层传递的,所以就</span><br><span class="hljs-comment">     * 把session对象定义封装在控制层中,不需要在业务层中额外处理以降低耦合</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">addNewAddress</span><span class="hljs-params">(Integer uid, String username, Address address)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>方法addNewAddress中三个参数的由来:</p>
+<ul>
+<li><p>首先肯定要有address</p>
+</li>
+<li><p>业务层需要根据uid查询该用户收货地址总数及新建地址时给字段uid赋值</p>
+<p>但新建收货地址的表单中并没有哪个控件让输入用户uid,所以需要控制层将uid传给业务层并在业务层封装到address对象中</p>
+</li>
+<li><p>业务层在创建&#x2F;修改收货地址时需要同时修改数据库中创建人&#x2F;修改人的字段</p>
+<p>但新建收货地址的表单中并没有哪个控件让输入用户username,所以需要控制层将username传给业务层并在业务层封装到address对象中</p>
+</li>
+</ul>
+<blockquote>
+<p>可以用HttpSession session代替Integer uid, String username,但这样写的话就需要把BaseController类下获取uid,username的方法重新封装到一个类中并让AddressServiceImpl实现类继承该类,这样就需要微调一下代码逻辑,太麻烦,并且,最好每一层只处理该层需要做的事情,session对象是控制层传递的,所以就把session对象定义封装在控制层中,不需要在业务层中额外处理,这样可以降低耦合</p>
+</blockquote>
+<p>2.创建一个AddressServiceImpl类实现接口中抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**新增收货地址的实现类*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddressServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IAddressService</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> AddressMapper addressMapper;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserMapper userMapper;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 为了方便日后修改最大收货地址数量,可以在配置文件</span><br><span class="hljs-comment">     * application.properties中定义user.address.max-count=20</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-comment">//spring读取配置文件中数据:@Value(&quot;$&#123;user.address.max-count&#125;&quot;)</span><br>    <span class="hljs-meta">@Value(&quot;$&#123;user.address.max-count&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> Integer maxCount;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addNewAddress</span><span class="hljs-params">(Integer uid, String username, Address address)</span> &#123;<br>        <span class="hljs-type">User</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> userMapper.findByUid(uid);<br>        <span class="hljs-keyword">if</span> (result ==<span class="hljs-literal">null</span> || result.getIsDelete() == <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UsernameNotFoundException</span>(<span class="hljs-string">&quot;用户数据不存在&quot;</span>);<br>        &#125;<br><br>        <span class="hljs-comment">//调用统计收货地址数量的方法</span><br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> addressMapper.countByUid(uid);<br>        <span class="hljs-keyword">if</span> (count &gt;= maxCount) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AddressCountLimitException</span>(<span class="hljs-string">&quot;用户收货地址超出上限&quot;</span>);<br>        &#125;<br><br>        <span class="hljs-comment">//uid,isDefault</span><br>        address.setUid(uid);<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">isDefault</span> <span class="hljs-operator">=</span> count == <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;<span class="hljs-comment">//1表示默认收货地址,0反之</span><br>        address.setIsDefault(isDefault);<br><br>        <span class="hljs-comment">//补全四项日志</span><br>        address.setCreatedUser(username);<br>        address.setModifiedUser(username);<br>        address.setCreatedTime(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>        address.setModifiedTime(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br><br>        <span class="hljs-comment">//调用插入收货地址的方法</span><br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">rows</span> <span class="hljs-operator">=</span> addressMapper.insert(address);<br>        <span class="hljs-keyword">if</span> (rows != <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InsertException</span>(<span class="hljs-string">&quot;插入用户的收货地址时产生未知异常&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>别忘了在配置文件application.properties中定义user.address.max-count&#x3D;20</p>
+<h4 id="4-3单元测试"><a href="#4-3单元测试" class="headerlink" title="4.3单元测试"></a>4.3单元测试</h4><p>在test下的service文件夹下创建AddressServiceTests测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddressServiceTests</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IAddressService addressService;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addNewAddress</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Address</span> <span class="hljs-variable">address</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Address</span>();<br>        address.setPhone(<span class="hljs-string">&quot;175726&quot;</span>);<br>        address.setName(<span class="hljs-string">&quot;男朋友&quot;</span>);<br>        addressService.addNewAddress(<span class="hljs-number">11</span>,<span class="hljs-string">&quot;mxy&quot;</span>,address);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-新增收货地址-控制层"><a href="#5-新增收货地址-控制层" class="headerlink" title="5.新增收货地址-控制层"></a>5.新增收货地址-控制层</h3><h4 id="5-1处理异常"><a href="#5-1处理异常" class="headerlink" title="5.1处理异常"></a>5.1处理异常</h4><p>义务层抛出了收货地址总数超出上限的异常,在BaseController中进行捕获处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e <span class="hljs-keyword">instanceof</span> AddressCountLimitException) &#123;<br>    result.setState(<span class="hljs-number">4003</span>);<br>    result.setMessage(<span class="hljs-string">&quot;用户的收货地址超出上限的异常&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-2设计请求"><a href="#5-2设计请求" class="headerlink" title="5.2设计请求"></a>5.2设计请求</h4><ul>
+<li>&#x2F;addresses&#x2F;add_new_address</li>
+<li>post</li>
+<li>Address address,HttpSession session</li>
+<li>JsonResult<Void></li>
+</ul>
+<h4 id="5-3处理请求"><a href="#5-3处理请求" class="headerlink" title="5.3处理请求"></a>5.3处理请求</h4><p>在controller包下创建AddressController并继承BaseController,该类用来处理用户收货地址的请求和响应</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;addresses&quot;)</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AddressController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseController</span>&#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IAddressService addressService;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;add_new_address&quot;)</span><br>    <span class="hljs-keyword">public</span> JsonResult&lt;Void&gt; <span class="hljs-title function_">addNewAddress</span><span class="hljs-params">(Address address, HttpSession session)</span> &#123;<br>        <span class="hljs-type">Integer</span> <span class="hljs-variable">uid</span> <span class="hljs-operator">=</span> getUidFromSession(session);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">username</span> <span class="hljs-operator">=</span> getUsernameFromSession(session);<br>        addressService.addNewAddress(uid,username,address);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;&gt;(OK);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启动服务器,登录账号后在地址栏输入<a target="_blank" rel="noopener" href="http://localhost:8080/addresses/add_new_address?name=tom&amp;phone=98745612%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95">http://localhost:8080/addresses/add_new_address?name=tom&amp;phone=98745612进行测试</a></p>
+<h3 id="6-新增收货地址-前端页面"><a href="#6-新增收货地址-前端页面" class="headerlink" title="6.新增收货地址-前端页面"></a>6.新增收货地址-前端页面</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script&gt;<br>    $(<span class="hljs-string">&quot;#btn-add-new-address&quot;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>        $.<span class="hljs-title function_">ajax</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/addresses/add_new_address&quot;</span>,<br>            <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>            <span class="hljs-attr">data</span>: $(<span class="hljs-string">&quot;#form-add-new-address&quot;</span>).<span class="hljs-title function_">serialize</span>(),<br>            <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;JSON&quot;</span>,<br>            <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>                <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;新增收货地址成功&quot;</span>)<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;新增收货地址失败&quot;</span>)<br>                &#125;<br>            &#125;,<br>            <span class="hljs-attr">error</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">xhr</span>) &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;新增收货地址时产生未知的异常!&quot;</span>+xhr.<span class="hljs-property">message</span>);<br>            &#125;<br>        &#125;);<br>    &#125;);<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="获取省市区列表"><a href="#获取省市区列表" class="headerlink" title="获取省市区列表"></a>获取省市区列表</h2><p>新增收货地址页面的三个下拉列表的内容展示没有和数据库进行交互,而是通过前端实现的(将代码逻辑放在了distpicker.data.js文件中),实现方法是在加载新增收货地址页面时加载该js文件,这种做法不可取(我不知道为啥)</p>
+<p>正确做法是:把这些数据保存到数据库中,用户点击下拉列表时相应的数据会被详细的展示出来,然后监听用户选择了哪一项以便后面的下拉列表进行二级关联</p>
+<h3 id="1-创建数据表-1"><a href="#1-创建数据表-1" class="headerlink" title="1.创建数据表"></a>1.创建数据表</h3><p>1.创建t_dict_district表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> t_dict_district (<br>  id <span class="hljs-type">INT</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  parent <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">6</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `code` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">6</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (id)<br>) ENGINE<span class="hljs-operator">=</span>INNODB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>code和name需要加&#96;&#96;</li>
+<li>parent代表父区域的代码号</li>
+<li>code代表自身的代码号</li>
+<li>省的父代码号是+86,代表中国</li>
+</ul>
+<p>2.向该表中插入省市区数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql">LOCK TABLES t_dict_district WRITE;<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> t_dict_district <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;110100&#x27;</span>,<span class="hljs-string">&#x27;110101&#x27;</span>,<span class="hljs-string">&#x27;东城区&#x27;</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;110100&#x27;</span>,<span class="hljs-string">&#x27;110102&#x27;</span>,<span class="hljs-string">&#x27;西城区&#x27;</span>)等等等等;<br>UNLOCK TABLES;<br></code></pre></td></tr></table></figure>
+
+<p>LOCK和UNLOVK干嘛用的?</p>
+<h3 id="2-创建省市区的实体类"><a href="#2-创建省市区的实体类" class="headerlink" title="2.创建省市区的实体类"></a>2.创建省市区的实体类</h3><p>在包entity下创建实体类District(不需要继承BaseEntity,但因为没有继承BaseEntity所以需要实现接口Serializable序列化)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**省市区的数据实体类*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">District</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">private</span> Integer id;<br>    <span class="hljs-keyword">private</span> String parent;<br>    <span class="hljs-keyword">private</span> String code;<br>    <span class="hljs-keyword">private</span> String name;<br> <span class="hljs-comment">/**</span><br><span class="hljs-comment"> * get,set</span><br><span class="hljs-comment"> * equals和hashCode</span><br><span class="hljs-comment"> * toString</span><br><span class="hljs-comment"> */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-获取省市区列表-持久层"><a href="#3-获取省市区列表-持久层" class="headerlink" title="3.获取省市区列表-持久层"></a>3.获取省市区列表-持久层</h3><h4 id="3-1规划需执行的SQL语句"><a href="#3-1规划需执行的SQL语句" class="headerlink" title="3.1规划需执行的SQL语句"></a>3.1规划需执行的SQL语句</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> t_dict_district <span class="hljs-keyword">where</span> parent<span class="hljs-operator">=</span>? <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> <span class="hljs-keyword">ASC</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2设计接口和抽象方法"><a href="#3-2设计接口和抽象方法" class="headerlink" title="3.2设计接口和抽象方法"></a>3.2设计接口和抽象方法</h4><p>日后可能开发新的模块仍要用到省市区列表,那么为了降低耦合性,就要创建新的接口</p>
+<p>在mapper层下创建接口DistrictMapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">DistrictMapper</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 根据父代码号查询区域信息</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> parent 父代码号</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 某个父区域下所有的区域列表</span><br><span class="hljs-comment">     */</span><br>    List&lt;District&gt; <span class="hljs-title function_">findByParent</span><span class="hljs-params">(String parent)</span>;<span class="hljs-comment">//查询的结果可能是多个,所以放在集合中</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3编写映射"><a href="#3-3编写映射" class="headerlink" title="3.3编写映射"></a>3.3编写映射</h4><p>创建一个DistrictMapper.xml映射文件并配置上述抽象方法的映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span></span><br><span class="hljs-meta">        <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="hljs-meta">        <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.cy.store.mapper.DistrictMapper&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;findByParent&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;com.cy.store.entity.District&quot;</span>&gt;</span><br>        select * from t_dict_district where parent=#&#123;parent&#125;<br>        order by code ASC<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-4单元测试"><a href="#3-4单元测试" class="headerlink" title="3.4单元测试"></a>3.4单元测试</h4><p>创建DistrictMapperTests测试类编写代码进行测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DistrictMapperTests</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> DistrictMapper districtMapper;<br>    <br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findByParent</span><span class="hljs-params">()</span> &#123;<br>        List&lt;District&gt; list = districtMapper.findByParent(<span class="hljs-string">&quot;210100&quot;</span>);<br>        <span class="hljs-keyword">for</span> (District district : list) &#123;<br>            System.out.println(district);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-获取省市区列表-业务层"><a href="#4-获取省市区列表-业务层" class="headerlink" title="4.获取省市区列表-业务层"></a>4.获取省市区列表-业务层</h3><h4 id="4-1规划异常-1"><a href="#4-1规划异常-1" class="headerlink" title="4.1规划异常"></a>4.1规划异常</h4><p>没有异常需要处理</p>
+<h4 id="4-2设计接口和抽象方法及实现-1"><a href="#4-2设计接口和抽象方法及实现-1" class="headerlink" title="4.2设计接口和抽象方法及实现"></a>4.2设计接口和抽象方法及实现</h4><p>1.创建一个接口IDistrictService,并定义抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IDistrictService</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 根据父代码号来查询区域信息(省或市或区)</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> parent 父代码号</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 多个区域的信息</span><br><span class="hljs-comment">     */</span><br>    List&lt;District&gt; <span class="hljs-title function_">getByParent</span><span class="hljs-params">(String parent)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.创建DistrictServiceImpl实现类来实现抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DistrictServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IDistrictService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> DistrictMapper districtMapper;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> List&lt;District&gt; <span class="hljs-title function_">getByParent</span><span class="hljs-params">(String parent)</span> &#123;<br>        List&lt;District&gt; list = districtMapper.findByParent(parent);<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 在进行网络数据传输时,为了尽量避免无效数据的传递,可以将无效数据</span><br><span class="hljs-comment">         * 设置为null,这样既节省流量,又提升了效率</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">for</span> (District district : list) &#123;<br>            district.setId(<span class="hljs-literal">null</span>);<br>            district.setParent(<span class="hljs-literal">null</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> list;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-3单元测试-1"><a href="#4-3单元测试-1" class="headerlink" title="4.3单元测试"></a>4.3单元测试</h4><p>在test下的service文件夹下创建DistrictServiceTests测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DistrictServiceTests</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IDistrictService districtService;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">getByParent</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//86代表中国,所有的省父代码号都是86</span><br>        List&lt;District&gt; list = districtService.getByParent(<span class="hljs-string">&quot;86&quot;</span>);<br>        <span class="hljs-keyword">for</span> (District district : list) &#123;<br>            System.err.println(district);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-获取省市区列表-控制层"><a href="#5-获取省市区列表-控制层" class="headerlink" title="5.获取省市区列表-控制层"></a>5.获取省市区列表-控制层</h3><h4 id="5-1设计请求"><a href="#5-1设计请求" class="headerlink" title="5.1设计请求"></a>5.1设计请求</h4><ul>
+<li>&#x2F;districts&#x2F;</li>
+<li>GET</li>
+<li>String parent</li>
+<li>JsonResult&lt;List<District>&gt;</li>
+</ul>
+<h4 id="5-2处理请求"><a href="#5-2处理请求" class="headerlink" title="5.2处理请求"></a>5.2处理请求</h4><p>1.创建一个DistrictController类,在类中编写处理请求的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RequestMapping(&quot;districts&quot;)</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DistrictController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseController</span>&#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> IDistrictService districtService;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 请求路径和父路径相同时用<span class="hljs-doctag">@RequestMapping</span>(&#123;&quot;/&quot;,&quot;&quot;&#125;),表</span><br><span class="hljs-comment">     * 示districts后面跟/或者什么也不跟都会进入这个方法</span><br><span class="hljs-comment">     * 点进RequestMapping发现参数类型是String[],且传入一</span><br><span class="hljs-comment">     * 个路径时默认有&#123;&#125;,传入一个以上路径时需要手动添加&#123;&#125;</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@RequestMapping(&#123;&quot;/&quot;,&quot;&quot;&#125;)</span><br>    <span class="hljs-keyword">public</span> JsonResult&lt;List&lt;District&gt;&gt; <span class="hljs-title function_">getByParent</span><span class="hljs-params">(String parent)</span> &#123;<br>        List&lt;District&gt; data = districtService.getByParent(parent);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JsonResult</span>&lt;&gt;(OK,data);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.为了能不登录也可以访问该数据,需要将districts请求添加到白名单中:</p>
+<p>在LoginInterceptorConfigure类的addInterceptors方法中添加代码:patterns.add(“&#x2F;districts&#x2F;**”);</p>
+<p>3.启动服务器,不登录账号,直接在地址栏输入<a target="_blank" rel="noopener" href="http://localhost:8080/districts?parent=86%E6%B5%8B%E8%AF%95%E8%83%BD%E5%90%A6%E6%AD%A3%E5%B8%B8%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE">http://localhost:8080/districts?parent=86测试能否正常获取数据</a></p>
+<h3 id="6-获取省市区列表-前端页面"><a href="#6-获取省市区列表-前端页面" class="headerlink" title="6.获取省市区列表-前端页面"></a>6.获取省市区列表-前端页面</h3><p>1.原始的下拉列表展示是将数据放在js,再动态获取js中的数据,而目前为止我们已经将数据放在了数据库,所以不能让它再使用这种办法了,所以需要注释掉addAddress.html页面的这两行js代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span> src=<span class="hljs-string">&quot;../js/distpicker.data.js&quot;</span>&gt;&lt;/script&gt;<br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/distpicker.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>关于这两行js代码:前者是为了获取数据,后者是为了将获取到的数据展示到下拉列表中</p>
+<p>2.检查前端页面在提交省市区数据时是否有相关name属性和id属性(name用于提交数据,id用于监听用户的点击)</p>
+<p>3.启动服务器,在前端验证一下是否还可以正常保存数据(除了省市区)</p>
+<h2 id="获取省市区名称"><a href="#获取省市区名称" class="headerlink" title="获取省市区名称"></a>获取省市区名称</h2><p>上一个模块获取省市区列表是通过父代码号获取子代码号完成联动,该模块获取省市区名称是通过自身的code获取自身的name</p>
+<h3 id="1-获取省市区名称-持久层"><a href="#1-获取省市区名称-持久层" class="headerlink" title="1.获取省市区名称-持久层"></a>1.获取省市区名称-持久层</h3><h4 id="3-1规划需要执行的SQL语句"><a href="#3-1规划需要执行的SQL语句" class="headerlink" title="3.1规划需要执行的SQL语句"></a>3.1规划需要执行的SQL语句</h4><p>根据当前code来获取当前省市区的名称,对应就是一条查询语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> t_dict_district <span class="hljs-keyword">where</span> code<span class="hljs-operator">=</span>?<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2设计接口和抽象方法-1"><a href="#3-2设计接口和抽象方法-1" class="headerlink" title="3.2设计接口和抽象方法"></a>3.2设计接口和抽象方法</h4><p>在DistrictMapper接口定义findNameByCode方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">String <span class="hljs-title function_">findNameByCode</span><span class="hljs-params">(String code)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3编写映射-1"><a href="#3-3编写映射-1" class="headerlink" title="3.3编写映射"></a>3.3编写映射</h4><p>在DistrictMapper.xml文件中添加findNameByCode方法的映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;findNameByCode&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span>&gt;</span><br>    select name from t_dict_district where code=#&#123;code&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-4单元测试-1"><a href="#3-4单元测试-1" class="headerlink" title="3.4单元测试"></a>3.4单元测试</h4><p>在DistrictMapperTests编写测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findNameByCode</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> districtMapper.findNameByCode(<span class="hljs-string">&quot;610000&quot;</span>);<br>    System.out.println(name);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-获取省市区名称-业务层"><a href="#2-获取省市区名称-业务层" class="headerlink" title="2.获取省市区名称-业务层"></a>2.获取省市区名称-业务层</h3><h4 id="2-1规划异常-1"><a href="#2-1规划异常-1" class="headerlink" title="2.1规划异常"></a>2.1规划异常</h4><p>没有异常需要处理</p>
+<h4 id="2-2设计接口和抽象方法及实现-1"><a href="#2-2设计接口和抽象方法及实现-1" class="headerlink" title="2.2设计接口和抽象方法及实现"></a>2.2设计接口和抽象方法及实现</h4><p>1.在IDistrictService接口定义对应的业务层接口中的抽象方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">String <span class="hljs-title function_">getNameByCode</span><span class="hljs-params">(String code)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>2.在DistrictServiceImpl实现此方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> String <span class="hljs-title function_">getNameByCode</span><span class="hljs-params">(String code)</span> &#123;<br>    <span class="hljs-keyword">return</span> districtMapper.findNameByCode(code);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3单元测试-1"><a href="#2-3单元测试-1" class="headerlink" title="2.3单元测试"></a>2.3单元测试</h4><p>业务层只是调用持久层对应的方法然后返回,没有什么额外的实现,可以不用测试(一般超过8行的代码都要进行测试)</p>
+<h3 id="3-获取省市区名称-控制层"><a href="#3-获取省市区名称-控制层" class="headerlink" title="3.获取省市区名称-控制层"></a>3.获取省市区名称-控制层</h3><p>实际开发中在获取省市区名称时并不需要前端传控制层,然后传业务层,再传持久层,而是在新增收货地址的业务层需要获取省市区名称,也就是说获取省市区名称的模块不需要控制层,只是需要被新增收货地址的业务层所依赖</p>
+<h3 id="4-获取省市区名称-业务层优化"><a href="#4-获取省市区名称-业务层优化" class="headerlink" title="4.获取省市区名称-业务层优化"></a>4.获取省市区名称-业务层优化</h3><p>1.<strong>在新增收货地址的业务层需要对address进行封装,使其存有所有数据,然后将address传给持久层(记住,持久层只会根据传过来的参数调用某个方法与数据库交互,永远不会有额外的实现),而此时新增收货地址的业务层并没有省市区的数据,所以需要依赖于获取省市区列表的业务层对应的接口中的getNameByCode方法</strong></p>
+<p>所以需要在业务层实现类AddressServiceImpl中加</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> IDistrictService districtService;<br></code></pre></td></tr></table></figure>
+
+<p>2.在AddressServiceImpl的方法中将DistrictService接口中获取到的省市区数据封装到address对象,此时address就包含了所有用户收货地址的数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 对address对象中的数据进行补全:省市区的名字看前端代码发现前端传递过来的省市区的name分别为:</span><br><span class="hljs-comment">* provinceCode,cityCode,areaCode,所以这里可以用address对象的get方法获取这三个的数据</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">String</span> <span class="hljs-variable">provinceName</span> <span class="hljs-operator">=</span> districtService.getNameByCode(address.getProvinceCode());<br><span class="hljs-type">String</span> <span class="hljs-variable">cityName</span> <span class="hljs-operator">=</span> districtService.getNameByCode(address.getCityCode());<br><span class="hljs-type">String</span> <span class="hljs-variable">areaName</span> <span class="hljs-operator">=</span> districtService.getNameByCode(address.getAreaCode());<br>address.setProvinceName(provinceName);<br>address.setCityName(cityName);<br>address.setAreaName(areaName);<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-获取省市区名称-前端页面"><a href="#5-获取省市区名称-前端页面" class="headerlink" title="5.获取省市区名称-前端页面"></a>5.获取省市区名称-前端页面</h3><p><strong>在addAddress.html页面中来编写对应的省市区展示及根据用户的不同选择来限制对应的标签中的内容</strong></p>
+<p>分析:</p>
+<ul>
+<li>在加载该页面时三个下拉列表的内容都显示为”—–请选择—–”</li>
+<li>没有选择市时如果点击区的下拉列表则列表中只有一个”—–请选择—–”</li>
+<li>加载该页面时需要自动发送一个请求把parent&#x3D;86发送出去,然后将返回的省&#x2F;直辖市填充到select标签中</li>
+<li>点击四川省后发送请求获取其下的市,并且将获取到的市罗列在市区域下拉列表中</li>
+<li>省点击”—–请选择—–“则需要把市,县内容填充为”—–请选择—–”终止请求而不是程序继续跑下去</li>
+<li>切换省份时,市,县内容更换为”—–请选择—–”</li>
+</ul>
+<p>在addAddress.html中编写js代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**因为清空后下拉列表的select标签没有option标签,所以需要设置一个默认的option标</span><br><span class="hljs-comment"> * 签并给市,县加上该标签.option标签并不会把内容发送到后端,而是将value值发</span><br><span class="hljs-comment"> * 送给后端,所以用value表示当前这个区域的code值</span><br><span class="hljs-comment"> * */</span><br><span class="hljs-keyword">var</span> defaultOption=<span class="hljs-string">&quot;&lt;option value=&#x27;0&#x27;&gt;-----请选择-----&lt;/option&gt;&quot;</span>;<br>$(<span class="hljs-variable language_">document</span>).<span class="hljs-title function_">ready</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">//加载省的数据罗列时代码量较多,建议定义在外部方法中,然后在这里调用定义的方法</span><br>    <span class="hljs-title function_">showProvinceList</span>();<br><br>    <span class="hljs-comment">//将省,市,县的下拉列表内容设为&quot;-----请选择-----&quot;</span><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * select标签默认获取第一个option的内容填充到下拉列表中,所以即使加载</span><br><span class="hljs-comment">     * 页面时省区域的下拉列表中已经有了所有省但仍然会显示-----请选择-----</span><br><span class="hljs-comment">     * */</span><br>    $(<span class="hljs-string">&quot;#province-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br><br>    $(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br>    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br>&#125;);<br><br><span class="hljs-comment">//省的下拉列表数据展示</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">showProvinceList</span>(<span class="hljs-params"></span>) &#123;<br>    $.<span class="hljs-title function_">ajax</span>(&#123;<br>        <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/districts&quot;</span>,<span class="hljs-comment">//发送请求用于获取所有省对象</span><br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">data</span>: <span class="hljs-string">&quot;parent=86&quot;</span>,<br>        <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;JSON&quot;</span>,<br>        <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>            <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                <span class="hljs-keyword">var</span> list = json.<span class="hljs-property">data</span>;<span class="hljs-comment">//获取所有省对象的List集合</span><br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; list.<span class="hljs-property">length</span>; i++) &#123;<br>                    <span class="hljs-keyword">var</span> opt =<br>                        <span class="hljs-string">&quot;&lt;option value=&#x27;&quot;</span>+list[i].<span class="hljs-property">code</span>+<span class="hljs-string">&quot;&#x27;&gt;&quot;</span>+list[i].<span class="hljs-property">name</span>+<span class="hljs-string">&quot;&lt;/option&gt;&quot;</span>;<br>                    $(<span class="hljs-string">&quot;#province-list&quot;</span>).<span class="hljs-title function_">append</span>(opt);<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                &lt;!--这个其实永远不会执行,因为没有编写<br>                异常,控制层返回的状态码永远是<span class="hljs-variable constant_">OK</span>--&gt;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;省/直辖区的信息加载失败&quot;</span>)<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">//这里没有写属性error,不知道为啥不用写,感觉写了更好</span><br>    &#125;);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * change()函数用于监听某个控件是否发生改变,一旦发生改变就</span><br><span class="hljs-comment"> * 会触发参数形式的函数,所以参数需要是function()&#123;&#125;</span><br><span class="hljs-comment"> * */</span><br>$(<span class="hljs-string">&quot;#province-list&quot;</span>).<span class="hljs-title function_">change</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">//先获取到省区域父代码号</span><br>    <span class="hljs-keyword">var</span> parent = $(<span class="hljs-string">&quot;#province-list&quot;</span>).<span class="hljs-title function_">val</span>();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 如果我选择了河南省洛阳市涧西区,然后又选择了河北省,此时需要</span><br><span class="hljs-comment">     * 将市,县下拉列表的所有option清除并显示内容-----请选择-----</span><br><span class="hljs-comment">     * empty()表示某标签的所有子标签(针对此页面来说select的子标</span><br><span class="hljs-comment">     * 签只有option)</span><br><span class="hljs-comment">     * */</span><br>    $(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">empty</span>();<br>    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">empty</span>();<br>    <span class="hljs-comment">//填充默认值:-----请选择-----</span><br>    $(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br>    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br><br>    <span class="hljs-keyword">if</span> (parent == <span class="hljs-number">0</span>) &#123;<span class="hljs-comment">//如果继续程序,后面的ajax接收的json数据中的data是</span><br>        <span class="hljs-keyword">return</span>;<span class="hljs-comment">//空集合[],进不了for循环,没有任何意义,所以直接在这里终止程序</span><br>    &#125;<br>    $.<span class="hljs-title function_">ajax</span>(&#123;<br>        <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/districts&quot;</span>,<br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">data</span>: <span class="hljs-string">&quot;parent=&quot;</span>+parent,<br>        <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;JSON&quot;</span>,<br>        <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>            <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                <span class="hljs-keyword">var</span> list = json.<span class="hljs-property">data</span>;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; list.<span class="hljs-property">length</span>; i++) &#123;<br>                    <span class="hljs-keyword">var</span> opt =<br>                        <span class="hljs-string">&quot;&lt;option value=&#x27;&quot;</span>+list[i].<span class="hljs-property">code</span>+<span class="hljs-string">&quot;&#x27;&gt;&quot;</span>+list[i].<span class="hljs-property">name</span>+<span class="hljs-string">&quot;&lt;/option&gt;&quot;</span>;<br>                    $(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">append</span>(opt);<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;市的信息加载失败&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;);<br>&#125;);<br><br>$(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">change</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">var</span> parent = $(<span class="hljs-string">&quot;#city-list&quot;</span>).<span class="hljs-title function_">val</span>();<br>    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">empty</span>();<br>    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">append</span>(defaultOption);<br><br>    <span class="hljs-keyword">if</span> (parent == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    $.<span class="hljs-title function_">ajax</span>(&#123;<br>        <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;/districts&quot;</span>,<br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">data</span>: <span class="hljs-string">&quot;parent=&quot;</span>+parent,<br>        <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;JSON&quot;</span>,<br>        <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) &#123;<br>            <span class="hljs-keyword">if</span> (json.<span class="hljs-property">state</span> == <span class="hljs-number">200</span>) &#123;<br>                <span class="hljs-keyword">var</span> list = json.<span class="hljs-property">data</span>;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; list.<span class="hljs-property">length</span>; i++) &#123;<br>                    <span class="hljs-keyword">var</span> opt =<br>                        <span class="hljs-string">&quot;&lt;option value=&#x27;&quot;</span>+list[i].<span class="hljs-property">code</span>+<span class="hljs-string">&quot;&#x27;&gt;&quot;</span>+list[i].<span class="hljs-property">name</span>+<span class="hljs-string">&quot;&lt;/option&gt;&quot;</span>;<br>                    $(<span class="hljs-string">&quot;#area-list&quot;</span>).<span class="hljs-title function_">append</span>(opt);<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;县的信息加载失败&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>电脑商城项目03头像上传和新增收货地址</div>
+      <div>https://yztldxdz.top/2022/07/24/电脑商城项目03头像上传和新增收货地址/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/26/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE04%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80%E5%88%97%E8%A1%A8%E5%B1%95%E7%A4%BA%EF%BC%8C%E8%AE%BE%E4%B8%BA%E9%BB%98%E8%AE%A4%EF%BC%8C%E5%88%A0%E9%99%A4%E5%92%8C%E5%95%86%E5%93%81%E7%83%AD%E9%94%80%E6%8E%92%E8%A1%8C/" title="电脑商城项目04收货地址列表展示，设为默认，删除和商品热销排行">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">电脑商城项目04收货地址列表展示，设为默认，删除和商品热销排行</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/22/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE02%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95%E5%92%8C%E8%B5%84%E6%96%99%E4%BF%AE%E6%94%B9/" title="电脑商城项目02用户注册登录和资料修改">
+                        <span class="hidden-mobile">电脑商城项目02用户注册登录和资料修改</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

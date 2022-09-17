@@ -36,21 +36,28 @@
   <meta name="author" content="Dambisa Moyo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Spring5 框架新功能 整个 Spring5 框架的代码基于 Java8，运行时兼容 JDK9，许多不建议使用的类和方法在代码库中删除了。 1、Spring 5.0 框架自带了通用的日志封装 （1）Spring5 已经移除 Log4jConfigListener，官方建议使用 Log4j2  （2）Spring5 框架整合 Log4j2  第一步 引入 jar 包  第二步 创建 log4j2">
+    <meta name="description" content="系统概述与环境搭建1 系统开发及运行环境电脑商城系统开发所需的环境及相关软件进行介绍。 1.操作系统：Windows 10 2.Java开发包：JDK 8 3.项目管理工具：Maven 3.6.3 4.项目开发工具：IntelliJ IDEA 2020.3.2 x64 5.数据库：MariaDB-10.3.7-winx64 6.浏览器：Google Chrome 7.服务器架构：Spring Bo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring5学习笔记(4)">
-<meta property="og:url" content="https://yztldxdz.top/2022/05/08/Spring5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(4)/index.html">
+<meta property="og:title" content="电脑商城项目01系统概述与环境搭建">
+<meta property="og:url" content="https://yztldxdz.top/2022/07/18/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE01%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="王振国的个人博客">
-<meta property="og:description" content="Spring5 框架新功能 整个 Spring5 框架的代码基于 Java8，运行时兼容 JDK9，许多不建议使用的类和方法在代码库中删除了。 1、Spring 5.0 框架自带了通用的日志封装 （1）Spring5 已经移除 Log4jConfigListener，官方建议使用 Log4j2  （2）Spring5 框架整合 Log4j2  第一步 引入 jar 包  第二步 创建 log4j2">
+<meta property="og:description" content="系统概述与环境搭建1 系统开发及运行环境电脑商城系统开发所需的环境及相关软件进行介绍。 1.操作系统：Windows 10 2.Java开发包：JDK 8 3.项目管理工具：Maven 3.6.3 4.项目开发工具：IntelliJ IDEA 2020.3.2 x64 5.数据库：MariaDB-10.3.7-winx64 6.浏览器：Google Chrome 7.服务器架构：Spring Bo">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-08T07:20:47.000Z">
-<meta property="article:modified_time" content="2022-07-14T02:00:37.541Z">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/2.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/3.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/1.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/4.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/6.png">
+<meta property="og:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/5.png">
+<meta property="article:published_time" content="2022-07-18T07:16:14.000Z">
+<meta property="article:modified_time" content="2022-07-30T07:30:58.139Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="e:/SSM/项目/源码/SpringBoot电脑商城项目-V1.0/unit01-系统概述与环境搭建/img/2.png">
   
   
   
-  <title>Spring5学习笔记(4) - 王振国的个人博客</title>
+  <title>电脑商城项目01系统概述与环境搭建 - 王振国的个人博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Spring5学习笔记(4)"></span>
+            <span id="subtitle" data-typed-text="电脑商城项目01系统概述与环境搭建"></span>
           
         </div>
 
@@ -233,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-05-08 15:20" pubdate>
-          2022年5月8日 下午
+        <time datetime="2022-07-18 15:16" pubdate>
+          2022年7月18日 下午
         </time>
       </span>
     
@@ -246,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          3.4k 字
+          2.4k 字
         
       </span>
     
@@ -258,7 +265,7 @@
         
         
           <!-- compatible with older versions-->
-          29 分钟
+          21 分钟
         
       </span>
     
@@ -296,51 +303,56 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Spring5学习笔记(4)</h1>
+            <h1 style="display: none">电脑商城项目01系统概述与环境搭建</h1>
             
             <div class="markdown-body">
               
-              <h2 id="Spring5-框架新功能"><a href="#Spring5-框架新功能" class="headerlink" title="Spring5 框架新功能"></a>Spring5 框架新功能</h2><p> 整个 Spring5 框架的代码基于 Java8，运行时兼容 JDK9，许多不建议使用的类和方法在代码库中删除了。</p>
-<h3 id="1、Spring-5-0-框架自带了通用的日志封装"><a href="#1、Spring-5-0-框架自带了通用的日志封装" class="headerlink" title="1、Spring 5.0 框架自带了通用的日志封装"></a>1、Spring 5.0 框架自带了通用的日志封装</h3><p> （1）Spring5 已经移除 Log4jConfigListener，官方建议使用 Log4j2</p>
-<p> （2）Spring5 框架整合 Log4j2</p>
-<p> 第一步 引入 jar 包</p>
-<p> 第二步 创建 log4j2.xml 配置文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-comment">&lt;!--日志级别以及优先级排序: OFF &gt; FATAL &gt; ERROR &gt; WARN &gt; INFO &gt; DEBUG &gt; TRACE &gt; ALL --&gt;</span><br><span class="hljs-comment">&lt;!--Configuration 后面的 status 用于设置 log4j2 自身内部的信息输出，可以不设置，当设置成 trace 时，可以看到 log4j2 内部各种详细输出--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span> <span class="hljs-attr">status</span>=<span class="hljs-string">&quot;INFO&quot;</span>&gt;</span><br> <span class="hljs-comment">&lt;!--先定义所有的 appender--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">appenders</span>&gt;</span><br> <span class="hljs-comment">&lt;!--输出日志信息到控制台--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">console</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Console&quot;</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;SYSTEM_OUT&quot;</span>&gt;</span><br> <span class="hljs-comment">&lt;!--控制日志输出的格式--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">PatternLayout</span> <span class="hljs-attr">pattern</span>=<span class="hljs-string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125; [%t] %-5level %logger&#123;36&#125; - %msg%n&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">console</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">appenders</span>&gt;</span><br>    <br> <span class="hljs-comment">&lt;!--然后定义 logger，只有定义 logger 并引入的 appender，appender 才会生效!--&gt;</span><br> <span class="hljs-comment">&lt;!--root：用于指定项目的根日志，如果没有单独指定 Logger，则会使用 root 作为默认的日志输出--&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">loggers</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">root</span> <span class="hljs-attr">level</span>=<span class="hljs-string">&quot;info&quot;</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;Console&quot;</span>/&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">loggers</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+              <h2 id="系统概述与环境搭建"><a href="#系统概述与环境搭建" class="headerlink" title="系统概述与环境搭建"></a>系统概述与环境搭建</h2><h3 id="1-系统开发及运行环境"><a href="#1-系统开发及运行环境" class="headerlink" title="1 系统开发及运行环境"></a>1 系统开发及运行环境</h3><p>电脑商城系统开发所需的环境及相关软件进行介绍。</p>
+<p>1.操作系统：Windows 10</p>
+<p>2.Java开发包：JDK 8</p>
+<p>3.项目管理工具：Maven 3.6.3</p>
+<p>4.项目开发工具：IntelliJ IDEA 2020.3.2 x64</p>
+<p>5.数据库：MariaDB-10.3.7-winx64</p>
+<p>6.浏览器：Google Chrome</p>
+<p>7.服务器架构：Spring Boot 2.4.7 + MyBatis 2.1.4 + AJAX</p>
+<h3 id="2-项目分析"><a href="#2-项目分析" class="headerlink" title="2 项目分析"></a>2 项目分析</h3><p>1.在开发某个项目之前，应先分析这个项目中可能涉及哪些种类的数据。本项目中涉及的数据：用户、商品、商品类别、收藏、订单、购物车、收货地址。</p>
+<p>2.关于数据，还应该要确定这些数据的开发顺序。设计开发顺序的原则是：先开发基础、简单或熟悉的数据。以上需要处理的数据的开发流程是：用户-收货地址-商品类别-商品-收藏-购物车-订单。</p>
+<p>3.在开发每种数据的相关功能时，先分析该数据涉及哪些功能。在本项目中以用户数据为例，需要开发的功能有：登录、注册、修改密码、修改资料、上传头像。</p>
+<p>4.然后，在确定这些功能的开发顺序。原则上，应先做基础功能，并遵循增查删改的顺序来开发。则用户相关功能的开发顺序应该是：注册-登录-修改密码-修改个人资料-上传头像。</p>
+<p>5.在实际开发中，应先创建该项目的数据库，当每次处理一种新的数据时，应先创建该数据在数据库中的数据表，然后在项目中创建该数据表对应的实体类。</p>
+<p>6.在开发某个具体的功能时，应遵循开发顺序：持久层-业务层-控制器-前端页面。</p>
+<h3 id="3-创建数据库"><a href="#3-创建数据库" class="headerlink" title="3 创建数据库"></a>3 创建数据库</h3><p>1.首先确保计算机上安装了MariaDB-10.3.7-winx64数据库，将来在数据库中创建与项目相关的表。</p>
+<p>2.创建电脑商城项目对应的后台数据库系统store。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE DATABASE store character SET utf8;<br></code></pre></td></tr></table></figure>
 
-<h3 id="2、Spring5-框架核心容器支持-Nullable-注解"><a href="#2、Spring5-框架核心容器支持-Nullable-注解" class="headerlink" title="2、Spring5 框架核心容器支持@Nullable 注解"></a>2、Spring5 框架核心容器支持@Nullable 注解</h3><p> @Nullable 注解可以使用在方法、属性、参数上面，表示方法返回可以为空，属性值可以为空，参数值可以为空</p>
-<h3 id="3、Spring5-核心容器支持函数式风格-GenericApplicationContext"><a href="#3、Spring5-核心容器支持函数式风格-GenericApplicationContext" class="headerlink" title="3、Spring5 核心容器支持函数式风格 GenericApplicationContext"></a>3、Spring5 核心容器支持函数式风格 GenericApplicationContext</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//函数式风格创建对象，交给 spring 进行管理</span><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testGenericApplicationContext</span><span class="hljs-params">()</span> &#123;<br> <span class="hljs-comment">//1 创建 GenericApplicationContext 对象</span><br> <span class="hljs-type">GenericApplicationContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">GenericApplicationContext</span>();<br> <span class="hljs-comment">//2 调用 context 的方法对象注册</span><br> context.refresh();<br> context.registerBean(<span class="hljs-string">&quot;user1&quot;</span>,User.class,() -&gt; <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>());<br> <span class="hljs-comment">//3 获取在 spring 注册的对象</span><br> <span class="hljs-comment">// User user = (User)context.getBean(&quot;com.atguigu.spring5.test.User&quot;);</span><br> <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> (User)context.getBean(<span class="hljs-string">&quot;user1&quot;</span>);<br> System.out.println(user);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="4-创建Spring-Initializr项目"><a href="#4-创建Spring-Initializr项目" class="headerlink" title="4 创建Spring Initializr项目"></a>4 创建Spring Initializr项目</h3><p>本质上Spring Initializr是一个Web应用程序，它提供了一个基本的项目结构，能够帮助开发者快速构建一个基础的Spring Boot项目。在创建Spring Initializr类型的项目时需在计算机连网的状态下进行创建。</p>
+<p><span style="color:red;">1.首先确保计算机上安装了JDK、IDEA、MariaDB等开发需要使用的软件，并在IDEA中配置了Maven 3.6.3项目管理工具。</span></p>
+<p>2.在IDEA欢迎界面，点击【New Project】按钮创建项目，左侧选择【Spring Initializr】选项进行Spring Boot项目快速构建。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\2.png" srcset="/img/loading.gif" lazyload></p>
+<p>3.将Group设置为com.cy，Artifact设置为store，其余选项使用默认值。单击【Next】进入Spring Boot场景依赖选择界面。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\3.png" srcset="/img/loading.gif" lazyload></p>
+<p>4.给项目添加Spring Web、MyBatis Framework、MySQL Driver的依赖。点击【Next】按钮完成项目创建。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\1.png" srcset="/img/loading.gif" lazyload></p>
+<p>5.首次创建完Spring Initializr项目时，解析项目依赖需消耗一定时间（Resolving dependencies of store…）。</p>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\4.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-配置并运行项目"><a href="#5-配置并运行项目" class="headerlink" title="5 配置并运行项目"></a>5 配置并运行项目</h3><h4 id="5-1-运行项目"><a href="#5-1-运行项目" class="headerlink" title="5.1 运行项目"></a>5.1 运行项目</h4><p>找到项目的入口类（被@SpringBootApplication注解修饰），然后运行启动类；启动过程如果控制台输出Spring图形则表示启动成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.cy.store;<br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StoreApplication</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(StoreApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="4、Spring5支持整合-JUnit5"><a href="#4、Spring5支持整合-JUnit5" class="headerlink" title="4、Spring5支持整合 JUnit5"></a>4、Spring5支持整合 JUnit5</h3><p>（1）引入 JUnit5 的 jar 包</p>
-<p>  (2) 创建测试类，使用注解完成</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@ExtendWith(SpringExtension.class)</span><br><span class="hljs-meta">@ContextConfiguration(&quot;classpath:bean1.xml&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JTest5</span> &#123;<br> <span class="hljs-meta">@Autowired</span><br> <span class="hljs-keyword">private</span> UserService userService;<br> <span class="hljs-meta">@Test</span><br> <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test1</span><span class="hljs-params">()</span> &#123;<br> userService.accountMoney();<br> &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\6.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="5-2-配置项目"><a href="#5-2-配置项目" class="headerlink" title="5.2 配置项目"></a>5.2 配置项目</h4><p>1.如果启动项目时提示：“配置数据源失败:’url’属性未指定，无法配置内嵌的数据源”。有如下的错误提示。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Failed to configure a DataSource: <span class="hljs-string">&#x27;url&#x27;</span> attribute is not specified and no embedded datasource could be configured.<br></code></pre></td></tr></table></figure>
 
-<p>（3）使用一个复合注解替代上面两个注解完成整合</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringJUnitConfig(locations = &quot;classpath:bean1.xml&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JTest5</span> &#123;<br> <span class="hljs-meta">@Autowired</span><br> <span class="hljs-keyword">private</span> UserService userService;<br> <span class="hljs-meta">@Test</span><br> <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test1</span><span class="hljs-params">()</span> &#123;<br> userService.accountMoney();<br> &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p><img src="E:\SSM\项目\源码\SpringBoot电脑商城项目-V1.0\unit01-系统概述与环境搭建\img\5.png" srcset="/img/loading.gif" lazyload></p>
+<p>2.解决以上操作提示的方法：在resources文件夹下的application.properties文件中添加数据源的配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">spring.datasource.url</span>=<span class="hljs-string">jdbc:mysql://localhost:3306/store?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai</span><br><span class="hljs-attr">spring.datasource.username</span>=<span class="hljs-string">root</span><br><span class="hljs-attr">spring.datasource.password</span>=<span class="hljs-string">123456</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="5、Spring5-框架新功能——Webflux（类似于springMVC）"><a href="#5、Spring5-框架新功能——Webflux（类似于springMVC）" class="headerlink" title="5、Spring5 框架新功能——Webflux（类似于springMVC）"></a>5、Spring5 框架新功能——Webflux（类似于springMVC）</h3><p> a）Webflux是 Spring5 添加新的模块，用于 web 开发的，功能和 SpringMVC 类似的，Webflux 使用 当前一种比较流行的响应式编程出现的框架。</p>
-<p> b）使用传统 web 框架，比如 SpringMVC，这些基于 Servlet 容器，Webflux 是一种异步非阻塞的框架，异步非阻塞的框架在 Servlet3.1 以后才支持，<strong>核心是基于 Reactor</strong> 的相关 API 实现的。</p>
-<blockquote>
-<p>解释什么是异步非阻塞 ：</p>
-<p>（1）异步和同步 （针对调用者）</p>
-<p> <strong>同步：</strong> 调用者发送请求，如果等着对方回应之后才去做其他事情就是同步</p>
-<p> <strong>异步：</strong> 调用者发送请求，如果发送请求之后不等着对方回应就去做其他事情就是异步 √</p>
-<p>（2）非阻塞和阻塞 （针对被调用者）</p>
-<p> <strong>阻塞：</strong> 被调用者受到请求之后，做完请求任务之后才给出反馈就是阻塞</p>
-<p> <strong>非阻塞：</strong> 被调用者受到请求之后，受到请求之后马上给出反馈然后再去做事情就是非阻塞 √</p>
-</blockquote>
-<p> c）Webflux 特点</p>
-<p> （1）第一 非阻塞式：在有限资源下，<strong>提高系统吞吐量和伸缩性</strong>，以 Reactor 为基础实现响应式编程</p>
-<p> （2）第二 函数式编程：Spring5 框架基于 java8，Webflux 使用 Java8 函数式编程方式实现路由请求</p>
-<p> d）SpringMVC和Webflux之间区别</p>
-<p> 相同：两个框架都可以使用注解方式，都运行在 Tomcat 等容器中</p>
-<p> 不同：SpringMVC 采用命令式编程，Webflux 采用异步响应式编程</p>
-<h3 id="6、响应式编程（Java-实现）"><a href="#6、响应式编程（Java-实现）" class="headerlink" title="6、响应式编程（Java 实现）"></a>6、响应式编程（Java 实现）</h3><blockquote>
-<p> 概念：什么是响应式编程 响应式编程是一种面向数据流和变化传播的编程范式。这意味着可以在编程语言中很方便 地表达静态或动态的数据流，而相关的计算模型会自动将变化的值通过数据流进行传播。</p>
-<p> 例子：电子表格程序就是响应式编程的一个例子。单元格可以包含字面值或类似”&#x3D;B1+C1”的公 式，而包含公式的单元格的值会依据其他单元格的值的变化而变化。</p>
-</blockquote>
-<p> a）Java8 及其之前版本是提供的观察者模式两个类 Observer 和 Observable实现</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ObserverDemo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Observable</span> &#123;<br> <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br> <span class="hljs-type">ObserverDemo</span> <span class="hljs-variable">observer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObserverDemo</span>();<br> <span class="hljs-comment">//添加观察者</span><br> observer.addObserver((o,arg)-&gt;&#123;<br>	 System.out.println(<span class="hljs-string">&quot;发生变化&quot;</span>);<br> &#125;);<br> observer.addObserver((o,arg)-&gt;&#123;<br> 	 System.out.println(<span class="hljs-string">&quot;手动被观察者通知，准备改变&quot;</span>);<br> &#125;);<br>  <span class="hljs-comment">//这里必须进行两个方法调用才可以响应！！</span><br> observer.setChanged(); <span class="hljs-comment">//数据变化</span><br> observer.notifyObservers(); <span class="hljs-comment">//通知</span><br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>3.为了便于查询JSON数据，隐藏没有值的属性，减少流量的消耗，服务器不应该向客户端响应为NULL的属性。可以在属性或类之前添加@JsonInclude(value&#x3D;Include.NON_NULL)，也可以在application.properties中添加全局的配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 服务器向客户端不响应为null的属性</span><br><span class="hljs-attr">spring.jackson.default-property-inclusion</span>=<span class="hljs-string">NON_NULL</span><br></code></pre></td></tr></table></figure>
 
+<p>4.SpringBoot项目的默认访问名称是“&#x2F;”，如果需要修改可以手动在配置文件中指定SpringBoot 2.x访问项目路径的项目名。不建议修改。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">server.servlet.context-path</span>=<span class="hljs-string">/store</span><br></code></pre></td></tr></table></figure>
+
+<p>5.重新启动项目，则不在提示配置数据源失败的问题。</p>
 
               
             </div>
@@ -357,15 +369,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Spring5学习笔记(4)</div>
-      <div>https://yztldxdz.top/2022/05/08/Spring5学习笔记(4)/</div>
+      <div>电脑商城项目01系统概述与环境搭建</div>
+      <div>https://yztldxdz.top/2022/07/18/电脑商城项目01系统概述与环境搭建/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年5月8日</div>
+          <div>2022年7月18日</div>
         </div>
       
       
@@ -395,9 +407,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/05/10/SpringMVC%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/" title="SpringMVC学习笔记(1)">
+                      <a href="/2022/07/22/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE02%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95%E5%92%8C%E8%B5%84%E6%96%99%E4%BF%AE%E6%94%B9/" title="电脑商城项目02用户注册登录和资料修改">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SpringMVC学习笔记(1)</span>
+                        <span class="hidden-mobile">电脑商城项目02用户注册登录和资料修改</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -405,8 +417,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/05/07/Spring5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)/" title="Spring5学习笔记(3)">
-                        <span class="hidden-mobile">Spring5学习笔记(3)</span>
+                      <a href="/2022/07/14/SpringBoot%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(5)/" title="SpringBoot学习笔记(5)">
+                        <span class="hidden-mobile">SpringBoot学习笔记(5)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
