@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="消息驱动Stream需求：消息中间件很多，希望向上抽象一个接口，我们不关心底层用的是什么消息中间件 屏蔽底层消息中间件的差异，降低切换成本，统一消息的编程模型 就像 JDBC 形成一种规范，统一不同数据库的接口  什么是SpringCloud Stream 官方定义SpringCloud Stream是一个构建消息驱动微服务的框架。https:&#x2F;&#x2F;spring.io&#x2F;projects&#x2F;spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud学习笔记(6)">
+<meta property="og:url" content="https://yztldxdz.top/2022/09/21/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(6)/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="消息驱动Stream需求：消息中间件很多，希望向上抽象一个接口，我们不关心底层用的是什么消息中间件 屏蔽底层消息中间件的差异，降低切换成本，统一消息的编程模型 就像 JDBC 形成一种规范，统一不同数据库的接口  什么是SpringCloud Stream 官方定义SpringCloud Stream是一个构建消息驱动微服务的框架。https:&#x2F;&#x2F;spring.io&#x2F;projects&#x2F;spring">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/d1710ba414fcbc3720ffea05aee186b5.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/65fa5f0d45eba8e13f3c3d5614eae009.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/074eeb14cc99b7067376138d25cc750b.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/e8673ce5d424abd401f623b921773667.png">
+<meta property="article:published_time" content="2022-09-21T11:43:02.000Z">
+<meta property="article:modified_time" content="2022-09-21T11:52:35.811Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/d1710ba414fcbc3720ffea05aee186b5.png">
+  
+  
+  
+  <title>SpringCloud学习笔记(6) - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SpringCloud学习笔记(6)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-21 19:43" pubdate>
+          2022年9月21日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          8.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          75 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SpringCloud学习笔记(6)</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="消息驱动"><a href="#消息驱动" class="headerlink" title="消息驱动"></a>消息驱动</h1><h2 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h2><p>需求：消息中间件很多，希望向上抽象一个接口，我们不关心底层用的是什么消息中间件</p>
+<p>屏蔽底层消息中间件的差异，降低切换成本，统一消息的编程模型</p>
+<p>就像 JDBC 形成一种规范，统一不同数据库的接口</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/d1710ba414fcbc3720ffea05aee186b5.png" srcset="/img/loading.gif" lazyload alt="1597725567239"></p>
+<p>什么是SpringCloud Stream</p>
+<p>官方定义SpringCloud Stream是一个构建消息驱动微服务的框架。<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-cloud-stream#overview">https://spring.io/projects/spring-cloud-stream#overview</a></p>
+<p>SpringCloud Stream为一些供应商的消息中间件产品提供了个性化的自动化配置实现，引用了发布-订阅、消费组、分区的三个核心概念</p>
+<p>目前仅支持RabbitMQ、Kafka。</p>
+<blockquote>
+<p>流程：</p>
+<p>pub生产者发送消息，BROKER接收消息放到队列中，订阅者接收到消息</p>
+<p>选修必须走特定的通道：下嘻嘻通道MessageChannel</p>
+<p>消息通道里的消息如何消费呢？谁负责收发处理：消息通道MessageChannel的子接口SubscribableChannel，由MessageHandler消息处理器所订阅</p>
+<p>比如java里用的是RabbitMQ，大数据里用的是kafka，来回切换麻烦，链各个消息中间件的架构上不同</p>
+<p>像RabbitMQ有exchange，kafka有Topic和Partitions分区</p>
+<p>这些中间件的差异导致我们实际项目开发给我们造成了一定的困难，我们如果用了两个消息队列的其中一种，后面的业务需求，我们想往另外一种消息队列进行迁移，这时候无疑就是一个灾难性的，一大堆东西都要重新推倒重新做，因为它跟我们的系统耦合了，这时候SpringCloud Stream给我们提供了一种解耦合的方式。</p>
+</blockquote>
+<p>Stream的消息通信方式遵循了<strong>发布-订阅模式</strong></p>
+<p>通过定义绑定器Binder作为中间层，实现了应用程序与消息中间件细节之间的隔离。INPUT对应于生产者，OUTPUT对应于消费者</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/65fa5f0d45eba8e13f3c3d5614eae009.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Stream标准流程套路：</p>
+<ul>
+<li>binder：很方便的连接中间件，屏蔽差异</li>
+<li>Channel：通道，是队列Queue的一种抽象，在消息通讯系统中就是实现存储和转发的媒介，通过channel对队列进行配置</li>
+<li>Source（生产）和sink（消费）：简单地可理解为参照对象是spring cloud stream自身，从stream发布消息就是输出，接收消息就是输入</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/074eeb14cc99b7067376138d25cc750b.png" srcset="/img/loading.gif" lazyload alt="1597730581088"></p>
+<p>常用注解：</p>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Middleware</td>
+<td>中间件，目前只支FRabbitMQ和Kafka</td>
+</tr>
+<tr>
+<td>Binder</td>
+<td>Binder是应用与消息中间件之间的封装，目前实行了KafKa和RabbitMQ的Binder,通过 Binder可以很方便的连接中间件，可以动态的改变消息类型（对应kafka的topic， RabbitMQ的exchange)，这些都可以通过配置文件来实现</td>
+</tr>
+<tr>
+<td>@Input</td>
+<td>注解标识输入通道，通过该输入通接收到的消息息进入应用程序</td>
+</tr>
+<tr>
+<td>@Output</td>
+<td>注解标识输出通道，发布的消息将通过该通道离开应用程序</td>
+</tr>
+<tr>
+<td>@StreamListener</td>
+<td>监听队列，用于消费者的队列的消息接收</td>
+</tr>
+<tr>
+<td>@EnableBinding</td>
+<td>指信道channel和exchange绑定在一起</td>
+</tr>
+</tbody></table>
+<h3 id="消息生产者"><a href="#消息生产者" class="headerlink" title="消息生产者"></a>消息生产者</h3><p>要新建3个子模块</p>
+<ul>
+<li>cloud-stream-rabbitmq-provide8801：作为生产者进行发消息模块</li>
+<li>cloud-stream-rabbitmq-consumer8802：作为消息接收模块</li>
+<li>cloud-stream-rabbitmq-consumer8802：作为消息接收模块</li>
+</ul>
+<p>新建模块 stream-rabbitmq-provider8801</p>
+<p>8801 pom依赖：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;<br>&lt;project xmlns=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br>         xmlns:xsi=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br>         xsi:schemaLocation=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;<br>    &lt;parent&gt;<br>        &lt;artifactId&gt;cloud2022&lt;/artifactId&gt;<br>        &lt;groupId&gt;com.wzg.springcloud&lt;/groupId&gt;<br>        &lt;version&gt;<span class="hljs-number">1.0</span>-SNAPSHOT&lt;/version&gt;<br>    &lt;/parent&gt;<br>    &lt;modelVersion&gt;<span class="hljs-number">4.0</span><span class="hljs-number">.0</span>&lt;/modelVersion&gt;<br><br>    &lt;artifactId&gt;stream-rabbitmq-provide8801&lt;/artifactId&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;!-- stream-rabbit --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-stream-rabbit&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br><br>        &lt;!--eureka-client 目前，这个不是必须的--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;<br>            &lt;scope&gt;runtime&lt;/scope&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;<br>            &lt;artifactId&gt;lombok&lt;/artifactId&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;<br>            &lt;scope&gt;test&lt;/scope&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;<br>            &lt;groupId&gt;com.wzg.springcloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;api-commons&lt;/artifactId&gt;<br>            &lt;version&gt;<span class="hljs-number">1.0</span>-SNAPSHOT&lt;/version&gt;<br>        &lt;/dependency&gt;<br>    &lt;/dependencies&gt;<br><br>    &lt;properties&gt;<br>        &lt;maven.compiler.source&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.target&gt;<br>    &lt;/properties&gt;<br><br>&lt;/project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>yml 配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8801</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">stream-provider</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">stream:</span><br>      <span class="hljs-attr">binders:</span> <span class="hljs-comment"># 在此配置要绑定的rabbitMQ的服务信息</span><br>        <span class="hljs-attr">defaultRabbit:</span> <span class="hljs-comment"># 表示定义的名称，用于和binding整合</span><br>          <span class="hljs-attr">type:</span> <span class="hljs-string">rabbit</span>  <span class="hljs-comment"># 消息组件类型</span><br>          <span class="hljs-attr">environment:</span>  <span class="hljs-comment"># 设置rabbitmq的相关环境配置</span><br>            <span class="hljs-attr">spring:</span><br>              <span class="hljs-attr">rabbitmq:</span><br>                <span class="hljs-attr">host:</span> <span class="hljs-string">localhost</span><br>                <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span><br>                <span class="hljs-attr">username:</span> <span class="hljs-string">guest</span><br>                <span class="hljs-attr">password:</span> <span class="hljs-string">guest</span><br>      <span class="hljs-attr">bindings:</span>  <span class="hljs-comment"># 服务的整合处理</span><br>        <span class="hljs-attr">output:</span>   <span class="hljs-comment"># 表示是生产者，向rabbitMQ发送消息</span><br>          <span class="hljs-attr">destination:</span> <span class="hljs-string">studyExchange</span>  <span class="hljs-comment"># 表示要使用的Exchange名称</span><br>          <span class="hljs-attr">content-type:</span> <span class="hljs-string">application/json</span>  <span class="hljs-comment"># 设置消息类型，本次是json，文本是 &quot;text/plain&quot;</span><br><span class="hljs-comment">#          binder: defaultRabbit  # 设置要绑定的消息服务的具体配置</span><br><br><span class="hljs-attr">eureka:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">service-url:</span><br>      <span class="hljs-attr">defaultZone:</span> <span class="hljs-string">http://eureka7001.com:7001/eureka/</span><br>  <span class="hljs-attr">instance:</span><br>    <span class="hljs-attr">lease-renewal-interval-in-seconds:</span> <span class="hljs-number">2</span> <span class="hljs-comment"># 设置心跳时间，默认是30秒</span><br>    <span class="hljs-attr">lease-expiration-duration-in-seconds:</span> <span class="hljs-number">5</span> <span class="hljs-comment"># 最大心跳间隔不能超过5秒,默认90秒</span><br>    <span class="hljs-attr">instance-id:</span> <span class="hljs-string">send-8801.com</span> <span class="hljs-comment"># 在信息列表显示主机名称</span><br>    <span class="hljs-attr">prefer-ip-address:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 访问路径变为ip地址</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Provider8801</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(Provider8801.class,args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>业务类：（此业务类不是以前的service，而实负责推送消息的服务类）</p>
+<ul>
+<li>发送消息的接口类</li>
+<li>发送消息接口类的实现类</li>
+<li>controller</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.serivce;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IMessageProvider</span> &#123;<br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">send</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.serivce;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> org.springframework.cloud.stream.annotation.EnableBinding;<br><span class="hljs-keyword">import</span> org.springframework.cloud.stream.messaging.Source;<br><span class="hljs-keyword">import</span> org.springframework.messaging.MessageChannel;<br><span class="hljs-keyword">import</span> org.springframework.messaging.support.MessageBuilder;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><span class="hljs-keyword">import</span> java.util.UUID;<br><br><span class="hljs-meta">@EnableBinding(Source.class)</span>  <span class="hljs-comment">// 定义消息的推送管道 output//不是和controller打交道的service,而是发送消息的推送服务类</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IMessageProviderImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IMessageProvider</span> &#123;<br>    <span class="hljs-comment">//上面是自定义的接口</span><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> MessageChannel output;<span class="hljs-comment">//消息发送管道</span><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">send</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">serial</span> <span class="hljs-operator">=</span> UUID.randomUUID().toString();<br>        output.send(MessageBuilder.withPayload(serial).build());<span class="hljs-comment">// 绑定器</span><br>        System.out.println(<span class="hljs-string">&quot;******serial: &quot;</span> + serial);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.controller;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.serivce.IMessageProvider;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SendMessageController</span> &#123;<br><br>    <span class="hljs-meta">@Resource</span> <span class="hljs-comment">// 自己的类</span><br>    <span class="hljs-keyword">private</span> IMessageProvider messageProvider;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/sendMessage&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">sendMessage</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">return</span> messageProvider.send(); <span class="hljs-comment">// 自己定义的方法，但是里面调用了MessageChannel.send()方法</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>启动Eureka Server 7001，再启动8801，进行测试，看是否rabbitMQ中有我们发送的消息。</p>
+</blockquote>
+<h3 id="消息消费者"><a href="#消息消费者" class="headerlink" title="消息消费者"></a>消息消费者</h3><p>新建模块 stream-rabbitmq-consumer8802</p>
+<p>pom依赖和生产者一样。</p>
+<p>yml配置: 在 stream的配置上，和生产者只有一处不同的地方，output 改成 input</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8802</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">cloud-stream-provider</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">stream:</span><br>      <span class="hljs-attr">binders:</span> <span class="hljs-comment"># 在次配置要绑定的rabbitMQ的服务信息</span><br>        <span class="hljs-attr">defaultRabbit:</span> <span class="hljs-comment"># 表示定义的名称，用于和binding整合</span><br>          <span class="hljs-attr">type:</span> <span class="hljs-string">rabbit</span>  <span class="hljs-comment"># 消息组件类型</span><br>          <span class="hljs-attr">environment:</span>  <span class="hljs-comment"># 设置rabbitmq的相关环境配置</span><br>            <span class="hljs-attr">spring:</span><br>              <span class="hljs-attr">rabbitmq:</span><br>                <span class="hljs-attr">host:</span> <span class="hljs-string">localhost</span><br>                <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span><br>                <span class="hljs-attr">username:</span> <span class="hljs-string">guest</span><br>                <span class="hljs-attr">password:</span> <span class="hljs-string">guest</span><br>      <span class="hljs-attr">bindings:</span>  <span class="hljs-comment"># 服务的整合处理</span><br>        <span class="hljs-attr">input:</span>   <span class="hljs-comment"># 表示是消费者，这里是唯一和生产者不同的地方，向rabbitMQ发送消息</span><br>          <span class="hljs-attr">destination:</span> <span class="hljs-string">studyExchange</span>  <span class="hljs-comment"># 表示要使用的Exchange名称</span><br>          <span class="hljs-attr">content-type:</span> <span class="hljs-string">application/json</span>  <span class="hljs-comment"># 设置消息类型，本次是json，文本是 &quot;text/plain&quot;</span><br>          <span class="hljs-attr">binder:</span> <span class="hljs-string">defaultRabbit</span>  <span class="hljs-comment"># 设置要绑定的消息服务的具体配置</span><br><span class="hljs-attr">eureka:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">service-url:</span><br>      <span class="hljs-attr">defaultZone:</span> <span class="hljs-string">http://eureka7001.com:7001/eureka/</span><br>  <span class="hljs-attr">instance:</span><br>    <span class="hljs-attr">lease-renewal-interval-in-seconds:</span> <span class="hljs-number">2</span> <span class="hljs-comment"># 设置心跳时间，默认是30秒</span><br>    <span class="hljs-attr">lease-expiration-duration-in-seconds:</span> <span class="hljs-number">5</span> <span class="hljs-comment"># 最大心跳间隔不能超过5秒,默认90秒</span><br>    <span class="hljs-attr">instance-id:</span> <span class="hljs-string">receive-8802.com</span> <span class="hljs-comment"># 在信息列表显示主机名称</span><br>    <span class="hljs-attr">prefer-ip-address:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 访问路径变为ip地址</span><br></code></pre></td></tr></table></figure>
+
+<p>接收消息的业务类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.springframework.cloud.stream.annotation.EnableBinding;<br><span class="hljs-keyword">import</span> org.springframework.cloud.stream.annotation.StreamListener;<br><span class="hljs-keyword">import</span> org.springframework.cloud.stream.messaging.Sink;<br><span class="hljs-keyword">import</span> org.springframework.messaging.Message;<br><br><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@EnableBinding(Sink.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConsumerController</span> &#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String serverPort;<br><br>    <span class="hljs-meta">@StreamListener(Sink.INPUT)</span> <span class="hljs-comment">// 消费者</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">input</span><span class="hljs-params">(Message&lt;String&gt; message)</span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;消费者1号，serverport: &quot;</span> + serverPort + <span class="hljs-string">&quot;，接受到的消息：&quot;</span> + message.getPayload());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置分组消费"><a href="#配置分组消费" class="headerlink" title="配置分组消费"></a>配置分组消费</h3><p>新建 stream-rabbitmq-consumer8803 模块：</p>
+<blockquote>
+<p>8803 就是 8802 clone出来的。</p>
+</blockquote>
+<p>当运行时，会有两个问题。</p>
+<p>第一个问题，两个消费者都接收到了消息，这属于重复消费。例如，消费者进行订单创建，这样就创建了两份订单，会造成系统错误。</p>
+<p>注意在stream中处同一个group中的多个消费者是竞争关系，就能保证消息只会被其中一个应用消费一次。</p>
+<p>不同组是可以全面消费（重复消费）的</p>
+<p>同一组内会发生竞争关系，只有其中一个可以消费。</p>
+<blockquote>
+<p>Stream默认不同的微服务是不同的组</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/e8673ce5d424abd401f623b921773667.png" srcset="/img/loading.gif" lazyload alt="1597731630685"></p>
+<p>对于重复消费这种问题，导致的原因是默认每个微服务是不同的group，组流水号不一样，所以被认为是不同组，两个都可以消费。</p>
+<p>解决的办法就是自定义配置分组：</p>
+<p>消费者 yml 文件配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-comment"># 8802 的消费者</span><br><span class="hljs-attr">bindings:</span><br>       <span class="hljs-attr">input:</span>   <br>         <span class="hljs-attr">destination:</span> <span class="hljs-string">studyExchange</span>  <br>         <span class="hljs-attr">content-type:</span> <span class="hljs-string">application/json</span>  <br>         <span class="hljs-attr">binder:</span> <span class="hljs-string">defaultRabbit</span>  <br>         <span class="hljs-attr">group:</span> <span class="hljs-string">dkfA</span>  <span class="hljs-comment"># 自定义分组配置</span><br>         <br>   <span class="hljs-comment"># 8803 的消费者</span><br><span class="hljs-attr">bindings:</span><br>       <span class="hljs-attr">input:</span>   <br>         <span class="hljs-attr">destination:</span> <span class="hljs-string">studyExchange</span>  <br>         <span class="hljs-attr">content-type:</span> <span class="hljs-string">application/json</span>  <br>         <span class="hljs-attr">binder:</span> <span class="hljs-string">defaultRabbit</span>  <br>         <span class="hljs-attr">group:</span> <span class="hljs-string">dkfB</span>  <span class="hljs-comment"># 自定义分组配置</span><br></code></pre></td></tr></table></figure>
+
+<p>当两个消费者配置的 group 都为 dkfA 时，就属于同一组，就不会被重复消费。（两个消费者消费同一队列）</p>
+<h3 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h3><blockquote>
+<p>加上group配置，就已经实现了消息的持久化。</p>
+</blockquote>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SpringCloud学习笔记(6)</div>
+      <div>https://yztldxdz.top/2022/09/21/SpringCloud学习笔记(6)/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月21日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/20/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(5)/" title="SpringCloud学习笔记(5)">
+                        <span class="hidden-mobile">SpringCloud学习笔记(5)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>
