@@ -43,37 +43,30 @@
 <meta property="og:site_name" content="王振国的个人博客">
 <meta property="og:description" content="Seata处理分布式事务 分布式事务问题  只要用到分布式，必然会提及分布式的事务。 在分布式之前，一切组件全都在一台机器上。 在使用分布式之后，单体应用被拆分成微服务应用，原来的三个模块被拆分成三个独立的应用，分别使用三个独立的数据源。 业务操作需要调用三个服务来完成。此时每个服务内部的数据一致性由本地事务来保证，但是全局的数据一致性问题没法保证。 用户购买商品的业务逻辑整个业务逻辑由3个微服务">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636511629414-0e4a7788-1488-40b8-8b5f-93f330a481b7.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722630747-fbdc8cc0-dd4c-45bf-96cb-4da7906a623e.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722844267-369a9bea-7ac3-4d0a-a2f0-ef322fc362d4.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722828489-0bdc54a6-0acc-4a8f-8972-ff8d7ba0985a.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880513744-d81289ab-be90-4832-b76c-facc47ef00d9.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880852242-f2460919-e326-4d4e-89b6-78c348c2eedd.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880870145-b34edc59-33e6-415b-a2c5-b94c70955f73.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880884317-f5faa635-ee75-457e-8c66-294a360f6083.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885157700-4b671044-f674-448a-b790-687be655d1c5.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885386660-f73be4c7-8f96-4436-928d-1b8924c3e812.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636886967312-d6cb850f-eef7-43bb-be02-6c9e46b69755.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885516045-e1f6a2a8-5637-4893-b021-97562e32d8cc.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885537110-40bda427-d547-423d-9538-eff77ce3141d.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885554249-edf1239b-27f2-4718-b529-1668c3229230.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887315777-49f3f304-95a5-4e84-84e1-db98d2063d0a.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887516874-e984a427-fd14-49c6-a025-d8a2ec94f904.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887749627-98e85882-a208-4380-beb1-3f68531995d2.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887791521-b7101ffd-ac2f-4d8c-9be1-aea20ea51d7c.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887816708-5257dccc-a554-410a-8e0d-2f742a3e26cd.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636888242942-a1c827b4-5ec0-4515-bf74-e1e6f358cdbf.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890980594-f9db0624-1c09-4055-8c65-5c087d16b36f.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890679040-20e2d483-549c-459a-b481-693caab0d239.png?x-oss-process=image/resize,w_736,limit_0">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892157973-e4a5ccaf-71c5-481e-9417-6b64d389f36f.png?x-oss-process=image/resize,w_937,limit_0">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892634620-1e6c1596-baba-4aed-b840-8afdfd320e05.png?x-oss-process=image/resize,w_937,limit_0">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636895943341-66b19f9d-e125-4536-8882-5c4c1f26fd91.png?x-oss-process=image/resize,w_761,limit_0">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is2qk91xj30dy0eowgv.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is39oqkrj30n80dj41r.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is5g1r1yj30no02idgs.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is64dtpfj30mh0efaf2.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is75s4hwj30d502ymy4.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is7rf4b3j30bi02n74v.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is7yldqqj30as02yaao.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isbkrdivj30lf03dt9y.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isd9b92gj30k90atdl5.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isdorke5j30n206ddjn.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isenjlruj30dd04amz1.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6iseszxwlj30eb04140l.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isf2oqxmj30ei03nabp.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isffcd92j30md03i0ul.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isfwvoitj30qo0crdis.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isgboq4tj30kg0e9tc9.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6isgpqgdgj30q10fw46x.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6ishiziffj30q10hqqan.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6ishqcfwkj30l50h077w.jpg">
 <meta property="article:published_time" content="2022-09-25T01:46:36.000Z">
-<meta property="article:modified_time" content="2022-09-25T02:11:22.347Z">
+<meta property="article:modified_time" content="2022-09-25T05:32:51.633Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png">
+<meta name="twitter:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6is2qk91xj30dy0eowgv.jpg">
   
   
   
@@ -285,7 +278,7 @@
         
         
           <!-- compatible with older versions-->
-          192 分钟
+          191 分钟
         
       </span>
     
@@ -336,7 +329,7 @@
 <p>仓储服务:对给定的商品扣除仓储数量</p>
 <p>订单服务:根据采购需求创建订单.</p>
 <p>账户服务:从用户账户中扣除余额.</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is2qk91xj30dy0eowgv.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>一句话：一次业务操作需要跨多个数据源或需要跨多个系统进行远程调用，就会产生分布式事务问题。</p>
 <p> 一、Seata简介与安装 </p>
 <p>Seata是一款开源的分布式事务解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。  <a target="_blank" rel="noopener" href="http://seata.io/zh-cn/">官网</a></p>
@@ -354,7 +347,7 @@
 <p>3RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖；</p>
 <p>4TM 向 TC 发起针对 XID 的全局提交或回滚决议；</p>
 <p>5TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636511629414-0e4a7788-1488-40b8-8b5f-93f330a481b7.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is39oqkrj30n80dj41r.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>我们只需要使用一个<code>@GlobalTransational</code>注解在业务方法上</p>
 <h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><ol>
 <li>修改 conf&#x2F;file.conf 文件：</li>
@@ -455,10 +448,7 @@
 
 <p> 启动测试 </p>
 <p>先启动nacos-1.1.4和seata-0.9.0，再启动2001。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722630747-fbdc8cc0-dd4c-45bf-96cb-4da7906a623e.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>测试nacos-2.0.3和seata-0.9.0，再启动2001 也可以启动成功</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722844267-369a9bea-7ac3-4d0a-a2f0-ef322fc362d4.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722828489-0bdc54a6-0acc-4a8f-8972-ff8d7ba0985a.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is5g1r1yj30no02idgs.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>仿照上面 创建 alibaba-seata-storage2002 和alibaba-seata-account2003 两个模块，唯一大的区别就是这两个不需要导入 open-feign 远程调用其它模块。</p>
 <h3 id="Seata全局事务怎么使用"><a href="#Seata全局事务怎么使用" class="headerlink" title="Seata全局事务怎么使用"></a>Seata全局事务怎么使用</h3><p>Spring提供的本地事务：@Transactional</p>
 <p>Seata提供的全局事务：@GlobalTransactional</p>
@@ -466,53 +456,47 @@
 <p>我们只需要使用一个</p>
 <p>注解在业务方法上:</p>
 <p>@GlobalTransactional</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880513744-d81289ab-be90-4832-b76c-facc47ef00d9.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is64dtpfj30mh0efaf2.jpg" srcset="/img/loading.gif" lazyload></p>
 <h3 id="数据库初始情况"><a href="#数据库初始情况" class="headerlink" title="数据库初始情况"></a>数据库初始情况</h3><p>下订单-&gt;减库存-&gt;扣余额-&gt;改(订单)状态</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880852242-f2460919-e326-4d4e-89b6-78c348c2eedd.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880870145-b34edc59-33e6-415b-a2c5-b94c70955f73.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880884317-f5faa635-ee75-457e-8c66-294a360f6083.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is75s4hwj30d502ymy4.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is7rf4b3j30bi02n74v.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6is7yldqqj30as02yaao.jpg" srcset="/img/loading.gif" lazyload></p>
 <h3 id="测试正常下单"><a href="#测试正常下单" class="headerlink" title="测试正常下单"></a>测试正常下单</h3><p>启动nacos、seata、2001、2002、2003；</p>
 <p>测试：<a target="_blank" rel="noopener" href="http://localhost:2001/order/create?userId=1&amp;productId=1&amp;count=10&amp;money=100">http://localhost:2001/order/create?userId=1&amp;productId=1&amp;count=10&amp;money=100</a></p>
 <p> 报错  </p>
 <p>java.sql.SQLException:Failed to fetch schema of <code>t_order</code></p>
 <p>Connector&#x2F;J 5.0.0以后的版本有一个名为useInformationSchema的数据库连接参数，Connector&#x2F;J 在mysql8.0中默认配置连接属性useInformationSchema为true，使查询table信息时更为有效。用户依然可以配置useInformationSchema为false，但是在8.0.3及其之后的版本中，由于不能支持早期的特性，某些数据字典的查询可能会失败。</p>
-<p>useInformationSchema配置为false的时候，也可能会造成REMARKS信息（对应数据库中各字段的comment）的缺失。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885157700-4b671044-f674-448a-b790-687be655d1c5.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>在各微服务的application.yml 文件的spring.datasource.url 后面加上&amp;useInformationSchema&#x3D;false设置useInformationSchema为false，即可解决该问题。 参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/acc99f891e91">https://www.jianshu.com/p/acc99f891e91</a></p>
 <p> 再次测试 </p>
 <p>访问成功</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885386660-f73be4c7-8f96-4436-928d-1b8924c3e812.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636886967312-d6cb850f-eef7-43bb-be02-6c9e46b69755.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<h3 id="数据库情况"><a href="#数据库情况" class="headerlink" title="数据库情况"></a>数据库情况</h3><p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885516045-e1f6a2a8-5637-4893-b021-97562e32d8cc.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885537110-40bda427-d547-423d-9538-eff77ce3141d.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885554249-edf1239b-27f2-4718-b529-1668c3229230.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isbkrdivj30lf03dt9y.jpg" srcset="/img/loading.gif" lazyload></p>
 <p> 测试超时异常：不加@GlobalTransactional </p>
 <p> AccountServiceImpl添加超时： </p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887315777-49f3f304-95a5-4e84-84e1-db98d2063d0a.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isd9b92gj30k90atdl5.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>我们使用的是Openfeign，默认超时时长是1s，这里我们延迟30s。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887516874-e984a427-fd14-49c6-a025-d8a2ec94f904.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887749627-98e85882-a208-4380-beb1-3f68531995d2.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887791521-b7101ffd-ac2f-4d8c-9be1-aea20ea51d7c.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887816708-5257dccc-a554-410a-8e0d-2f742a3e26cd.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isdorke5j30n206ddjn.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isenjlruj30dd04amz1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6iseszxwlj30eb04140l.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isf2oqxmj30ei03nabp.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>当库存和账户金额扣减后，订单状态并没有设置为已经完成，没有从零改为1；而且由于feign的重试机制，账户余额还有可能被多次扣减。</p>
 <p> 测试超时异常：加@GlobalTransactional </p>
 <p>OrderServiceImpl添加@GlobalTransactional注解，注意改注解只能用在方法上！</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636888242942-a1c827b4-5ec0-4515-bf74-e1e6f358cdbf.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isffcd92j30md03i0ul.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>●name：给定全局事务实例的名称，随便取，唯一即可</p>
 <p>●rollbackFor：当发生什么样的异常时，进行回滚</p>
 <p>●noRollbackFor：发生什么样的异常不进行回滚。</p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>做好配置后，我们只需要使用一个 @GlobalTransactional(name &#x3D; “lsp-create-order”, rollbackFor &#x3D; Exception.class) 放在业务的入口，即可实现控制全局的事务。注意该注解只能放在方法上。</p>
 <h2 id="再看TC-x2F-TM-x2F-RM三大组件"><a href="#再看TC-x2F-TM-x2F-RM三大组件" class="headerlink" title="再看TC&#x2F;TM&#x2F;RM三大组件"></a>再看TC&#x2F;TM&#x2F;RM三大组件</h2><p>TC：seata服务器； （我们电脑上启动的seata ）<br>TM：事物的发起者，业务的入口。 哪个微服务使用了@GlobalTransactional哪个就是TM<br>RM：事务的参与者，一个数据库就是一个RM。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890980594-f9db0624-1c09-4055-8c65-5c087d16b36f.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isfwvoitj30qo0crdis.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>分布式事务的执行流程：<br>1TM 开启分布式事务（TM 向 TC 注册全局事务记录）；<br>2按业务场景，编排数据库、服务等事务内资源（RM 向 TC 汇报资源准备状态 ）；<br>3TM 结束分布式事务，事务一阶段结束（TM 通知 TC 提交&#x2F;回滚分布式事务）；<br>4TC 汇总事务信息，决定分布式事务是提交还是回滚；<br>5TC 通知所有 RM 提交&#x2F;回滚 资源，事务二阶段结束。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890679040-20e2d483-549c-459a-b481-693caab0d239.png?x-oss-process=image/resize,w_736,limit_0" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isgboq4tj30kg0e9tc9.jpg" srcset="/img/loading.gif" lazyload></p>
 <h2 id="AT模式（默认）如何做到对业务的无侵入"><a href="#AT模式（默认）如何做到对业务的无侵入" class="headerlink" title="AT模式（默认）如何做到对业务的无侵入"></a>AT模式（默认）如何做到对业务的无侵入</h2><p>Seata有四大模式：AT（默认）、TCC、SAGA、XA。（阿里云上的AT叫做GTS，收费）<br><a target="_blank" rel="noopener" href="http://seata.io/zh-cn/docs/dev/mode/at-mode.html">AT模式</a><br>AT模式两阶段提交协议的演变：<br>●一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。<br>●二阶段：<br>○提交异步化，非常快速地完成。<br>○回滚通过一阶段的回滚日志进行反向补偿（前面insert，后面回滚时就delete）。</p>
 <p>每个数据库除了自身存储数据的表以外，都会有一个事务回滚表：undo_log<br>Seata库中存在：branch_table\global_table\lock_table\distributed_lock(高版本才有)这样一些表</p>
 <h3 id="一阶段加载"><a href="#一阶段加载" class="headerlink" title="一阶段加载"></a><strong>一阶段加载</strong></h3><p>在一阶段，Seata 会拦截“业务 SQL”，<br>1  解析 SQL 语义，找到“业务 SQL”要更新的业务数据，在业务数据被更新前，将其保存成“before image”（前置镜像）<br>2  执行“业务 SQL”更新业务数据，在业务数据更新之后，<br>3  其保存成“after image”，最后生成行锁。<br>以上操作全部在一个数据库事务内完成，这样保证了一阶段操作的原子性。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892157973-e4a5ccaf-71c5-481e-9417-6b64d389f36f.png?x-oss-process=image/resize,w_937,limit_0" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6isgpqgdgj30q10fw46x.jpg" srcset="/img/loading.gif" lazyload></p>
 <h3 id="二阶段回滚"><a href="#二阶段回滚" class="headerlink" title="二阶段回滚"></a><strong>二阶段回滚</strong></h3><p>二阶段如果是回滚的话，Seata 就需要回滚一阶段已经执行的“业务 SQL”，还原业务数据。<br>回滚方式便是用“before image”还原业务数据；但在还原前要首先要校验脏写，对比“数据库当前业务数据”和 “after image”。如果两份数据完全一致就说明没有脏写，可以还原业务数据，如果不一致就说明有脏写，出现脏写就需要转人工处理。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892634620-1e6c1596-baba-4aed-b840-8afdfd320e05.png?x-oss-process=image/resize,w_937,limit_0" srcset="/img/loading.gif" lazyload></p>
-<h3 id="整体流程图"><a href="#整体流程图" class="headerlink" title="整体流程图"></a><strong>整体流程图</strong></h3><p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636895943341-66b19f9d-e125-4536-8882-5c4c1f26fd91.png?x-oss-process=image/resize,w_761,limit_0" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6ishiziffj30q10hqqan.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="整体流程图"><a href="#整体流程图" class="headerlink" title="整体流程图"></a><strong>整体流程图</strong></h3><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6ishqcfwkj30l50h077w.jpg" srcset="/img/loading.gif" lazyload></p>
 
               
             </div>
