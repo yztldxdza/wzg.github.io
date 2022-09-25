@@ -1,0 +1,1058 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Sentinel sentinel在 springcloud Alibaba 中的作用是实现熔断和限流。类似于Hystrix豪猪   下载地址dashboard： https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;Sentinel&#x2F;releases&#x2F;download&#x2F;1.7.1&#x2F;sentinel-dashboard-1.7.1.jar 下载jar包以后，使用【java -jar】命令启动即可。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud学习笔记(8)">
+<meta property="og:url" content="https://yztldxdz.top/2022/09/23/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(8)/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="Sentinel sentinel在 springcloud Alibaba 中的作用是实现熔断和限流。类似于Hystrix豪猪   下载地址dashboard： https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;Sentinel&#x2F;releases&#x2F;download&#x2F;1.7.1&#x2F;sentinel-dashboard-1.7.1.jar 下载jar包以后，使用【java -jar】命令启动即可。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/4afe83cd7157f9147f7aa969fdf17301.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/ed8c470859d2364e159219e3b364444f.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/57bc94814fa2307f6daeed7a46350dd9.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/4cf0c88905f8a3bc4c8fe4de1552e3d6.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/59c35e9cae5431ae7d9d0e52135380b3.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/2ce46af6ddef61d7127ad3e0aeadb206.png">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6hg5ln3oaj314o0fok72.jpg">
+<meta property="article:published_time" content="2022-09-23T12:15:06.000Z">
+<meta property="article:modified_time" content="2022-09-24T01:40:27.573Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/4afe83cd7157f9147f7aa969fdf17301.png">
+  
+  
+  
+  <title>SpringCloud学习笔记(8) - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SpringCloud学习笔记(8)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-23 20:15" pubdate>
+          2022年9月23日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          199 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SpringCloud学习笔记(8)</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="Sentinel"><a href="#Sentinel" class="headerlink" title="Sentinel"></a>Sentinel</h2><blockquote>
+<p>sentinel在 springcloud Alibaba 中的作用是实现<code>熔断</code>和<code>限流</code>。类似于Hystrix豪猪</p>
+</blockquote>
+<blockquote>
+<p>下载地址dashboard： <a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/releases/download/1.7.1/sentinel-dashboard-1.7.1.jar">https://github.com/alibaba/Sentinel/releases/download/1.7.1/sentinel-dashboard-1.7.1.jar</a></p>
+<p>下载jar包以后，使用【java -jar】命令启动即可。</p>
+<p>它使用 8080 端口，用户名和密码都为 ： sentinel</p>
+</blockquote>
+<p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<p>Sentinel 具有以下特征:</p>
+<ul>
+<li><strong>丰富的应用场景</strong>：Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷、集群流量控制、实时熔断下游不可用应用等。</li>
+<li><strong>完备的实时监控</strong>：Sentinel 同时提供实时的监控功能。您可以在控制台中看到接入应用的单台机器秒级数据，甚至 500 台以下规模的集群的汇总运行情况。</li>
+<li><strong>广泛的开源生态</strong>：Sentinel 提供开箱即用的与其它开源框架&#x2F;库的整合模块，例如与 Spring Cloud、Dubbo、gRPC 的整合。您只需要引入相应的依赖并进行简单的配置即可快速地接入 Sentinel。</li>
+<li><strong>完善的 SPI 扩展点</strong>：Sentinel 提供简单易用、完善的 SPI 扩展接口。您可以通过实现扩展接口来快速地定制逻辑。例如定制规则管理、适配动态数据源等。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/4afe83cd7157f9147f7aa969fdf17301.png" srcset="/img/loading.gif" lazyload alt="Sentinel-features-overview"></p>
+<p>Sentinel 分为两个部分:</p>
+<ul>
+<li>核心库（Java 客户端）不依赖任何框架&#x2F;库，能够运行于所有 Java 运行时环境，同时对 Dubbo &#x2F; Spring Cloud 等框架也有较好的支持。</li>
+<li>控制台（Dashboard）基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器。</li>
+</ul>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><blockquote>
+<p>先启动nacos</p>
+<p>新建模块 <code>alibaba-sentinel-service8401</code> ，使用nacos作为服务注册中心</p>
+<p>Sentinel可以对service进行监控、熔断、降级</p>
+<p>没访问时再sentinel里是看不到监控的应用的，因为是懒加载，需要访问一次</p>
+</blockquote>
+<p>pom依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span><br><span class="hljs-tag">         <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">         <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>cloud2022<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.wzg.springcloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">parent</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>alibaba-sentinel-service8401<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 后续做Sentinel的持久化会用到的依赖 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.csp<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- sentinel  --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- springcloud alibaba nacos 依赖,Nacos Server 服务注册中心 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- springboot整合Web组件 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- 日常通用jar包 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>runtime<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><span class="hljs-comment">&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.wzg.springcloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>api-commons<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;project.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.source</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.source</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.target</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.target</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>yml 配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8401</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">cloudalibaba-sentinel-service</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-comment"># 服务注册中心 # sentinel注册进nacos</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br>    <span class="hljs-attr">sentinel:</span><br>      <span class="hljs-attr">transport:</span><br>        <span class="hljs-comment"># 配置 Sentinel Dashboard 的地址</span><br>        <span class="hljs-attr">dashboard:</span> <span class="hljs-string">localhost:8080</span><br>        <span class="hljs-comment"># 默认8719 ，如果端口被占用，端口号会自动 +1，直到找到未被占用的端口，提供给 sentinel 的监控端口</span><br>        <span class="hljs-attr">port:</span> <span class="hljs-number">8719</span><br>        <br><span class="hljs-attr">management:</span><br>  <span class="hljs-attr">endpoints:</span><br>    <span class="hljs-attr">web:</span><br>      <span class="hljs-attr">exposure:</span><br>        <span class="hljs-attr">include:</span> <span class="hljs-string">&#x27;*&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud;<br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-meta">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MainApp8401</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(MainApp8401.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.controller;<br><br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.annotation.SentinelResource;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;<br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestParam;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FlowLimitController</span> &#123;<br>    <span class="hljs-meta">@GetMapping(&quot;/testA&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testA</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------testA&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/testB&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testB</span><span class="hljs-params">()</span> &#123;<br>        log.info(Thread.currentThread().getName()+<span class="hljs-string">&quot;\t&quot;</span>+<span class="hljs-string">&quot;...testB&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------testB&quot;</span>;<br>    &#125;<br><br><br>    <span class="hljs-meta">@GetMapping(&quot;/testD&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testD</span><span class="hljs-params">()</span> &#123;<br><span class="hljs-comment">//        try &#123; TimeUnit.SECONDS.sleep(1); &#125; catch (InterruptedException e) &#123; e.printStackTrace(); &#125;</span><br><span class="hljs-comment">//        log.info(&quot;testD 测试RT&quot;);</span><br><br>        log.info(<span class="hljs-string">&quot;testD 异常比例&quot;</span>);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">age</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>/<span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------testD&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/testE&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testE</span><span class="hljs-params">()</span> &#123;<br>        log.info(<span class="hljs-string">&quot;testE 测试异常数&quot;</span>);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">age</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>/<span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------testE 测试异常数&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/testHotKey&quot;)</span><br>    <span class="hljs-meta">@SentinelResource(value = &quot;testHotKey&quot;,blockHandler = &quot;deal_testHotKey&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testHotKey</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(value = &quot;p1&quot;,required = false)</span> String p1,</span><br><span class="hljs-params">                             <span class="hljs-meta">@RequestParam(value = &quot;p2&quot;,required = false)</span> String p2)</span> &#123;<br>        <span class="hljs-comment">//int age = 10/0;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------testHotKey&quot;</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">deal_testHotKey</span> <span class="hljs-params">(String p1, String p2, BlockException exception)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;------deal_testHotKey,o(╥﹏╥)o&quot;</span>;  <span class="hljs-comment">//sentinel系统默认的提示：Blocked by Sentinel (flow limiting)</span><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs typescript">package com.<span class="hljs-property">wzg</span>.<span class="hljs-property">springcloud</span>.<span class="hljs-property">controller</span>;<br><br><span class="hljs-keyword">import</span> com.<span class="hljs-property">alibaba</span>.<span class="hljs-property">csp</span>.<span class="hljs-property">sentinel</span>.<span class="hljs-property">annotation</span>.<span class="hljs-property">SentinelResource</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">alibaba</span>.<span class="hljs-property">csp</span>.<span class="hljs-property">sentinel</span>.<span class="hljs-property">slots</span>.<span class="hljs-property">block</span>.<span class="hljs-property">BlockException</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">wzg</span>.<span class="hljs-property">springcloud</span>.<span class="hljs-property">entities</span>.<span class="hljs-property">CommonResult</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">wzg</span>.<span class="hljs-property">springcloud</span>.<span class="hljs-property">entities</span>.<span class="hljs-property">Payment</span>;<br><span class="hljs-keyword">import</span> com.<span class="hljs-property">wzg</span>.<span class="hljs-property">springcloud</span>.<span class="hljs-property">handler</span>.<span class="hljs-property">CustomerBlockHandler</span>;<br><span class="hljs-keyword">import</span> org.<span class="hljs-property">springframework</span>.<span class="hljs-property">web</span>.<span class="hljs-property">bind</span>.<span class="hljs-property">annotation</span>.<span class="hljs-property">GetMapping</span>;<br><span class="hljs-keyword">import</span> org.<span class="hljs-property">springframework</span>.<span class="hljs-property">web</span>.<span class="hljs-property">bind</span>.<span class="hljs-property">annotation</span>.<span class="hljs-property">RestController</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RateLimitController</span> &#123;<br>    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">&quot;/byResource&quot;</span>)<br>    <span class="hljs-meta">@SentinelResource</span>(value = <span class="hljs-string">&quot;byResource&quot;</span>,blockHandler = <span class="hljs-string">&quot;handleException&quot;</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">CommonResult</span> <span class="hljs-title function_">byResource</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">200</span>,<span class="hljs-string">&quot;按资源名称限流测试OK&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(2020L,<span class="hljs-string">&quot;serial001&quot;</span>));<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">CommonResult</span> <span class="hljs-title function_">handleException</span>(<span class="hljs-params">BlockException exception</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">444</span>,exception.<span class="hljs-title function_">getClass</span>().<span class="hljs-title function_">getCanonicalName</span>()+<span class="hljs-string">&quot;\t 服务不可用&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">&quot;/rateLimit/byUrl&quot;</span>)<br>    <span class="hljs-meta">@SentinelResource</span>(value = <span class="hljs-string">&quot;byUrl&quot;</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">CommonResult</span> <span class="hljs-title function_">byUrl</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">200</span>,<span class="hljs-string">&quot;按url限流测试OK&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(2020L,<span class="hljs-string">&quot;serial002&quot;</span>));<br>    &#125;<br><br><br>    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">&quot;/rateLimit/customerBlockHandler&quot;</span>)<br>    <span class="hljs-meta">@SentinelResource</span>(value = <span class="hljs-string">&quot;customerBlockHandler&quot;</span>,<br>            blockHandlerClass = <span class="hljs-title class_">CustomerBlockHandler</span>.<span class="hljs-property">class</span>,<br>            blockHandler = <span class="hljs-string">&quot;handlerException2&quot;</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">CommonResult</span> <span class="hljs-title function_">customerBlockHandler</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">200</span>,<span class="hljs-string">&quot;按客戶自定义&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(2020L,<span class="hljs-string">&quot;serial003&quot;</span>));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>handler</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.handler;<br><br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.entities.CommonResult;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomerBlockHandler</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> CommonResult <span class="hljs-title function_">handlerException</span><span class="hljs-params">(BlockException exception)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">4444</span>,<span class="hljs-string">&quot;按客戶自定义,global handlerException----1&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> CommonResult <span class="hljs-title function_">handlerException2</span><span class="hljs-params">(BlockException exception)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">4444</span>,<span class="hljs-string">&quot;按客戶自定义,global handlerException----2&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="流控规则"><a href="#流控规则" class="headerlink" title="流控规则"></a>流控规则</h3><ul>
+<li>资源名：唯一名称，默认请求路径</li>
+<li>针对来源：sentinel可以针对调用者进行限流，填写微服务名，默认default（不区分来源）</li>
+<li>阈值类型&#x2F;单机值：<ul>
+<li>QPS（每秒钟的请求数量）：当调用该api就QPS达到阈值的时候，进行限流</li>
+<li>线程数．当调用该api的线程数达到阈值的时候，进行限流</li>
+</ul>
+</li>
+<li>是否集群：不需要集群</li>
+<li>流控模式：<ul>
+<li>直接：api达到限流条件时，直接限流。分为QPS和线程数</li>
+<li>关联：当关联的资到阈值时，就限流自己。别人惹事，自己买单</li>
+<li>链路：只记录指定链路上的流量（指定资源从入口资源进来的流量，如果达到阈值，就进行限流）【api级别的针对来源】</li>
+</ul>
+</li>
+<li>流控效果：<ul>
+<li>快速失败：直接抛异常</li>
+<li>warm up：根据codeFactor（冷加载因子，默认3）的值，从阈值codeFactor，经过预热时长，才达到设置的QPS阈值</li>
+</ul>
+</li>
+</ul>
+<p>重要属性：</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>resource</td>
+<td>资源名，资源名是限流规则的作用对象</td>
+<td></td>
+</tr>
+<tr>
+<td>count</td>
+<td>限流阈值</td>
+<td></td>
+</tr>
+<tr>
+<td>grade</td>
+<td>限流阈值类型，QPS 模式（1）或并发线程数模式（0）</td>
+<td>QPS 模式</td>
+</tr>
+<tr>
+<td>limitApp</td>
+<td>流控针对的调用来源</td>
+<td><code>default</code>，代表不区分调用来源</td>
+</tr>
+<tr>
+<td>strategy</td>
+<td>调用关系限流策略：直接、链路、关联</td>
+<td>根据资源本身（直接）</td>
+</tr>
+<tr>
+<td>controlBehavior</td>
+<td>流控效果（直接拒绝&#x2F;WarmUp&#x2F;匀速+排队等待），不支持按调用关系限流</td>
+<td>直接拒绝</td>
+</tr>
+<tr>
+<td>clusterMode</td>
+<td>是否集群限流</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>我们先只针对&#x2F;testA请求进行限制</p>
+<p><strong>流控模式–直接</strong>：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/ed8c470859d2364e159219e3b364444f.png" srcset="/img/loading.gif" lazyload alt="1597819546992"></p>
+<blockquote>
+<p>限流表现：当超过阀值，就会被降级。</p>
+<p>1s内多次刷新网页，localhost:8401&#x2F;testA</p>
+<p>返回Blocked by Sentienl(flow limiting)</p>
+</blockquote>
+<p><strong>流控模式–关联</strong>：</p>
+<ul>
+<li>当与A关联的资源B达到阀值后，就限流A自己</li>
+<li>B惹事，A挂了。支付达到阈值，限流下单接口。B阈值达到1，A就挂</li>
+<li>用post访问B让B忙，访问A发现挂了</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/57bc94814fa2307f6daeed7a46350dd9.png" srcset="/img/loading.gif" lazyload alt="1597820015308"></p>
+<p><strong>流控效果–预热Warm up</strong>：</p>
+<p>访问数量慢慢升高</p>
+<p>阈值初一coldFactor（默认3），经过预热时长后才会达到阈值。</p>
+<p><strong>流控效果–排队等待</strong>：</p>
+<p>匀速排队（Ru1eConstant.CONTROL_BEHAVIOR_RATE_LIMITER）方式会严格控制请求通过的间隔时间，即让请求以均匀的速度通过对应的是漏桶算法。详细文档可以参考流量控制-匀速器模式，具体的例子可以参见PaceFlowDemo</p>
+<h3 id="熔断降级"><a href="#熔断降级" class="headerlink" title="熔断降级"></a>熔断降级</h3><p>新增降级规则：降低策略：RT</p>
+<p>RT（平均响应时间，秒级）</p>
+<p>平均响应时间 超出阈值 且 在时间窗口内通过的请求&gt;&#x3D;5，两个条件同时满足后触发降级</p>
+<p>窗口期过后关闭断路器</p>
+<p>RT最大4900（更大的需要通过-Dcsp.Sentinel.statistic.max.rt&#x3D;XXXX才能生效）</p>
+<p>异常比例（秒级）<br>QPS&gt;&#x3D;5且异常比例（秒级统计）超过阈值时，触发降级，时间窗口结束后，关闭降级</p>
+<p>sentinel熔断降级会在调用链路中某个资源出现不稳定状态时（例如调用超时或异常比例升高），对这个资源的调用进行限制，让请求快速失败，避免影响到其它的资源而导致级联错误。</p>
+<p>当资源被降级后，在接下来的降级时间窗囗之内，对该资源的调用都自动熔断（默认行为是抛出DegradeException)。</p>
+<p><strong>降级策略–RT</strong></p>
+<p>降级策略–异常比例：</p>
+<p>异常比例（DEGRADE-GRADE-EXCEPTION-RATIO）：当资源的每秒请求量&gt;&#x3D;5，并且每秒异常总数占通过的比值超过阈值（DegradeRule中的count）之后，资源进入降级状态，即在接下的时间窗口（DegradeRu1e中的timeWindow，，以s为单位）之内，对这个方法的调用都会自动地返回。异常b阈值范围是[0.0,l.0]，代表0％一100％。</p>
+<p>降级测录–异常数：</p>
+<p>异常数（DEGRADE-GRADE-EXCEPTION-COUNT）：当资源近1分钟的异常数目超过阈值之后会进行熔断。注意由于统计时间窗口是分钟级别的，若timeWindow小于60s,则结束熔断状态后仍可能再进入熔断状态。</p>
+<p>时间窗口一定要大于等于60秒。</p>
+<p>时间窗口结束后关闭降级</p>
+<p>localhost:8401&#x2F;testE , 第一次访问绝对报错，因为除数不能为零，<br>我们看到error窗口，但是达到5次报错后，进入熔断后降级。</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-0uG4jp95-1615737211171)(images\1597821618735.png)]</p>
+<h3 id="热点Key限流"><a href="#热点Key限流" class="headerlink" title="热点Key限流"></a>热点Key限流</h3><p>何为热点？热点即经常访问的数据。很多时候我们希望统计某个热点数据中访问频次最高的TopK数据，并对其访问进行限制。比如：</p>
+<ul>
+<li>商品ID为参数，统计一段时间内最常购买的商品ID并进行限制</li>
+<li>用户ID为参数，针对一段时间内频繁访问的用户ID进行限制</li>
+</ul>
+<p>参数限流会统计传入参数中的参数，并根据配置流阈值与模式，对包含热点参数的资源调用进行限流。热点参数限流可以看做是一种特殊的流量控制，仅对包含热点参数的资源调用生效。</p>
+<p>controller层写一个demo:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/testhotkey&quot;)</span><br>   <span class="hljs-meta">@SentinelResource(value = &quot;testhotkey&quot;, blockHandler = &quot;deal_testhotkey&quot;)</span><br>   <span class="hljs-comment">//这个value是随意的值，并不和请求路径必须一致</span><br>   <span class="hljs-comment">//在填写热点限流的 资源名 这一项时，可以填 /testhotkey 或者是 @SentinelResource的value的值</span><br>   <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testHotKey</span><span class="hljs-params">(</span><br><span class="hljs-params">           <span class="hljs-meta">@RequestParam(value=&quot;p1&quot;, required = false)</span> String p1,</span><br><span class="hljs-params">           <span class="hljs-meta">@RequestParam(value = &quot;p2&quot;, required = false)</span> String p2</span><br><span class="hljs-params">   )</span>&#123;<br>       <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;testHotKey__success&quot;</span>;<br>   &#125;<br><br><span class="hljs-comment">//类似Hystrix 的兜底方法</span><br>   <span class="hljs-keyword">public</span> String <span class="hljs-title function_">deal_testhotkey</span><span class="hljs-params">(String p1, String p2, BlockException e)</span>&#123;<br>       <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;testhotkey__fail&quot;</span>; <br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/img_convert/4cf0c88905f8a3bc4c8fe4de1552e3d6.png" srcset="/img/loading.gif" lazyload alt="1597822501876"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/59c35e9cae5431ae7d9d0e52135380b3.png" srcset="/img/loading.gif" lazyload alt="1597822772165"></p>
+<p>说明：</p>
+<p>@SentinelResource ：处理的是Sentine1控制台配置的违规情况，有blockHandler方法配置的兜底处理</p>
+<p>@RuntimeException：int age&#x3D;10&#x2F;0，这个是java运行时报出的运行时异异常RunTimeException，@Sentine1Resource不管</p>
+<h3 id="系统规则"><a href="#系统规则" class="headerlink" title="系统规则"></a>系统规则</h3><blockquote>
+<p>一般配置在网关或者入口应用中，但是这个东西有点危险，不但值不合适，就相当于系统瘫痪。</p>
+</blockquote>
+<p>系统自适应限流</p>
+<p>Sentinel 系统自适应限流从整体维度对应用入口流量进行控制，结合应用的 Load、CPU 使用率、总体平均 RT、入口 QPS 和并发线程数等几个维度的监控指标，通过自适应的流控策略，让系统的入口流量和系统的负载达到一个平衡，让系统尽可能跑在最大吞吐量的同时保证系统整体的稳定性。</p>
+<p>系统规则包含下面几个重要的属性：</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>highestSystemLoad</td>
+<td><code>load1</code> 触发值，用于触发自适应控制阶段</td>
+<td>-1 (不生效)</td>
+</tr>
+<tr>
+<td>avgRt</td>
+<td>所有入口流量的平均响应时间</td>
+<td>-1 (不生效)</td>
+</tr>
+<tr>
+<td>maxThread</td>
+<td>入口流量的最大并发数</td>
+<td>-1 (不生效)</td>
+</tr>
+<tr>
+<td>qps</td>
+<td>所有入口资源的 QPS</td>
+<td>-1 (不生效)</td>
+</tr>
+<tr>
+<td>highestCpuUsage</td>
+<td>当前系统的 CPU 使用率（0.0-1.0）</td>
+<td>-1 (不生效)</td>
+</tr>
+</tbody></table>
+<h3 id="SentinelResource配置"><a href="#SentinelResource配置" class="headerlink" title="@SentinelResource配置"></a>@SentinelResource配置</h3><blockquote>
+<p>@SentinelResource 注解，主要是指定资源名（也可以用请求路径作为资源名），和指定降级处理方法的。</p>
+</blockquote>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.annotation.SentinelResource;<br><span class="hljs-keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;<br><span class="hljs-keyword">import</span> com.dkf.springcloud.entities.CommonResult;<br><span class="hljs-keyword">import</span> com.dkf.springcloud.entities.Payment;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RateLimitController</span> &#123;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/byResource&quot;)</span>						<span class="hljs-comment">//处理降级的方法名</span><br>    <span class="hljs-meta">@SentinelResource(value = &quot;byResource&quot;, blockHandler = &quot;handleException&quot;)</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">byResource</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;按照资源名限流测试0K&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(<span class="hljs-number">2020L</span>,<span class="hljs-string">&quot;serial001&quot;</span>));<br>    &#125;<br><br>    <span class="hljs-comment">//降级方法</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">handleException</span><span class="hljs-params">(BlockException e)</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">444</span>, e.getClass().getCanonicalName() + <span class="hljs-string">&quot;\t 服务不可用&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/img_convert/2ce46af6ddef61d7127ad3e0aeadb206.png" srcset="/img/loading.gif" lazyload alt="1597901945492"></p>
+<p>很明显，上面虽然自定义了兜底方法，但是耦合度太高，下面要解决这个问题。</p>
+<h4 id="自定义全局BlockHandler处理类"><a href="#自定义全局BlockHandler处理类" class="headerlink" title="自定义全局BlockHandler处理类"></a>自定义全局BlockHandler处理类</h4><p>写一个 CustomerBlockHandler 自定义限流处理类：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-khnkVraZ-1615737211177)(images\1597903188558.png)]</p>
+<h3 id="整合-openfeign-服务降级"><a href="#整合-openfeign-服务降级" class="headerlink" title="整合 openfeign 服务降级"></a>整合 openfeign 服务降级</h3><h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><blockquote>
+<p>之前有 open-feign 和 hystrix 的整合，现在来实现sentinel 整合 ribbon + open-feign + fallback 进行服务熔断。</p>
+<p>新建三个模块，两个提供者 9004、9005，和一个消费者 84</p>
+<p>目的：</p>
+<p>fallback管运行异常<br>blockHandIer管配置违规</p>
+<p>上面使用sentinel有一个很明显的问题，就是sentinel，对程序内部异常（各种异常，包括超时）这种捕捉，显得很乏力，它主要是针对流量控制，系统吞吐量，或者是异常比例这种，会发生降级或熔断，但是当程序内部发生异常，直接返回给用户错误页面，根本不会触发异常比例这种降级。所以才需要整合open-feign 来解决程序内部异常时，配置相应的兜底方法</p>
+</blockquote>
+<p>———————————————————–两个提供者模块一致，如下：</p>
+<p>pom依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>       <span class="hljs-comment">&lt;!-- springcloud alibaba nacos 依赖 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <br>       <span class="hljs-comment">&lt;!-- springboot整合Web组件 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>       <span class="hljs-comment">&lt;!-- 日常通用jar包 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>runtime<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><span class="hljs-comment">&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.dkf.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>cloud-api-commons<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;project.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>yml配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">9005</span>  <span class="hljs-comment"># / 9004</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nacos-payment-provider</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br><span class="hljs-attr">management:</span><br>  <span class="hljs-attr">endpoints:</span><br>    <span class="hljs-attr">web:</span><br>      <span class="hljs-attr">exposure:</span><br>        <span class="hljs-attr">include:</span> <span class="hljs-string">&#x27;*&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动类只是启动，没有其它注解。</p>
+<p>controller :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.dkf.sprIngcloud.controller;<br><br><span class="hljs-keyword">import</span> com.dkf.springcloud.entities.CommonResult;<br><span class="hljs-keyword">import</span> com.dkf.springcloud.entities.Payment;<br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PaymentController</span> &#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String serverPort;<br><br>    <span class="hljs-comment">//模拟sql查询</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> HashMap&lt;Long, Payment&gt; hashMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>    <span class="hljs-keyword">static</span> &#123;<br>        hashMap.put(<span class="hljs-number">1L</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(<span class="hljs-number">1L</span>, <span class="hljs-string">&quot;xcxcxcxcxcxcxcxcxcxcxcxcxc11111111&quot;</span>));<br>        hashMap.put(<span class="hljs-number">2L</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(<span class="hljs-number">2L</span>, <span class="hljs-string">&quot;xcxcxcxcggggggggg2222222222222222&quot;</span>));<br>        hashMap.put(<span class="hljs-number">3L</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Payment</span>(<span class="hljs-number">3L</span>, <span class="hljs-string">&quot;xcxcxcxccxxcxcfafdgdgdsgdsgds33333&quot;</span>));<br>    &#125;<br><br><br>    <span class="hljs-meta">@GetMapping(&quot;/payment/get/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">paymentSql</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>&#123;<br>        <span class="hljs-type">Payment</span> <span class="hljs-variable">payment</span> <span class="hljs-operator">=</span> hashMap.get(id);<br>        <span class="hljs-type">CommonResult</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;from mysql, server port : &quot;</span> + serverPort + <span class="hljs-string">&quot; ,查询成功&quot;</span>, payment);<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>—消费者：</p>
+<p>pom依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>       <span class="hljs-comment">&lt;!-- 后续做Sentinel的持久化会用到的依赖 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.csp<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-comment">&lt;!-- sentinel  --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-comment">&lt;!-- springcloud alibaba nacos 依赖 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>       <span class="hljs-comment">&lt;!-- springboot整合Web组件 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>       <span class="hljs-comment">&lt;!-- 日常通用jar包 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>runtime<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><span class="hljs-comment">&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.dkf.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>cloud-api-commons<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;project.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>yml配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">84</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br>    <span class="hljs-attr">sentinel:</span><br>      <span class="hljs-attr">transport:</span><br>        <span class="hljs-attr">dashboard:</span> <span class="hljs-string">localhost:8080</span><br>        <span class="hljs-attr">port:</span> <span class="hljs-number">8719</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nacos-order-consumer</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动类不用说了。</p>
+<p>config类里面注入 Resttemplate：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ApplicationContextConfig</span> &#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@LoadBalanced</span><br>    <span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">getRestTemplate</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller 层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderController</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String PAYMENT_URL=<span class="hljs-string">&quot;http://nacos-payment-provider&quot;</span>;<br><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> RestTemplate restTemplate;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/consutomer/payment/get/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">getPayment</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>&#123;<br>        <span class="hljs-keyword">if</span>(id &gt;= <span class="hljs-number">4</span>)&#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;非法参数异常...&quot;</span>);<br>        &#125;<span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> restTemplate.getForObject(PAYMENT_URL + <span class="hljs-string">&quot;/payment/get/&quot;</span> + id, CommonResult.class);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面只实现了 以nacos 作为服务注册中心，消费者使用ribbon 实现负载均衡调用提供者的效果。</p>
+<h4 id="正式"><a href="#正式" class="headerlink" title="正式"></a>正式</h4><p>只配置 fallback:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/consutomer/payment/get/&#123;id&#125;&quot;)</span><br>   <span class="hljs-meta">@SentinelResource(value = &quot;fallback&quot;, fallback = &quot;handleFallback&quot;)</span> <span class="hljs-comment">//fallback只处理业务异常</span><br>   <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">getPayment</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>&#123;<br>       <span class="hljs-keyword">if</span>(id &gt;= <span class="hljs-number">4</span>)&#123;<br>           <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;非法参数异常...&quot;</span>);<br>       &#125;<span class="hljs-keyword">else</span> &#123;<br>           <span class="hljs-keyword">return</span> restTemplate.getForObject(PAYMENT_URL + <span class="hljs-string">&quot;/payment/get/&quot;</span> + id, CommonResult.class);<br>       &#125;<br>   &#125;<br><br>   <span class="hljs-comment">//兜底方法</span><br>   <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">handleFallback</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id, Throwable e)</span>&#123;<br>       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">414</span>, <span class="hljs-string">&quot;---非法参数异常--&quot;</span>, e);<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>业务异常会被 fallback 处理，返回我们自定义的提示信息，而如果给它加上流控，并触发阈值，只能返回sentinel默认的提示信息。</p>
+</blockquote>
+<p>只配置blockHandler:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java">	<span class="hljs-comment">//@SentinelResource(value = &quot;fallback&quot;, fallback = &quot;handleFallback&quot;) //fallback只处理业务异常</span><br>    <span class="hljs-meta">@GetMapping(&quot;/consutomer/payment/get/&#123;id&#125;&quot;)</span><br>    <span class="hljs-meta">@SentinelResource(value = &quot;fallback&quot;, blockHandler = &quot;handleblockHandler&quot;)</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">getPayment</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>&#123;<br>        <span class="hljs-keyword">if</span>(id &gt;= <span class="hljs-number">4</span>)&#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;非法参数异常...&quot;</span>);<br>        &#125;<span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> restTemplate.getForObject(PAYMENT_URL + <span class="hljs-string">&quot;/payment/get/&quot;</span> + id, CommonResult.class);<br>        &#125;<br>    &#125;<br><br><span class="hljs-comment">//    //====fallback</span><br><span class="hljs-comment">//    public CommonResult handleFallback(@PathVariable(&quot;id&quot;)Long id, Throwable e)&#123;</span><br><span class="hljs-comment">//        return new CommonResult(414, &quot;---非法参数异常--&quot;, e);</span><br><span class="hljs-comment">//    &#125;</span><br><br>    <span class="hljs-comment">//====blockHandler                                       blockHandler的方法必须有这个参数</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">handleblockHandler</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id, BlockException e)</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">414</span>, <span class="hljs-string">&quot;---非法参数异常--&quot;</span>, e);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这时候的效果就是，运行异常直接报错错误页面。在sentinel上添加一个降级规则，设置2s内触发异常2次，触发阈值以后，返回的是我们自定义的 blockhanlder 方法返回的内容。</p>
+</blockquote>
+<p>两者都配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//@SentinelResource(value = &quot;fallback&quot;, fallback = &quot;handleFallback&quot;) //fallback只处理业务异常</span><br>  <span class="hljs-meta">@GetMapping(&quot;/consutomer/payment/get/&#123;id&#125;&quot;)</span><br>  <span class="hljs-meta">@SentinelResource(value = &quot;fallback&quot;, blockHandler = &quot;handleblockHandler&quot;, fallback = &quot;handleFallback&quot;)</span><br>  <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">getPayment</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>&#123;<br>      <span class="hljs-keyword">if</span>(id &gt;= <span class="hljs-number">4</span>)&#123;<br>          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;非法参数异常...&quot;</span>);<br>      &#125;<span class="hljs-keyword">else</span> &#123;<br>          <span class="hljs-keyword">return</span> restTemplate.getForObject(PAYMENT_URL + <span class="hljs-string">&quot;/payment/get/&quot;</span> + id, CommonResult.class);<br>      &#125;<br>  &#125;<br>  <span class="hljs-comment">//====fallback</span><br>  <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">handleFallback</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id, Throwable e)</span>&#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">414</span>, <span class="hljs-string">&quot;---非法参数异常--form fallback的提示&quot;</span>, e);<br>  &#125;<br><br>  <span class="hljs-comment">//====blockHandler                                       blockHandler的方法必须有这个参数</span><br>  <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">handleblockHandler</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id, BlockException e)</span>&#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">414</span>, <span class="hljs-string">&quot;---非法参数异常--&quot;</span>, e);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>明显两者都是有效的，可以同时配置。</p>
+</blockquote>
+<h4 id="全局降级"><a href="#全局降级" class="headerlink" title="全局降级"></a>全局降级</h4><blockquote>
+<p>上面是单个进行 fallback 和 blockhandler 的测试，下面是整合 openfeign 实现把降级方法解耦。和Hystrix 几乎一摸一样！</p>
+</blockquote>
+<p>还是使用上面 84 这个消费者做测试：</p>
+<ol>
+<li>先添加open-feign依赖：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>yml 追加如下配置：</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 激活Sentinel对Feign的支持</span><br><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">sentinel:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>主启动类添加注解 ： @EnableFeignClients 激活open-feign</li>
+<li>service :</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FeignClient(value = &quot;nacos-payment-provider&quot;, fallback = PaymentServiceImpl.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">PaymentService</span> &#123;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/payment/get/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">paymentSql</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span>Long id)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>service 实现类：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PaymentServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">PaymentService</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> CommonResult <span class="hljs-title function_">paymentSql</span><span class="hljs-params">(Long id)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CommonResult</span>(<span class="hljs-number">414</span>, <span class="hljs-string">&quot;open-feign 整合 sentinel 实现的全局服务降级策略&quot;</span>,<span class="hljs-literal">null</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>controller 层代码没什么特殊的，和普通调用service 一样即可。</li>
+<li>测试，关闭提供者的项目，会触发 service 实现类的方法。</li>
+<li>总结: 这种全局熔断，是针对 “访问提供者” 这个过程的，只有访问提供者过程中发生异常才会触发降级，也就是这些降级，是给service接口上这些提供者的方法加的，以保证在远程调用时能顺利进行。而且这明显是 fallback ，而不是 blockHandler，注意区分。</li>
+</ol>
+<blockquote>
+<p>fallback 和 blockHandler 肤浅的区别：</p>
+<p>F ： 不需要指定规则，程序内部异常均可触发（超时异常需要配置超时时间）</p>
+<p>B : 配上也没用，必须去 Sentinel 上指定规则才会被触发。</p>
+</blockquote>
+<h3 id="异常忽略"><a href="#异常忽略" class="headerlink" title="异常忽略"></a>异常忽略</h3><blockquote>
+<p>这是 @SentinelResource 注解的一个值：</p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6hg5ln3oaj314o0fok72.jpg" srcset="/img/loading.gif" lazyload></p>
+</blockquote>
+<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><blockquote>
+<p>目前的sentinel 当重启以后，数据都会丢失，和 nacos 类似原理。需要持久化。它可以被持久化到 nacos 的数据库中。</p>
+</blockquote>
+<ol>
+<li>pom依赖：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.csp<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>yml配置：</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">sentinel:</span><br>      <span class="hljs-attr">datasource:</span><br>        <span class="hljs-attr">ds1:</span>  <br>          <span class="hljs-attr">nacos:</span><br>            <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br>            <span class="hljs-attr">dataId:</span> <span class="hljs-string">$&#123;spring.application.name&#125;</span><br>            <span class="hljs-attr">group:</span> <span class="hljs-string">DEFAULT_GROUP</span><br>            <span class="hljs-attr">data-type:</span> <span class="hljs-string">json</span><br>            <span class="hljs-attr">rule-type:</span> <span class="hljs-string">flow</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>去nacos上创建一个dataid ,名字和yml配置的一致，json格式，内容如下：</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">[</span><br>    <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;resource&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/testA&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;limitApp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;default&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;grade&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;count&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;strategy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;controlBehavior&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;clusterMode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
+
+<p>resource：资源名称<br>limitApp：来源应用<br>grade：阈值类型，0表示线程数，1表示QPS，<br>count：单机阈值，<br>strategy：流控模式，0表示直接，1表示关联，2表示链路</p>
+<p>controlBehavior:流控效果，0表示快速失败，1表示Warm Up,2表示排队等待；</p>
+<p>cIusterM0de是否集群。</p>
+<ol>
+<li>启动应用，发现存在 关于 &#x2F;testA 请求路径的流控规则。</li>
+<li>总结: 就是在 sentinel 启动的时候，去 nacos 上读取相关规则配置信息，实际上它规则的持久化，就是第三步，粘贴到nacos上保存下来，就算以后在 sentinel 上面修改了，重启应用以后也是无效的。</li>
+</ol>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SpringCloud学习笔记(8)</div>
+      <div>https://yztldxdz.top/2022/09/23/SpringCloud学习笔记(8)/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月23日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/25/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(9)/" title="SpringCloud学习笔记(9)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SpringCloud学习笔记(9)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/23/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(7)/" title="SpringCloud学习笔记(7)">
+                        <span class="hidden-mobile">SpringCloud学习笔记(7)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

@@ -1,0 +1,930 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Seata处理分布式事务 分布式事务问题  只要用到分布式，必然会提及分布式的事务。 在分布式之前，一切组件全都在一台机器上。 在使用分布式之后，单体应用被拆分成微服务应用，原来的三个模块被拆分成三个独立的应用，分别使用三个独立的数据源。 业务操作需要调用三个服务来完成。此时每个服务内部的数据一致性由本地事务来保证，但是全局的数据一致性问题没法保证。 用户购买商品的业务逻辑整个业务逻辑由3个微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud学习笔记(9)">
+<meta property="og:url" content="https://yztldxdz.top/2022/09/25/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(9)/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="Seata处理分布式事务 分布式事务问题  只要用到分布式，必然会提及分布式的事务。 在分布式之前，一切组件全都在一台机器上。 在使用分布式之后，单体应用被拆分成微服务应用，原来的三个模块被拆分成三个独立的应用，分别使用三个独立的数据源。 业务操作需要调用三个服务来完成。此时每个服务内部的数据一致性由本地事务来保证，但是全局的数据一致性问题没法保证。 用户购买商品的业务逻辑整个业务逻辑由3个微服务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636511629414-0e4a7788-1488-40b8-8b5f-93f330a481b7.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722630747-fbdc8cc0-dd4c-45bf-96cb-4da7906a623e.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722844267-369a9bea-7ac3-4d0a-a2f0-ef322fc362d4.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722828489-0bdc54a6-0acc-4a8f-8972-ff8d7ba0985a.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880513744-d81289ab-be90-4832-b76c-facc47ef00d9.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880852242-f2460919-e326-4d4e-89b6-78c348c2eedd.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880870145-b34edc59-33e6-415b-a2c5-b94c70955f73.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880884317-f5faa635-ee75-457e-8c66-294a360f6083.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885157700-4b671044-f674-448a-b790-687be655d1c5.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885386660-f73be4c7-8f96-4436-928d-1b8924c3e812.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636886967312-d6cb850f-eef7-43bb-be02-6c9e46b69755.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885516045-e1f6a2a8-5637-4893-b021-97562e32d8cc.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885537110-40bda427-d547-423d-9538-eff77ce3141d.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885554249-edf1239b-27f2-4718-b529-1668c3229230.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887315777-49f3f304-95a5-4e84-84e1-db98d2063d0a.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887516874-e984a427-fd14-49c6-a025-d8a2ec94f904.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887749627-98e85882-a208-4380-beb1-3f68531995d2.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887791521-b7101ffd-ac2f-4d8c-9be1-aea20ea51d7c.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887816708-5257dccc-a554-410a-8e0d-2f742a3e26cd.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636888242942-a1c827b4-5ec0-4515-bf74-e1e6f358cdbf.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890980594-f9db0624-1c09-4055-8c65-5c087d16b36f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890679040-20e2d483-549c-459a-b481-693caab0d239.png?x-oss-process=image/resize,w_736,limit_0">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892157973-e4a5ccaf-71c5-481e-9417-6b64d389f36f.png?x-oss-process=image/resize,w_937,limit_0">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892634620-1e6c1596-baba-4aed-b840-8afdfd320e05.png?x-oss-process=image/resize,w_937,limit_0">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636895943341-66b19f9d-e125-4536-8882-5c4c1f26fd91.png?x-oss-process=image/resize,w_761,limit_0">
+<meta property="article:published_time" content="2022-09-25T01:46:36.000Z">
+<meta property="article:modified_time" content="2022-09-25T02:11:22.347Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png">
+  
+  
+  
+  <title>SpringCloud学习笔记(9) - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SpringCloud学习笔记(9)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-25 09:46" pubdate>
+          2022年9月25日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          23k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          192 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SpringCloud学习笔记(9)</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="Seata处理分布式事务"><a href="#Seata处理分布式事务" class="headerlink" title="Seata处理分布式事务"></a><strong>Seata处理分布式事务</strong></h2><p> 分布式事务问题 </p>
+<p>只要用到分布式，必然会提及分布式的事务。</p>
+<p>在分布式之前，一切组件全都在一台机器上。</p>
+<p>在使用分布式之后，单体应用被拆分成微服务应用，原来的三个模块被拆分成三个独立的应用，分别使用三个独立的数据源。</p>
+<p>业务操作需要调用三个服务来完成。此时每个服务内部的数据一致性由本地事务来保证，但是全局的数据一致性问题没法保证。</p>
+<p>用户购买商品的业务逻辑整个业务逻辑由3个微服务提供支持:</p>
+<p>仓储服务:对给定的商品扣除仓储数量</p>
+<p>订单服务:根据采购需求创建订单.</p>
+<p>账户服务:从用户账户中扣除余额.</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636468367331-5feffbdc-ec8f-4620-9c50-d8c5485c2871.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>一句话：一次业务操作需要跨多个数据源或需要跨多个系统进行远程调用，就会产生分布式事务问题。</p>
+<p> 一、Seata简介与安装 </p>
+<p>Seata是一款开源的分布式事务解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。  <a target="_blank" rel="noopener" href="http://seata.io/zh-cn/">官网</a></p>
+<p> 1.1 相关术语 </p>
+<p>一个典型的分布式事务过程，可以用分布式处理过程的一ID+三组件模型来描述。</p>
+<p>一ID（全局唯一的事务ID）：Transaction ID XID，在这个事务ID下的所有事务会被统一控制</p>
+<p>三组件：</p>
+<p>●Transaction Coordinator (TC)：事务协调器，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚；（Server端，为单独服务器部署）</p>
+<p>●Transaction Manager (TM)：事务管理器，控制全局事务的边界，负责开启一个全局事务，并最终发起全局提交或全局回滚的决议；</p>
+<p>●Resource Manager (RM)：资源管理器，控制分支事务，负责分支注册、状态汇报，并接收事务协调器的指令，驱动分支（本地）事务的提交和回滚</p>
+<p>●Seata分TC、TM和RM三个角色，TC（Server端）为单独服务端部署，TM和RM（Client端）由业务系统集成（微服务）。</p>
+<p> 1.2 典型的分布式控制事务流程 </p>
+<p>1TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID；</p>
+<p>2XID 在微服务调用链路的上下文中传播；（也就是在多个TM，RM中传播）</p>
+<p>3RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖；</p>
+<p>4TM 向 TC 发起针对 XID 的全局提交或回滚决议；</p>
+<p>5TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636511629414-0e4a7788-1488-40b8-8b5f-93f330a481b7.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>我们只需要使用一个<code>@GlobalTransational</code>注解在业务方法上</p>
+<h3 id="初始化操作"><a href="#初始化操作" class="headerlink" title="初始化操作"></a>初始化操作</h3><ol>
+<li>修改 conf&#x2F;file.conf 文件：</li>
+</ol>
+<blockquote>
+<p>主要修改自定义事务组名称 + 事务日志存储模式为db + 数据库连接信息</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs ini">service &#123;<br>  <span class="hljs-comment">#transaction service group mapping</span><br>  <span class="hljs-attr">vgroup_mapping.dkf_tx_group</span> = <span class="hljs-string">&quot;fsp_tx_group&quot;</span>   <span class="hljs-comment"># 修改这里</span><br>  <span class="hljs-comment">#only support when registry.type=file, please don&#x27;t set multiple addresses</span><br>  <span class="hljs-attr">default.grouplist</span> = <span class="hljs-string">&quot;127.0.0.1:8091&quot;</span><br>  <span class="hljs-comment">#disable seata</span><br>  <span class="hljs-attr">disableGlobalTransaction</span> = <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-comment">## transaction log store, only used in seata-server</span><br>store &#123;<br>  <span class="hljs-comment">## store mode: file、db</span><br>  <span class="hljs-attr">mode</span> = <span class="hljs-string">&quot;db&quot;</span>   <span class="hljs-comment"># 修改这里</span><br><br>  <span class="hljs-comment">## file store property</span><br>  file &#123;<br>    <span class="hljs-comment">## store location dir</span><br>    <span class="hljs-attr">dir</span> = <span class="hljs-string">&quot;sessionStore&quot;</span><br>  &#125;<br><br>  <span class="hljs-comment">## database store property</span><br>  db &#123;<br>    <span class="hljs-comment">## the implement of javax.sql.DataSource, such as DruidDataSource(druid)/BasicDataSource(dbcp) etc.</span><br>    <span class="hljs-attr">datasource</span> = <span class="hljs-string">&quot;dbcp&quot;</span><br>    <span class="hljs-comment">## mysql/oracle/h2/oceanbase etc.</span><br>    <span class="hljs-attr">db-type</span> = <span class="hljs-string">&quot;mysql&quot;</span><br>    <span class="hljs-attr">driver-class-name</span> = <span class="hljs-string">&quot;com.mysql.jdbc.Driver&quot;</span><br>    <span class="hljs-attr">url</span> = <span class="hljs-string">&quot;jdbc:mysql://127.0.0.1:3306/seata&quot;</span><br>    <span class="hljs-attr">user</span> = <span class="hljs-string">&quot;root&quot;</span>   <span class="hljs-comment"># 修改对</span><br>    <span class="hljs-attr">password</span> = <span class="hljs-string">&quot;123&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<ol>
+<li><p>创建名和 file.conf 指定一致的数据库。</p>
+</li>
+<li><p>在新建的数据库里面创建数据表，db_store.sql文件在 conf 目录下（1.0.0有坑，没有sql文件，下载0.9.0的，使用它的sql文件即可）</p>
+</li>
+<li><p>修改 conf&#x2F;registry.conf 文件内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java">registry &#123;<br>  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa # 默认<span class="hljs-type">file</span><br>  <span class="hljs-variable">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;nacos&quot;</span><br><br>  nacos &#123;  # 修改nacos的端口<span class="hljs-number">8848</span><br>    serverAddr = <span class="hljs-string">&quot;localhost:8848&quot;</span><br>    namespace = <span class="hljs-string">&quot;&quot;</span><br>    cluster = <span class="hljs-string">&quot;default&quot;</span><br>  &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>先启动 nacos Server 服务，再启动seata Server 。</p>
+</li>
+<li><p>启动 Seata Server 报错，在bin目录创建 &#x2F;logs&#x2F;seata_gc.log 文件。再次双击 bat文件启动。</p>
+</li>
+</ol>
+<h4 id="数据库准备"><a href="#数据库准备" class="headerlink" title="数据库准备"></a>数据库准备</h4><p>这里我们会创建三个服务，一个订单服务，一个库存服务，一个账户服务。</p>
+<p>当用户下单时，会在订单服务中创建一个订单，然后通过远程调用库存服务来扣减下单商品的库存，<br>再通过远程调用账户服务来扣减用户账户里面的余额，<br>最后在订单服务中修改订单状态为已完成。</p>
+<p>该操作跨越三个数据库，有两次远程调用，很明显会有分布式事务问题。</p>
+<p>创建三个数据库： <code>seata_account、seata_order、seata_storage</code></p>
+<p>三个数据库都创建一个回滚日志表，seata&#x2F;conf&#x2F; 有相应的sql文件（1.0.0没有，依然使用0.9.0中的）。</p>
+<p>最终效果：</p>
+<ul>
+<li>seata<ul>
+<li>branch_table</li>
+<li>global_table</li>
+<li>lock_table</li>
+</ul>
+</li>
+<li>seata_account<ul>
+<li>t_account</li>
+<li>undo_log</li>
+</ul>
+</li>
+<li>seata_order<ul>
+<li>t_order</li>
+<li>undo_log</li>
+</ul>
+</li>
+<li>seata_storage<ul>
+<li>t_storage</li>
+<li>undo_log</li>
+</ul>
+</li>
+</ul>
+<h4 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h4><blockquote>
+<p>实现 下订单-&gt; 减库存 -&gt; 扣余额 -&gt; 改（订单）状态</p>
+<p>需要注意的是，下面做了 seata 与 mybatis 的整合，所以注意一下，和以往的mybatis的使用不太一样。</p>
+</blockquote>
+<p>新建模块 alibaba-seata-order2001 ：</p>
+<p>pom依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span><br><span class="hljs-tag">         <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">         <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>cloud2022<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.wzg.springcloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">parent</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>seata-order-service2001<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- seata --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-seata<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>seata-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.seata<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.seata<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>seata-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.9.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- springcloud alibaba nacos 依赖,Nacos Server 服务注册中心 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- open feign 服务调用 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- springboot整合Web组件 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- 持久层支持 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>druid-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1.10<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--mysql-connector-java--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>mysql<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mysql-connector-java<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--jdbc--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- mybatis --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- 日常通用jar包 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>runtime<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><span class="hljs-comment">&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.wzg.springcloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>api-commons<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;project.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.source</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.source</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.target</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.target</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>yml配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">2001</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">seata-order-service</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">alibaba:</span><br>      <span class="hljs-attr">seata:</span><br>        <span class="hljs-comment"># 自定义事务组，需要和当时在 seata/conf/file.conf 中的一致</span><br>        <span class="hljs-attr">tx-service-group:</span> <span class="hljs-string">fsp_tx_group</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br>  <span class="hljs-attr">datasource:</span><br>    <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">com.mysql.jdbc.Driver</span><br>    <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:mysql://localhost:3306/seata_order?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;useSSL=false&amp;useInformationSchema=false</span><br>    <span class="hljs-attr">username:</span> <span class="hljs-string">root</span><br>    <span class="hljs-attr">password:</span> <span class="hljs-number">123</span><br><br><br><span class="hljs-comment"># 注意，这是自定义的，原来的是mapper_locations</span><br><span class="hljs-attr">mybatis:</span><br>  <span class="hljs-attr">mapperLocations:</span> <span class="hljs-string">classpath:mapper/*.xml</span><br><br><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">hystrix:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br><br><span class="hljs-attr">logging:</span><br>  <span class="hljs-attr">level:</span><br>    <span class="hljs-attr">io:</span><br>      <span class="hljs-attr">seata:</span> <span class="hljs-string">info</span><br></code></pre></td></tr></table></figure>
+
+<p>file.conf</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><code class="hljs java">transport &#123;<br>  # tcp udt unix-domain-<span class="hljs-type">socket</span><br>  <span class="hljs-variable">type</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;TCP&quot;</span><br>  #NIO <span class="hljs-type">NATIVE</span><br>  <span class="hljs-variable">server</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;NIO&quot;</span><br>  #enable <span class="hljs-type">heartbeat</span><br>  <span class="hljs-variable">heartbeat</span> <span class="hljs-operator">=</span> <span class="hljs-literal">true</span><br>  #thread factory <span class="hljs-keyword">for</span> netty<br>  thread-factory &#123;<br>    boss-thread-prefix = <span class="hljs-string">&quot;NettyBoss&quot;</span><br>    worker-thread-prefix = <span class="hljs-string">&quot;NettyServerNIOWorker&quot;</span><br>    server-executor-thread-prefix = <span class="hljs-string">&quot;NettyServerBizHandler&quot;</span><br>    share-boss-worker = <span class="hljs-literal">false</span><br>    client-selector-thread-prefix = <span class="hljs-string">&quot;NettyClientSelector&quot;</span><br>    client-selector-thread-size = <span class="hljs-number">1</span><br>    client-worker-thread-prefix = <span class="hljs-string">&quot;NettyClientWorkerThread&quot;</span><br>    # netty boss thread size,will not be used <span class="hljs-keyword">for</span> UDT<br>    boss-thread-size = <span class="hljs-number">1</span><br>    #auto <span class="hljs-keyword">default</span> pin or <span class="hljs-number">8</span><br>    worker-thread-size = <span class="hljs-number">8</span><br>  &#125;<br>  shutdown &#123;<br>    # when destroy server, wait <span class="hljs-type">seconds</span><br>    <span class="hljs-variable">wait</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span><br>  &#125;<br>  serialization = <span class="hljs-string">&quot;seata&quot;</span><br>  compressor = <span class="hljs-string">&quot;none&quot;</span><br>&#125;<br><br>service &#123;<br><br>  vgroup_mapping.fsp_tx_group = <span class="hljs-string">&quot;default&quot;</span><br><br>  <span class="hljs-keyword">default</span>.grouplist = <span class="hljs-string">&quot;127.0.0.1:8091&quot;</span><br>  enableDegrade = <span class="hljs-type">false</span><br>  <span class="hljs-variable">disable</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span><br>  max.commit.retry.timeout = <span class="hljs-string">&quot;-1&quot;</span><br>  max.rollback.retry.timeout = <span class="hljs-string">&quot;-1&quot;</span><br>  disableGlobalTransaction = <span class="hljs-literal">false</span><br>&#125;<br><br><br>client &#123;<br>  async.commit.buffer.limit = <span class="hljs-number">10000</span><br>  lock &#123;<br>    retry.internal = <span class="hljs-number">10</span><br>    retry.times = <span class="hljs-number">30</span><br>  &#125;<br>  report.retry.count = <span class="hljs-number">5</span><br>  tm.commit.retry.count = <span class="hljs-number">1</span><br>  tm.rollback.retry.count = <span class="hljs-number">1</span><br>&#125;<br><br>## transaction log store<br>store &#123;<br>  ## store mode: file、<span class="hljs-type">db</span><br>  <span class="hljs-variable">mode</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;db&quot;</span><br><br>  ## file store<br>  file &#123;<br>    dir = <span class="hljs-string">&quot;sessionStore&quot;</span><br><br>    # branch session size , <span class="hljs-keyword">if</span> exceeded first <span class="hljs-keyword">try</span> compress lockkey, still exceeded <span class="hljs-keyword">throws</span> exceptions<br>    max-branch-session-size = <span class="hljs-number">16384</span><br>    # globe session size , <span class="hljs-keyword">if</span> exceeded <span class="hljs-keyword">throws</span> exceptions<br>    max-global-session-size = <span class="hljs-number">512</span><br>    # file buffer size , <span class="hljs-keyword">if</span> exceeded allocate <span class="hljs-keyword">new</span> <span class="hljs-title class_">buffer</span><br>    file-write-buffer-cache-size = <span class="hljs-number">16384</span><br>    # when recover batch read size<br>    session.reload.read_size = <span class="hljs-number">100</span><br>    # async, sync<br>    flush-disk-mode = async<br>  &#125;<br><br>  ## database store<br>  db &#123;<br>    ## the implement of javax.sql.DataSource, such as <span class="hljs-title function_">DruidDataSource</span><span class="hljs-params">(druid)</span>/BasicDataSource(dbcp) etc.<br>    datasource = <span class="hljs-string">&quot;dbcp&quot;</span><br>    ## mysql/oracle/h2/oceanbase etc.<br>    db-type = <span class="hljs-string">&quot;mysql&quot;</span><br>    driver-class-name = <span class="hljs-string">&quot;com.mysql.jdbc.Driver&quot;</span><br>    url = <span class="hljs-string">&quot;jdbc:mysql://127.0.0.1:3306/seata&quot;</span><br>    user = <span class="hljs-string">&quot;root&quot;</span><br>    password = <span class="hljs-string">&quot;123&quot;</span><br>    min-conn = <span class="hljs-number">1</span><br>    max-conn = <span class="hljs-number">3</span><br>    global.table = <span class="hljs-string">&quot;global_table&quot;</span><br>    branch.table = <span class="hljs-string">&quot;branch_table&quot;</span><br>    lock-table = <span class="hljs-string">&quot;lock_table&quot;</span><br>    query-limit = <span class="hljs-number">100</span><br>  &#125;<br>&#125;<br>lock &#123;<br>  ## the lock store mode: local、<span class="hljs-type">remote</span><br>  <span class="hljs-variable">mode</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;remote&quot;</span><br><br>  local &#123;<br>    ## store locks in user<span class="hljs-string">&#x27;s database</span><br><span class="hljs-string">  &#125;</span><br><span class="hljs-string"></span><br><span class="hljs-string">  remote &#123;</span><br><span class="hljs-string">    ## store locks in the seata&#x27;</span>s server<br>  &#125;<br>&#125;<br>recovery &#123;<br>  #schedule committing retry period in milliseconds<br>  committing-retry-period = <span class="hljs-number">1000</span><br>  #schedule asyn committing retry period in milliseconds<br>  asyn-committing-retry-period = <span class="hljs-number">1000</span><br>  #schedule rollbacking retry period in milliseconds<br>  rollbacking-retry-period = <span class="hljs-number">1000</span><br>  #schedule timeout retry period in milliseconds<br>  timeout-retry-period = <span class="hljs-number">1000</span><br>&#125;<br><br>transaction &#123;<br>  undo.data.validation = <span class="hljs-literal">true</span><br>  undo.log.serialization = <span class="hljs-string">&quot;jackson&quot;</span><br>  undo.log.save.days = <span class="hljs-number">7</span><br>  #schedule delete expired undo_log in milliseconds<br>  undo.log.delete.period = <span class="hljs-number">86400000</span><br>  undo.log.table = <span class="hljs-string">&quot;undo_log&quot;</span><br>&#125;<br><br>## metrics settings<br>metrics &#123;<br>  enabled = <span class="hljs-literal">false</span><br>  registry-type = <span class="hljs-string">&quot;compact&quot;</span><br>  # multi exporters use comma divided<br>  exporter-list = <span class="hljs-string">&quot;prometheus&quot;</span><br>  exporter-prometheus-port = <span class="hljs-number">9898</span><br>&#125;<br><br>support &#123;<br>  ## spring<br>  spring &#123;<br>    # auto proxy the DataSource bean<br>    datasource.autoproxy = <span class="hljs-literal">false</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>将 seata&#x2F;conf&#x2F; 下的registry.cong 文件拷贝到 resource 目录下。</p>
+<p>创建 domain 实体类 ： Order 和 CommonResult 两个实体类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.daomain;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> lombok.AllArgsConstructor;<br><span class="hljs-keyword">import</span> lombok.Data;<br><span class="hljs-keyword">import</span> lombok.NoArgsConstructor;<br><br><span class="hljs-keyword">import</span> java.math.BigDecimal;<br><br><br><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@AllArgsConstructor</span><br><span class="hljs-meta">@NoArgsConstructor</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Order</span> &#123;<br>    <span class="hljs-keyword">private</span> Long id;<br><br>    <span class="hljs-keyword">private</span> Long userId;<br><br>    <span class="hljs-keyword">private</span> Long productId;<br><br>    <span class="hljs-keyword">private</span> Integer count;<br><br>    <span class="hljs-keyword">private</span> BigDecimal money;<br><br>    <span class="hljs-keyword">private</span> Integer status; <span class="hljs-comment">//订单状态：0：创建中；1：已完结</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.daomain;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> lombok.AllArgsConstructor;<br><span class="hljs-keyword">import</span> lombok.Data;<br><span class="hljs-keyword">import</span> lombok.NoArgsConstructor;<br><br><br><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@AllArgsConstructor</span><br><span class="hljs-meta">@NoArgsConstructor</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CommonResult</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">private</span> Integer code;<br>    <span class="hljs-keyword">private</span> String message;<br>    <span class="hljs-keyword">private</span> T data;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">CommonResult</span><span class="hljs-params">(Integer code, String message)</span> &#123;<br>        <span class="hljs-built_in">this</span>(code, message, <span class="hljs-literal">null</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>dao :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.dao;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.Order;<br><span class="hljs-keyword">import</span> org.apache.ibatis.annotations.Mapper;<br><span class="hljs-keyword">import</span> org.apache.ibatis.annotations.Param;<br><br><span class="hljs-meta">@Mapper</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">OrderDao</span> &#123;<br>    <span class="hljs-comment">//新建订单</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">create</span><span class="hljs-params">(Order order)</span>;<br><br>    <span class="hljs-comment">//修改订单状态，从零改为1</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">update</span><span class="hljs-params">(<span class="hljs-meta">@Param(&quot;userId&quot;)</span> Long userId, <span class="hljs-meta">@Param(&quot;status&quot;)</span> Integer status)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在resource目录下创建mapper文件夹并创建OrderMapper.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span> &gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;com.wzg.springcloud.dao.OrderDao&quot;</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 以备后面会用到 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">resultMap</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;BaseResultMap&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;com.wzg.springcloud.daomain.Order&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;BIGINT&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;user_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;userId&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;BIGINT&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">result</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;product_id&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;productId&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;BIGINT&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">result</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;count&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;count&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;INTEGER&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">result</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;money&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;money&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;DECIMAL&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">result</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">result</span> <span class="hljs-attr">column</span>=<span class="hljs-string">&quot;status&quot;</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;status&quot;</span> <span class="hljs-attr">jdbcType</span>=<span class="hljs-string">&quot;INTEGER&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">result</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">resultMap</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;create&quot;</span> &gt;</span><br>        insert into t_order values (null, #&#123;userId&#125;, #&#123;productId&#125;, #&#123;count&#125;, #&#123;money&#125;, 0);<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;update&quot;</span>&gt;</span><br>        update t_order<br>        set status = 1<br>        where user_id = #&#123;userId&#125;<br>          and status = #&#123;status&#125;;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>service ：</p>
+<p>三个接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.service;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.Order;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">OrderService</span>&#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">create</span><span class="hljs-params">(Order order)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.service;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.CommonResult;<br><span class="hljs-keyword">import</span> org.springframework.cloud.openfeign.FeignClient;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestParam;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(value = &quot;seata-storage-service&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StorageService</span>&#123;<br>    <span class="hljs-meta">@PostMapping(value = &quot;/storage/decrease&quot;)</span><br>    CommonResult <span class="hljs-title function_">decrease</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;productId&quot;)</span> Long productId, <span class="hljs-meta">@RequestParam(&quot;count&quot;)</span> Integer count)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.service;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.CommonResult;<br><span class="hljs-keyword">import</span> org.springframework.cloud.openfeign.FeignClient;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestParam;<br><br><span class="hljs-keyword">import</span> java.math.BigDecimal;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FeignClient(value = &quot;seata-account-service&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">AccountService</span>&#123;<br>    <span class="hljs-meta">@PostMapping(value = &quot;/account/decrease&quot;)</span><br>    CommonResult <span class="hljs-title function_">decrease</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;userId&quot;)</span> Long userId, <span class="hljs-meta">@RequestParam(&quot;money&quot;)</span> BigDecimal money)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个实现类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.service.iml;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.dao.OrderDao;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.Order;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.AccountService;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.OrderService;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.StorageService;<br><span class="hljs-keyword">import</span> io.seata.spring.annotation.GlobalTransactional;<br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> OrderDao orderDao;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> StorageService storageService;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> AccountService accountService;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建订单-&gt;调用库存服务扣减库存-&gt;调用账户服务扣减账户余额-&gt;修改订单状态</span><br><span class="hljs-comment">     */</span><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-meta">@GlobalTransactional(name = &quot;fsp-create-order&quot;, rollbackFor = Exception.class)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">create</span><span class="hljs-params">(Order order)</span> &#123;<br>        log.info(<span class="hljs-string">&quot;-----&gt;开始新建订单&quot;</span>);<br>        <span class="hljs-comment">//新建订单</span><br>        orderDao.create(order);<br><br>        <span class="hljs-comment">//扣减库存</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用库存，做扣减Count&quot;</span>);<br>        storageService.decrease(order.getProductId(), order.getCount());<br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用库存，做扣减end&quot;</span>);<br><br>        <span class="hljs-comment">//扣减账户</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用账户，做扣减Money&quot;</span>);<br>        accountService.decrease(order.getUserId(), order.getMoney());<br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用账户，做扣减end&quot;</span>);<br><br><br>        <span class="hljs-comment">//修改订单状态，从零到1代表已经完成</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;修改订单状态开始&quot;</span>);<br>        orderDao.update(order.getUserId(), <span class="hljs-number">0</span>);<br>        log.info(<span class="hljs-string">&quot;-----&gt;修改订单状态结束&quot;</span>);<br><br>        log.info(<span class="hljs-string">&quot;-----&gt;下订单结束了&quot;</span>);<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.service.iml;<br><br><span class="hljs-keyword">import</span> com.wzg.springcloud.dao.OrderDao;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.daomain.Order;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.AccountService;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.OrderService;<br><span class="hljs-keyword">import</span> com.wzg.springcloud.service.StorageService;<br><span class="hljs-keyword">import</span> io.seata.spring.annotation.GlobalTransactional;<br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> OrderDao orderDao;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> StorageService storageService;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> AccountService accountService;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建订单-&gt;调用库存服务扣减库存-&gt;调用账户服务扣减账户余额-&gt;修改订单状态</span><br><span class="hljs-comment">     */</span><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-meta">@GlobalTransactional(name = &quot;fsp-create-order&quot;, rollbackFor = Exception.class)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">create</span><span class="hljs-params">(Order order)</span> &#123;<br>        log.info(<span class="hljs-string">&quot;-----&gt;开始新建订单&quot;</span>);<br>        <span class="hljs-comment">//新建订单</span><br>        orderDao.create(order);<br><br>        <span class="hljs-comment">//扣减库存</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用库存，做扣减Count&quot;</span>);<br>        storageService.decrease(order.getProductId(), order.getCount());<br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用库存，做扣减end&quot;</span>);<br><br>        <span class="hljs-comment">//扣减账户</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用账户，做扣减Money&quot;</span>);<br>        accountService.decrease(order.getUserId(), order.getMoney());<br>        log.info(<span class="hljs-string">&quot;-----&gt;订单微服务开始调用账户，做扣减end&quot;</span>);<br><br><br>        <span class="hljs-comment">//修改订单状态，从零到1代表已经完成</span><br>        log.info(<span class="hljs-string">&quot;-----&gt;修改订单状态开始&quot;</span>);<br>        orderDao.update(order.getUserId(), <span class="hljs-number">0</span>);<br>        log.info(<span class="hljs-string">&quot;-----&gt;修改订单状态结束&quot;</span>);<br><br>        log.info(<span class="hljs-string">&quot;-----&gt;下订单结束了&quot;</span>);<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>config</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.config;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">import</span> com.alibaba.druid.pool.DruidDataSource;<br><span class="hljs-keyword">import</span> io.seata.rm.datasource.DataSourceProxy;<br><span class="hljs-keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;<br><span class="hljs-keyword">import</span> org.mybatis.spring.SqlSessionFactoryBean;<br><span class="hljs-keyword">import</span> org.mybatis.spring.transaction.SpringManagedTransactionFactory;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;<br><span class="hljs-keyword">import</span> javax.sql.DataSource;<br><br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DataSourceProxyConfig</span> &#123;<br><br><br>    <span class="hljs-meta">@Value(&quot;$&#123;mybatis.mapperLocations&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String mapperLocations;<br><br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span><br>    <span class="hljs-keyword">public</span> DataSource <span class="hljs-title function_">druidDataSource</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DruidDataSource</span>();<br>    &#125;<br><br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> DataSourceProxy <span class="hljs-title function_">dataSourceProxy</span><span class="hljs-params">(DataSource dataSource)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DataSourceProxy</span>(dataSource);<br>    &#125;<br><br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> SqlSessionFactory <span class="hljs-title function_">sqlSessionFactoryBean</span><span class="hljs-params">(DataSourceProxy dataSourceProxy)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">SqlSessionFactoryBean</span> <span class="hljs-variable">sqlSessionFactoryBean</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SqlSessionFactoryBean</span>();<br>        sqlSessionFactoryBean.setDataSource(dataSourceProxy);<br>        sqlSessionFactoryBean.setMapperLocations(<span class="hljs-keyword">new</span> <span class="hljs-title class_">PathMatchingResourcePatternResolver</span>().getResources(mapperLocations));<br>        sqlSessionFactoryBean.setTransactionFactory(<span class="hljs-keyword">new</span> <span class="hljs-title class_">SpringManagedTransactionFactory</span>());<br>        <span class="hljs-keyword">return</span> sqlSessionFactoryBean.getObject();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.config;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">import</span> org.mybatis.spring.annotation.MapperScan;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@MapperScan(&#123;&quot;com.wzg.springcloud.dao&quot;&#125;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyBatisConfig</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>主启动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><span class="hljs-keyword">import</span> org.springframework.cloud.openfeign.EnableFeignClients;<br><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-meta">@EnableFeignClients</span><br><span class="hljs-meta">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)</span><span class="hljs-comment">//取消数据源自动创建的配置</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SeataOrderMainApp2001</span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span>&#123;<br>        SpringApplication.run(SeataOrderMainApp2001.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 启动测试 </p>
+<p>先启动nacos-1.1.4和seata-0.9.0，再启动2001。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722630747-fbdc8cc0-dd4c-45bf-96cb-4da7906a623e.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>测试nacos-2.0.3和seata-0.9.0，再启动2001 也可以启动成功</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722844267-369a9bea-7ac3-4d0a-a2f0-ef322fc362d4.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636722828489-0bdc54a6-0acc-4a8f-8972-ff8d7ba0985a.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>仿照上面 创建 alibaba-seata-storage2002 和alibaba-seata-account2003 两个模块，唯一大的区别就是这两个不需要导入 open-feign 远程调用其它模块。</p>
+<h3 id="Seata全局事务怎么使用"><a href="#Seata全局事务怎么使用" class="headerlink" title="Seata全局事务怎么使用"></a>Seata全局事务怎么使用</h3><p>Spring提供的本地事务：@Transactional</p>
+<p>Seata提供的全局事务：@GlobalTransactional</p>
+<p>SEATA的分布式交易解决方案</p>
+<p>我们只需要使用一个</p>
+<p>注解在业务方法上:</p>
+<p>@GlobalTransactional</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880513744-d81289ab-be90-4832-b76c-facc47ef00d9.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="数据库初始情况"><a href="#数据库初始情况" class="headerlink" title="数据库初始情况"></a>数据库初始情况</h3><p>下订单-&gt;减库存-&gt;扣余额-&gt;改(订单)状态</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880852242-f2460919-e326-4d4e-89b6-78c348c2eedd.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880870145-b34edc59-33e6-415b-a2c5-b94c70955f73.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636880884317-f5faa635-ee75-457e-8c66-294a360f6083.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="测试正常下单"><a href="#测试正常下单" class="headerlink" title="测试正常下单"></a>测试正常下单</h3><p>启动nacos、seata、2001、2002、2003；</p>
+<p>测试：<a target="_blank" rel="noopener" href="http://localhost:2001/order/create?userId=1&amp;productId=1&amp;count=10&amp;money=100">http://localhost:2001/order/create?userId=1&amp;productId=1&amp;count=10&amp;money=100</a></p>
+<p> 报错  </p>
+<p>java.sql.SQLException:Failed to fetch schema of <code>t_order</code></p>
+<p>Connector&#x2F;J 5.0.0以后的版本有一个名为useInformationSchema的数据库连接参数，Connector&#x2F;J 在mysql8.0中默认配置连接属性useInformationSchema为true，使查询table信息时更为有效。用户依然可以配置useInformationSchema为false，但是在8.0.3及其之后的版本中，由于不能支持早期的特性，某些数据字典的查询可能会失败。</p>
+<p>useInformationSchema配置为false的时候，也可能会造成REMARKS信息（对应数据库中各字段的comment）的缺失。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885157700-4b671044-f674-448a-b790-687be655d1c5.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>在各微服务的application.yml 文件的spring.datasource.url 后面加上&amp;useInformationSchema&#x3D;false设置useInformationSchema为false，即可解决该问题。 参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/acc99f891e91">https://www.jianshu.com/p/acc99f891e91</a></p>
+<p> 再次测试 </p>
+<p>访问成功</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885386660-f73be4c7-8f96-4436-928d-1b8924c3e812.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636886967312-d6cb850f-eef7-43bb-be02-6c9e46b69755.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h3 id="数据库情况"><a href="#数据库情况" class="headerlink" title="数据库情况"></a>数据库情况</h3><p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885516045-e1f6a2a8-5637-4893-b021-97562e32d8cc.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885537110-40bda427-d547-423d-9538-eff77ce3141d.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636885554249-edf1239b-27f2-4718-b529-1668c3229230.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p> 测试超时异常：不加@GlobalTransactional </p>
+<p> AccountServiceImpl添加超时： </p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887315777-49f3f304-95a5-4e84-84e1-db98d2063d0a.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>我们使用的是Openfeign，默认超时时长是1s，这里我们延迟30s。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887516874-e984a427-fd14-49c6-a025-d8a2ec94f904.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887749627-98e85882-a208-4380-beb1-3f68531995d2.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887791521-b7101ffd-ac2f-4d8c-9be1-aea20ea51d7c.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636887816708-5257dccc-a554-410a-8e0d-2f742a3e26cd.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>当库存和账户金额扣减后，订单状态并没有设置为已经完成，没有从零改为1；而且由于feign的重试机制，账户余额还有可能被多次扣减。</p>
+<p> 测试超时异常：加@GlobalTransactional </p>
+<p>OrderServiceImpl添加@GlobalTransactional注解，注意改注解只能用在方法上！</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636888242942-a1c827b4-5ec0-4515-bf74-e1e6f358cdbf.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>●name：给定全局事务实例的名称，随便取，唯一即可</p>
+<p>●rollbackFor：当发生什么样的异常时，进行回滚</p>
+<p>●noRollbackFor：发生什么样的异常不进行回滚。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>做好配置后，我们只需要使用一个 @GlobalTransactional(name &#x3D; “lsp-create-order”, rollbackFor &#x3D; Exception.class) 放在业务的入口，即可实现控制全局的事务。注意该注解只能放在方法上。</p>
+<h2 id="再看TC-x2F-TM-x2F-RM三大组件"><a href="#再看TC-x2F-TM-x2F-RM三大组件" class="headerlink" title="再看TC&#x2F;TM&#x2F;RM三大组件"></a>再看TC&#x2F;TM&#x2F;RM三大组件</h2><p>TC：seata服务器； （我们电脑上启动的seata ）<br>TM：事物的发起者，业务的入口。 哪个微服务使用了@GlobalTransactional哪个就是TM<br>RM：事务的参与者，一个数据库就是一个RM。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890980594-f9db0624-1c09-4055-8c65-5c087d16b36f.png" srcset="/img/loading.gif" lazyload></p>
+<p>分布式事务的执行流程：<br>1TM 开启分布式事务（TM 向 TC 注册全局事务记录）；<br>2按业务场景，编排数据库、服务等事务内资源（RM 向 TC 汇报资源准备状态 ）；<br>3TM 结束分布式事务，事务一阶段结束（TM 通知 TC 提交&#x2F;回滚分布式事务）；<br>4TC 汇总事务信息，决定分布式事务是提交还是回滚；<br>5TC 通知所有 RM 提交&#x2F;回滚 资源，事务二阶段结束。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636890679040-20e2d483-549c-459a-b481-693caab0d239.png?x-oss-process=image/resize,w_736,limit_0" srcset="/img/loading.gif" lazyload></p>
+<h2 id="AT模式（默认）如何做到对业务的无侵入"><a href="#AT模式（默认）如何做到对业务的无侵入" class="headerlink" title="AT模式（默认）如何做到对业务的无侵入"></a>AT模式（默认）如何做到对业务的无侵入</h2><p>Seata有四大模式：AT（默认）、TCC、SAGA、XA。（阿里云上的AT叫做GTS，收费）<br><a target="_blank" rel="noopener" href="http://seata.io/zh-cn/docs/dev/mode/at-mode.html">AT模式</a><br>AT模式两阶段提交协议的演变：<br>●一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。<br>●二阶段：<br>○提交异步化，非常快速地完成。<br>○回滚通过一阶段的回滚日志进行反向补偿（前面insert，后面回滚时就delete）。</p>
+<p>每个数据库除了自身存储数据的表以外，都会有一个事务回滚表：undo_log<br>Seata库中存在：branch_table\global_table\lock_table\distributed_lock(高版本才有)这样一些表</p>
+<h3 id="一阶段加载"><a href="#一阶段加载" class="headerlink" title="一阶段加载"></a><strong>一阶段加载</strong></h3><p>在一阶段，Seata 会拦截“业务 SQL”，<br>1  解析 SQL 语义，找到“业务 SQL”要更新的业务数据，在业务数据被更新前，将其保存成“before image”（前置镜像）<br>2  执行“业务 SQL”更新业务数据，在业务数据更新之后，<br>3  其保存成“after image”，最后生成行锁。<br>以上操作全部在一个数据库事务内完成，这样保证了一阶段操作的原子性。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892157973-e4a5ccaf-71c5-481e-9417-6b64d389f36f.png?x-oss-process=image/resize,w_937,limit_0" srcset="/img/loading.gif" lazyload></p>
+<h3 id="二阶段回滚"><a href="#二阶段回滚" class="headerlink" title="二阶段回滚"></a><strong>二阶段回滚</strong></h3><p>二阶段如果是回滚的话，Seata 就需要回滚一阶段已经执行的“业务 SQL”，还原业务数据。<br>回滚方式便是用“before image”还原业务数据；但在还原前要首先要校验脏写，对比“数据库当前业务数据”和 “after image”。如果两份数据完全一致就说明没有脏写，可以还原业务数据，如果不一致就说明有脏写，出现脏写就需要转人工处理。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636892634620-1e6c1596-baba-4aed-b840-8afdfd320e05.png?x-oss-process=image/resize,w_937,limit_0" srcset="/img/loading.gif" lazyload></p>
+<h3 id="整体流程图"><a href="#整体流程图" class="headerlink" title="整体流程图"></a><strong>整体流程图</strong></h3><p><img src="https://cdn.nlark.com/yuque/0/2021/png/22423156/1636895943341-66b19f9d-e125-4536-8882-5c4c1f26fd91.png?x-oss-process=image/resize,w_761,limit_0" srcset="/img/loading.gif" lazyload></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SpringCloud学习笔记(9)</div>
+      <div>https://yztldxdz.top/2022/09/25/SpringCloud学习笔记(9)/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月25日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/23/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(8)/" title="SpringCloud学习笔记(8)">
+                        <span class="hidden-mobile">SpringCloud学习笔记(8)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

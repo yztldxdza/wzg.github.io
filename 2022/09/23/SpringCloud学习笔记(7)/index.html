@@ -1,0 +1,1144 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="高级部分SpringCloud Alibaba alibaba 的 github上有中文文档  spring cloud alibaba带来了什么？ 2018.10.31，spring cloud Alibaba正式入驻了Spring Cloud官方孵化器，并在Maven中央库发布了第一个版本 主要功能：  服务限流降级：默认支持 WebServlet、WebFlux, OpenFeign、Res">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud学习笔记(7)">
+<meta property="og:url" content="https://yztldxdz.top/2022/09/23/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(7)/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="高级部分SpringCloud Alibaba alibaba 的 github上有中文文档  spring cloud alibaba带来了什么？ 2018.10.31，spring cloud Alibaba正式入驻了Spring Cloud官方孵化器，并在Maven中央库发布了第一个版本 主要功能：  服务限流降级：默认支持 WebServlet、WebFlux, OpenFeign、Res">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/fe93ab4dbfdc520c411ca49163d6821a.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/5954d90819e12cafc9972a8e0977561d.png">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h6gczbr0l3j30iu0fh40g.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/b39e4b09d1da87d2598bfdbf31c1d751.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/c159b991ac8444ab61bc240a6c4899bc.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/a377948306a03bb10de4dd9657578a22.png">
+<meta property="article:published_time" content="2022-09-23T02:46:36.000Z">
+<meta property="article:modified_time" content="2022-09-23T03:08:00.154Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/fe93ab4dbfdc520c411ca49163d6821a.png">
+  
+  
+  
+  <title>SpringCloud学习笔记(7) - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>SPY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SpringCloud学习笔记(7)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-23 10:46" pubdate>
+          2022年9月23日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          19k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          157 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SpringCloud学习笔记(7)</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="高级部分"><a href="#高级部分" class="headerlink" title="高级部分"></a>高级部分</h1><h1 id="SpringCloud-Alibaba"><a href="#SpringCloud-Alibaba" class="headerlink" title="SpringCloud Alibaba"></a>SpringCloud Alibaba</h1><blockquote>
+<p>alibaba 的 github上有中文文档</p>
+</blockquote>
+<p>spring cloud alibaba带来了什么？</p>
+<p>2018.10.31，spring cloud Alibaba正式入驻了Spring Cloud官方孵化器，并在Maven中央库发布了第一个版本</p>
+<p>主要功能：</p>
+<ul>
+<li><strong>服务限流降级</strong>：默认支持 WebServlet、WebFlux, OpenFeign、RestTemplate、Spring Cloud Gateway, Zuul, Dubbo 和 RocketMQ 限流降级功能的接入，可以在运行时通过控制台实时修改限流降级规则，还支持查看限流降级 Metrics 监控。</li>
+<li><strong>服务注册与发现</strong>：适配 Spring Cloud 服务注册与发现标准，默认集成了 Ribbon 的支持。</li>
+<li><strong>分布式配置管理</strong>：支持分布式系统中的外部化配置，配置更改时自动刷新。</li>
+<li><strong>消息驱动能力</strong>：基于 Spring Cloud Stream 为微服务应用构建消息驱动能力。</li>
+<li><strong>分布式事务</strong>：使用 @GlobalTransactional 注解， 高效并且对业务零侵入地解决分布式事务问题。。</li>
+<li><strong>阿里云对象存储</strong>：阿里云提供的海量、安全、低成本、高可靠的云存储服务。支持在任何应用、任何时间、任何地点存储和访问任意类型的数据。</li>
+<li><strong>分布式任务调度</strong>：提供秒级、精准、高可靠、高可用的定时（基于 Cron 表达式）任务调度服务。同时提供分布式的任务执行模型，如网格任务。网格任务支持海量子任务均匀分配到所有 Worker（schedulerx-client）上执行。</li>
+<li><strong>阿里云短信服务</strong>：覆盖全球的短信服务，友好、高效、智能的互联化通讯能力，帮助企业迅速搭建客户触达通道。</li>
+</ul>
+<p>只需引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencyManagement</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.3.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>pom<span class="hljs-tag">&lt;/<span class="hljs-name">type</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>import<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencyManagement</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>组件：</p>
+<ul>
+<li>**<a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel">Sentinel</a>**：把流量作为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</li>
+<li>**<a target="_blank" rel="noopener" href="https://github.com/alibaba/Nacos">Nacos</a>**：一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。</li>
+<li>**<a target="_blank" rel="noopener" href="https://rocketmq.apache.org/">RocketMQ</a>**：一款开源的分布式消息系统，基于高可用分布式集群技术，提供低延时的、高可靠的消息发布与订阅服务。</li>
+<li>**<a target="_blank" rel="noopener" href="https://github.com/apache/dubbo">Dubbo</a>**：Apache Dubbo™ 是一款高性能 Java RPC 框架。</li>
+<li>**<a target="_blank" rel="noopener" href="https://github.com/seata/seata">Seata</a>**：阿里巴巴开源产品，一个易于使用的高性能微服务分布式事务解决方案。</li>
+<li><strong><a target="_blank" rel="noopener" href="https://www.aliyun.com/product/oss">Alibaba Cloud OSS</a></strong>: 阿里云对象存储服务（Object Storage Service，简称 OSS），是阿里云提供的海量、安全、低成本、高可靠的云存储服务。您可以在任何应用、任何时间、任何地点存储和访问任意类型的数据。</li>
+<li><strong><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/43136.html">Alibaba Cloud SchedulerX</a></strong>: 阿里中间件团队开发的一款分布式任务调度产品，提供秒级、精准、高可靠、高可用的定时（基于 Cron 表达式）任务调度服务。</li>
+<li><strong><a target="_blank" rel="noopener" href="https://www.aliyun.com/product/sms">Alibaba Cloud SMS</a></strong>: 覆盖全球的短信服务，友好、高效、智能的互联化通讯能力，帮助企业迅速搭建客户触达通道。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md">https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md</a></p>
+<h2 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h2><p>nacos(NAming COnfiguration Service)：服务注册和配置中心</p>
+<blockquote>
+<p>Nacos &#x3D; Eureka + Config + Bus</p>
+<p>替代Eureka做服务注册中心</p>
+<p>替代Config做服务配置中心</p>
+</blockquote>
+<blockquote>
+<p>github地址： <a target="_blank" rel="noopener" href="https://github.com/alibaba/Nacos">https://github.com/alibaba/Nacos</a></p>
+<p>Nacos 地址： <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/">https://nacos.io/zh-cn/</a></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>服务注册与服务框架</th>
+<th>CAP模型</th>
+<th>控制台管理</th>
+<th>社区活跃度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eureka</td>
+<td>AP高可用</td>
+<td>支持</td>
+<td>低(2.x版本闭源)</td>
+</tr>
+<tr>
+<td>Zookeeper</td>
+<td>CP一致</td>
+<td>支持</td>
+<td>中</td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>CP</td>
+<td>支持</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Nacos</td>
+<td>AP（可以切换）</td>
+<td>支持</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>nacos可以切换 AP 和 CP ,可使用如下命令切换成CP模式：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">curl</span> -X PUT <span class="hljs-string">&#x27;<span class="hljs-variable">$NACOS_SERVER</span>:8848/nacos/v1/ns/operator/switches?entry=serverMode&amp;value=CP&#x27;</span><br><span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>下载 ：</p>
+<blockquote>
+<p>下载地址： <a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/tag/1.1.4">https://github.com/alibaba/nacos/releases/tag/1.1.4</a></p>
+<p>直接下载网址： <a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.zip">https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.zip</a></p>
+<p>下载压缩包以后解压，进入bin目录，打开dos窗口，执行startup命令启动它。</p>
+<p>端口号8848</p>
+<p>可访问 ： 【 <a target="_blank" rel="noopener" href="http://localhost:8848/nacos/index.html%E3%80%91%E5%9C%B0%E5%9D%80%EF%BC%8C%E9%BB%98%E8%AE%A4%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E9%83%BD%E6%98%AFnacos">http://localhost:8848/nacos/index.html】地址，默认账号密码都是nacos</a></p>
+</blockquote>
+<h3 id="nacos服务中心"><a href="#nacos服务中心" class="headerlink" title="nacos服务中心"></a>nacos服务中心</h3><p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/feature-list.html">https://nacos.io/zh-cn/docs/feature-list.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/en-us/index.html#_spring_cloud_alibaba_nacos_discovery">https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/en-us/index.html#_spring_cloud_alibaba_nacos_discovery</a></p>
+<h4 id="nacos提供者"><a href="#nacos提供者" class="headerlink" title="nacos提供者"></a>nacos提供者</h4><p>新建模块 <code>alibaba-provider-payment9001</code></p>
+<p>父pom中</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencyManagement</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.1.1.BUILD-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>pom<span class="hljs-tag">&lt;/<span class="hljs-name">type</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>import<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencyManagement</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>子pom依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br><br>       <span class="hljs-comment">&lt;!-- springcloud alibaba nacos 依赖 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <br>       <span class="hljs-comment">&lt;!-- springboot整合Web组件 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>       <span class="hljs-comment">&lt;!-- 日常通用jar包 --&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>runtime<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><span class="hljs-comment">&lt;!-- 引入自己定义的api通用包，可以使用Payment支付Entity --&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.wzg.springcloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>api-commons<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;project.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>yml 配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">9001</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nacos-provider</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br><span class="hljs-attr">management:</span><br>  <span class="hljs-attr">endpoints:</span><br>    <span class="hljs-attr">web:</span><br>      <span class="hljs-attr">exposure:</span><br>        <span class="hljs-attr">include:</span> <span class="hljs-string">&#x27;*&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@EnableDiscoveryClient</span> <span class="hljs-comment">// 注册</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PaymentMain9001</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>            SpringApplication.run(PaymentMain9001.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PaymentController</span> &#123;<br>    <span class="hljs-meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String serverPort;<br><br>    <span class="hljs-meta">@GetMapping(value = &quot;/payment/nacos/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getPayment</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Integer id)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;nacos registry, serverPort: &quot;</span>+ serverPort+<span class="hljs-string">&quot;\t id&quot;</span>+id;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Nacos 自带负载均衡机制，下面创建第二个提供者9002。也可以<code>-Dserver.port=9011</code></p>
+<p>新建 alibaba-provider-payment9002 提供者模块，clone 9001 就可以</p>
+<h4 id="nacos消费者"><a href="#nacos消费者" class="headerlink" title="nacos消费者"></a>nacos消费者</h4><p>新建消费者 模块： alibaba-customer-nacos-order83</p>
+<p>pom</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;<br>&lt;project xmlns=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br>         xmlns:xsi=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br>         xsi:schemaLocation=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;<br>    &lt;parent&gt;<br>        &lt;artifactId&gt;cloud2022&lt;/artifactId&gt;<br>        &lt;groupId&gt;com.wzg.springcloud&lt;/groupId&gt;<br>        &lt;version&gt;<span class="hljs-number">1.0</span>-SNAPSHOT&lt;/version&gt;<br>    &lt;/parent&gt;<br>    &lt;modelVersion&gt;<span class="hljs-number">4.0</span><span class="hljs-number">.0</span>&lt;/modelVersion&gt;<br><br>    &lt;artifactId&gt;alibaba-consumer-nacos-order83&lt;/artifactId&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;!--SpringCloud ailibaba nacos --&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.wzg.springcloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;api-commons&lt;/artifactId&gt;<br>            &lt;version&gt;$&#123;project.version&#125;&lt;/version&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;<br>            &lt;scope&gt;runtime&lt;/scope&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;<br>            &lt;artifactId&gt;lombok&lt;/artifactId&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;<br>            &lt;scope&gt;test&lt;/scope&gt;<br>        &lt;/dependency&gt;<br>    &lt;/dependencies&gt;<br><br><br>    &lt;properties&gt;<br>        &lt;maven.compiler.source&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.target&gt;<br>    &lt;/properties&gt;<br><br>&lt;/project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">83</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nacos-order-consumer</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span><br><br><br><span class="hljs-comment">#消费者将要去访问的微服务名称(注册成功进nacos的微服务提供者)</span><br><span class="hljs-attr">service-url:</span><br>  <span class="hljs-attr">nacos-user-service:</span> <span class="hljs-string">http://nacos-payment-provider</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderNacosMain83</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(OrderNacosMain83.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.bean;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> org.springframework.cloud.client.loadbalancer.LoadBalanced;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.web.client.RestTemplate;<br><br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ApplicationContextConfig</span> &#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@LoadBalanced</span><br>    <span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">getRestTemplate</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.controller;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.PathVariable;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><span class="hljs-keyword">import</span> org.springframework.web.client.RestTemplate;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderNacosController</span> &#123;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> RestTemplate restTemplate;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;service-url.nacos-user-service&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String serverURL;<br><br>    <span class="hljs-meta">@GetMapping(value = &quot;/consumer/payment/nacos/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">paymentInfo</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long id)</span> &#123;<br>        <span class="hljs-keyword">return</span> restTemplate.getForObject(serverURL + <span class="hljs-string">&quot;/payment/nacos/&quot;</span> + id, String.class);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="各种服务中心对比"><a href="#各种服务中心对比" class="headerlink" title="各种服务中心对比"></a>各种服务中心对比</h4><table>
+<thead>
+<tr>
+<th>服务注册与服务框架</th>
+<th>CAP模型</th>
+<th>控制台管理</th>
+<th>社区活跃度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eureka</td>
+<td>AP</td>
+<td>支持</td>
+<td>低(2.x版本闭源)</td>
+</tr>
+<tr>
+<td>Zookeeper</td>
+<td>CP</td>
+<td>支持</td>
+<td>中</td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>CP</td>
+<td>支持</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Nacos</td>
+<td>AP&#x2F;CP</td>
+<td>支持</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>组件名</th>
+<th>语言</th>
+<th>CAP</th>
+<th>服务健康检查</th>
+<th>对外暴露接口</th>
+<th>SpringCloud集合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eureka</td>
+<td>java</td>
+<td>AP</td>
+<td>可配支持</td>
+<td>HTTP</td>
+<td>已集成</td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>Go</td>
+<td>CP</td>
+<td>支持</td>
+<td>HTTP&#x2F;DNS</td>
+<td>已集成</td>
+</tr>
+<tr>
+<td>Zookeeper</td>
+<td>java</td>
+<td>CP</td>
+<td>支持</td>
+<td>客户端</td>
+<td>已集成</td>
+</tr>
+</tbody></table>
+<p>NACOS支持CP和AP切换</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/fe93ab4dbfdc520c411ca49163d6821a.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="nacos配置中心"><a href="#nacos配置中心" class="headerlink" title="nacos配置中心"></a>nacos配置中心</h3><h5 id="配置中心对比"><a href="#配置中心对比" class="headerlink" title="配置中心对比"></a>配置中心对比</h5><table>
+<thead>
+<tr>
+<th>对比项目</th>
+<th>Spring Cloud Config</th>
+<th>Apollo</th>
+<th>Nacos</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>配置实时推送</td>
+<td>支持(Spring Cloud Bus)</td>
+<td>支持(HTTP长轮询1s内)</td>
+<td>支持(HTTP长轮询1s内)</td>
+</tr>
+<tr>
+<td>版本管理</td>
+<td>支持(Git)</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>配置回滚</td>
+<td>支持(Git)</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>灰度发布</td>
+<td>支持</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>权限管理</td>
+<td>支持(依赖Git)</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>多集群</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>多环境</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>监听查询</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>多语言</td>
+<td>只支持Java</td>
+<td>主流语言，提供了Open API</td>
+<td>主流语言，提供了Open API</td>
+</tr>
+<tr>
+<td>配置格式校验</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>单机读(QPS)</td>
+<td>7(限流所致)</td>
+<td>9000</td>
+<td>15000</td>
+</tr>
+<tr>
+<td>单击写(QPS)</td>
+<td>5(限流所致)</td>
+<td>1100</td>
+<td>1800</td>
+</tr>
+<tr>
+<td>3节点读 (QPS)</td>
+<td>21(限流所致)</td>
+<td>27000</td>
+<td>45000</td>
+</tr>
+<tr>
+<td>3节点写 (QPS)</td>
+<td>5(限流所致)</td>
+<td>3300</td>
+<td>5600</td>
+</tr>
+</tbody></table>
+<p>从配置中心角度来看，性能方面Nacos的读写性能最高，Apollo次之，Spring Cloud Config依赖Git场景不适合开放的大规模自动化运维API。功能方面Apollo最为完善，nacos具有Apollo大部分配置管理功能，而Spring Cloud Config不带运维管理界面，需要自行开发。Nacos的一大优势是整合了注册中心、配置中心功能，部署和操作相比Apollo都要直观简单，因此它简化了架构复杂度，并减轻运维及部署工作。</p>
+<blockquote>
+<p>nacos 还可以作为服务配置中心，下面是案例，创建一个模块，从nacos上读取配置信息。</p>
+<p>nacos 作为配置中心，不需要像springcloud config 一样做一个Server端模块。</p>
+</blockquote>
+<p>新建模块 <code>alibaba-config-nacos-client3377</code></p>
+<p>pom依赖：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;<br>&lt;project xmlns=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br>         xmlns:xsi=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br>         xsi:schemaLocation=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;<br>    &lt;parent&gt;<br>        &lt;artifactId&gt;cloud2022&lt;/artifactId&gt;<br>        &lt;groupId&gt;com.wzg.springcloud&lt;/groupId&gt;<br>        &lt;version&gt;<span class="hljs-number">1.0</span>-SNAPSHOT&lt;/version&gt;<br>    &lt;/parent&gt;<br>    &lt;modelVersion&gt;<span class="hljs-number">4.0</span><span class="hljs-number">.0</span>&lt;/modelVersion&gt;<br><br>    &lt;artifactId&gt;alibaba-config-nacos-client3377&lt;/artifactId&gt;<br><br>    &lt;dependencies&gt;<br>        &lt;!--nacos-config--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;!--nacos-discovery--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;!--web + actuator--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;<br>        &lt;/dependency&gt;<br>        &lt;!--一般基础配置--&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;<br>            &lt;scope&gt;runtime&lt;/scope&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;<br>            &lt;artifactId&gt;lombok&lt;/artifactId&gt;<br>            &lt;optional&gt;<span class="hljs-literal">true</span>&lt;/optional&gt;<br>        &lt;/dependency&gt;<br>        &lt;dependency&gt;<br>            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;<br>            &lt;scope&gt;test&lt;/scope&gt;<br>        &lt;/dependency&gt;<br>    &lt;/dependencies&gt;<br><br>    &lt;properties&gt;<br>        &lt;maven.compiler.source&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.source&gt;<br>        &lt;maven.compiler.target&gt;<span class="hljs-number">8</span>&lt;/maven.compiler.target&gt;<br>    &lt;/properties&gt;<br><br>&lt;/project&gt;<br></code></pre></td></tr></table></figure>
+
+<p>bootstrap.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">3377</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nacos-config-client</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span> <span class="hljs-comment">#服务注册中心地址</span><br>      <span class="hljs-attr">config:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-string">localhost:8848</span> <span class="hljs-comment">#配置中心地址</span><br>        <span class="hljs-attr">file-extension:</span> <span class="hljs-string">yaml</span> <span class="hljs-comment">#指定yaml格式的配置</span><br>        <span class="hljs-attr">group:</span> <span class="hljs-string">TEST_GROUP</span><br>        <span class="hljs-attr">namespace:</span> <span class="hljs-string">50d6d64e-f273-406a-abf8-9e45e2f2a7b6</span><br><br><span class="hljs-comment"># $&#123;spring.application.name&#125;-$&#123;spring.profile.active&#125;.$&#123;spring.cloud.nacos.config.file-extension&#125;</span><br><span class="hljs-comment"># nacos-config-client-dev.yaml</span><br><br><span class="hljs-comment"># nacos-config-client-test.yaml   ----&gt; config.info</span><br></code></pre></td></tr></table></figure>
+
+<p>application.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">profiles:</span><br>    <span class="hljs-attr">active:</span> <span class="hljs-string">dev</span><br>    <span class="hljs-comment">#active: test # 表示测试环境</span><br><span class="hljs-comment">#    active: info</span><br></code></pre></td></tr></table></figure>
+
+<p>主启动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> org.springframework.boot.SpringApplication;<br><span class="hljs-keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;<br><span class="hljs-keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;<br><br><br><span class="hljs-meta">@EnableDiscoveryClient</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NacosConfigClientMain3377</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        SpringApplication.run(NacosConfigClientMain3377.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wzg.springcloud.controller;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> whlie(true)&#123;learn&#125;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.cloud.context.config.annotation.RefreshScope;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RefreshScope</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConfigClientController</span> &#123;<br>    <span class="hljs-meta">@Value(&quot;$&#123;config.info&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String configInfo;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/config/info&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getConfigInfo</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> configInfo;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>nacos同springcloud-config一样，在项目初始化时，要先从配置中心进行配置拉取，拉取配置之后，才能保证项目的正常启动。</p>
+<p>springboot的配置文件的加载是存在优先熟悉怒的，bootstrap优先级高于application。（bootstrap中放共性，application中放个性）</p>
+<p>nacos中的dataid的组成格式及与springboot配置文件中的匹配规则：</p>
+<p>在nacos中，消费端要的文件怎么和nacos中的文件匹配呢？</p>
+<p>在 Nacos Spring Cloud 中，<code>dataId</code> 的完整格式如下：（就是说在nacos端我们怎么命名文件的）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">$&#123;prefix&#125;-$&#123;spring.profiles.active&#125;.$&#123;file-extension&#125;<br>1<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>prefix</code> 默认为 <code>spring.application.name</code> 的值，也可以通过配置项 <code>spring.cloud.nacos.config.prefix</code>来配置。</li>
+<li><code>spring.profiles.active</code> 即为当前环境对应的 profile，详情可以参考 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-profiles.html#boot-features-profiles">Spring Boot文档</a>。 <strong>注意：当 <code>spring.profiles.active</code> 为空时，对应的连接符 <code>-</code> 也将不存在，dataId 的拼接格式变成 <code>$&#123;prefix&#125;.$&#123;file-extension&#125;</code></strong></li>
+<li><code>file-exetension</code> 为配置内容的数据格式，可以通过配置项 <code>spring.cloud.nacos.config.file-extension</code> 来配置。目前只支持 <code>properties</code> 和 <code>yaml</code> 类型。（注意nacos里必须使用yaml）</li>
+</ul>
+<blockquote>
+<p>从上面可以看到重要的一点，配置文件的名称第二项，spring.profiles.active 是依据当前环境的profile属性值的，也就是这个值如果是 dev，即开发环境，它就会读取 dev 的配置信息，如果是test，测试环境，它就会读取test的配置信息，就是从 spring.profile.active 值获取当前应该读取哪个环境下的配置信息。</p>
+</blockquote>
+<p>所以要配置spring.profiles.active，新建application.yml文件，添加如下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">profiles:</span><br>    <span class="hljs-attr">active:</span> <span class="hljs-string">dev</span> <span class="hljs-comment"># 表示开发环境</span><br></code></pre></td></tr></table></figure>
+
+<p>综合以上说明，和下面的截图，Nacos 的dataid（类似文件名）应为： nacos-config-client-dev.yaml (必须是yaml)</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/5954d90819e12cafc9972a8e0977561d.png" srcset="/img/loading.gif" lazyload></p>
+<p>当修改配置值，会发现 3377 上也已经修改，Nacos自带自动刷新功能！</p>
+<p>nacos的优势在哪：</p>
+<ul>
+<li>问题1：实际开发者，通常一个系统会准备dev&#x2F;test&#x2F;prod环境。如何保证环境启动时服务能正确读取nacos上相应环境的配置文件<ul>
+<li>用namespace区分环境</li>
+</ul>
+</li>
+<li>问题2：一个大型分布式微服务系统有很多微服务子项目，每个微服务项目又都会有相应的开发环境、测试环境、预发环境、正式环境。那怎么对微服务配置进行管理呢？<ul>
+<li>用group把不同的微服务划分到同一个分组里面去</li>
+</ul>
+</li>
+</ul>
+<h5 id="dgn方案"><a href="#dgn方案" class="headerlink" title="dgn方案"></a>dgn方案</h5><p><code>dataid</code>方案（就是nacos的文件名）：</p>
+<ul>
+<li>指定spring.profile.active和配置文件的dataID来使不太环境下读取不同的配置</li>
+<li>配置空间+配置分组+新建dev和test两个dataid：就是创建-后不同的两个文件名<code>nacos-config-client-dev.yaml</code>、<code>nacos-config-client-test.yaml</code></li>
+<li>通过IDEA里的spring.profile.active属性就能进行多环境下配置文件的读取</li>
+</ul>
+<p><code>Group</code>方案（默认DEFAULT_GROUP）：</p>
+<ul>
+<li>在nacos创建配置文件时，给文件指定分组。</li>
+<li>在IDEA中该group内容</li>
+<li>实现的功能：当修改开发环境时，只会从同一group中进行切换。</li>
+</ul>
+<p><code>namespace</code>方案（默认public）：</p>
+<ul>
+<li>这个是不允许删除的，可以创建一个新的命名空间，会自动给创建的命名空间一个流水号。</li>
+<li>在nacos新建命名空间，自动出现7d8f0f5a-6a53-4785-9686-dd460158e5d4</li>
+<li>在IDEA的yml中指定命名空间namespace: 7d8f0f5a-6a53-4785-9686-dd460158e5d4</li>
+</ul>
+<p>最后，dataid、group、namespace 三者关系如下：（不同的dataid，是相互独立的，不同的group是相互隔离的，不同的namespace也是相互独立的）</p>
+<blockquote>
+<p>上面只是小打小闹，下面才是真正的高级操作。</p>
+</blockquote>
+<p>搭建集群必须持久化，不然多台机器上的nacos的配置信息不同，造成系统错乱。它不同于单个springcloud config，没有集群一说，而且数据保存在github上，也不同于eureka，配置集群就完事了，没有需要保存的配置信息。</p>
+<h3 id="nacos集群-x2F-持久化"><a href="#nacos集群-x2F-持久化" class="headerlink" title="nacos集群&#x2F;持久化"></a>nacos集群&#x2F;持久化</h3><p>nacos挂了怎么办？</p>
+<p><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html">https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html</a></p>
+<blockquote>
+<p>一台linux虚拟机：nginx服务器（虚拟ip），3个nacos服务，一个mysql数据库。</p>
+<p>nginx的安装参考之前学，使用 ContOs7 至少需要安装gcc库，不然无法编译安装【yum install gcc】</p>
+<p>nacos下载linux版本的 tar.gz 包：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.tar.gz">https://github.com/alibaba/nacos/releases/download/1.1.4/nacos-server-1.1.4.tar.gz</a></p>
+</blockquote>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h6gczbr0l3j30iu0fh40g.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>Nacos支持三种部署模式 <a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/deployment.html">https://nacos.io/zh-cn/docs/deployment.html</a></p>
+<ul>
+<li>单机模式 - 用于测试和单机试用。</li>
+<li>集群模式 - 用于生产环境，确保高可用。</li>
+<li>多集群模式 - 用于多数据中心场景。</li>
+</ul>
+<p>单机模式支持mysql：在0.7版本之前，在单机模式时nacos使用<strong>嵌入式数据库</strong>（derby，他的pom里有这个依赖）实现数据的存储，不方便观察数据存储的基本情况。0.7版本增加了支持mysql数据源能力，具体的操作步骤：</p>
+<ul>
+<li><p>1.安装数据库，版本要求：5.6.5+</p>
+</li>
+<li><p>2.初始化mysql数据库，数据库初始化文件：nacos&#x2F;conf&#x2F;nacos-mysql.sql。创建个database数据库nacos_devtest</p>
+</li>
+<li><p>3.修改IDEA中nacos&#x2F;conf&#x2F;application.properties文件(切换数据库)，增加支持mysql数据源配置（目前只支持mysql），添加mysql数据源的url、用户名和密码。</p>
+</li>
+<li><p>&#96;&#96;&#96;properties</p>
+<h1 id="切换数据库"><a href="#切换数据库" class="headerlink" title="切换数据库"></a>切换数据库</h1><p>spring.datasource.platform&#x3D;mysql</p>
+<p>db.num&#x3D;1<br>db.url.0&#x3D;jdbc:mysql:&#x2F;&#x2F;11.162.196.16:3306&#x2F;nacos_devtest?characterEncoding&#x3D;utf8&amp;connectTimeout&#x3D;1000&amp;socketTimeout&#x3D;3000&amp;autoReconnect&#x3D;true<br>db.user&#x3D;root<br>db.password&#x3D;w2757312346</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs awk"><br>- 再以单机模式启动nacos(重启)，nacos所有写嵌入式数据库的数据都写到了mysql<br><br>单击的数据库都是独立的，我们得让他们共用一个数据库<br><br>Nacos集群配置<br><br>环境准备：<br><br><span class="hljs-number">1</span>. <span class="hljs-number">64</span> bit OS Linux<span class="hljs-regexp">/Unix/</span>Mac，推荐使用Linux系统。<br><span class="hljs-number">2</span>. <span class="hljs-number">64</span> bit JDK <span class="hljs-number">1.8</span>+；[下载](http:<span class="hljs-regexp">//</span>www.oracle.com<span class="hljs-regexp">/technetwork/</span>java<span class="hljs-regexp">/javase/</span>downloads<span class="hljs-regexp">/jdk8-downloads-2133151.html).[配置](https:/</span><span class="hljs-regexp">/docs.oracle.com/</span>cd<span class="hljs-regexp">/E19182-01/</span><span class="hljs-number">820</span>-<span class="hljs-number">7851</span><span class="hljs-regexp">/inst_cli_jdk_javahome_t/</span>)。<br><span class="hljs-number">3</span>. Maven <span class="hljs-number">3.2</span>.x+；[下载](https:<span class="hljs-regexp">//m</span>aven.apache.org<span class="hljs-regexp">/download.cgi).[配置](https:/</span><span class="hljs-regexp">/maven.apache.org/</span>settings.html)。<br><span class="hljs-number">4</span>. <span class="hljs-number">3</span>个或<span class="hljs-number">3</span>个以上Nacos节点才能构成集群。<br><br>开始配置集群：<br><br><span class="hljs-number">1</span>. 首先对 nacos 进行持久化操作，操作如上面一致。<br><br><span class="hljs-number">2</span>. 修改 nacos/conf 下的cluster.conf文件，添加如下内容:<br><br>   ```sh<br>   <span class="hljs-comment"># it is ip</span><br>   <span class="hljs-comment"># 告诉这3个集群结点是一组的 # 不能写127.0.0.1，必须是linux hostname -i能够识别的ip</span><br>   <span class="hljs-number">192.168</span>.<span class="hljs-number">200.130</span>:<span class="hljs-number">3333</span><br>   <span class="hljs-number">192.168</span>.<span class="hljs-number">200.130</span>:<span class="hljs-number">4444</span><br>   <span class="hljs-number">192.168</span>.<span class="hljs-number">200.130</span>:<span class="hljs-number">5555</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<ol start="3">
+<li><p>修改nacos&#x2F;conf&#x2F;application.properties文件，添加设置我们的数据库信息</p>
+</li>
+<li><p>模拟三台nacos服务，编辑nacos的startup.sh脚本，使他能够支持不同的端口启动多次。<br>集群启动，我们希望可以类似其他软件的shell命令，传递不同的端口号启动不同的nacos实例。</p>
+<p><code>vim startup.sh</code></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/b39e4b09d1da87d2598bfdbf31c1d751.png" srcset="/img/loading.gif" lazyload alt="1597812799242"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/c159b991ac8444ab61bc240a6c4899bc.png" srcset="/img/loading.gif" lazyload alt="1597813020494"></p>
+<p><code>nohup $JAVA -Dserver.port=$&#123;PORT&#125; $&#123;JAVA_POT&#125; nacoas.nacos &gt;&gt; $&#123;BASE_DIR&#125;/logs/start.out 2&gt;&amp;1 &amp;</code></p>
+</li>
+<li><p>依次执行命令启动3个nacos集群：<br><code>./startup.sh -p 3333</code> 表示启动端口号为3333的nacos服务器实例<br><code>./startup.sh -p 4444</code><br><code>./startup.sh -p 5555</code><br><code>ps -ef | grep nacos | grep -v grep | wc -l</code></p>
+</li>
+<li><p>修改nginx配置，把他作为负载均衡：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">vim ./nginx/conf/nginx.conf<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/img_convert/a377948306a03bb10de4dd9657578a22.png" srcset="/img/loading.gif" lazyload alt="1597813917440"></p>
+</li>
+<li><p>启动nginx：<code>./nginx -c ../conf/nginx.conf</code></p>
+</li>
+<li><p>通过nginx访问：192.168.1.2:1111&#x2F;nacos&#x2F;#&#x2F;login</p>
+</li>
+<li><p>使用 9002 模块注册进Nacos集群，并获取它上面配置文件的信息application.yml中的<code>server-addr: 192.168.1.2:1111</code>，进行测试。</p>
+</li>
+</ol>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SpringCloud学习笔记(7)</div>
+      <div>https://yztldxdz.top/2022/09/23/SpringCloud学习笔记(7)/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月23日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/23/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(8)/" title="SpringCloud学习笔记(8)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SpringCloud学习笔记(8)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/21/SpringCloud%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(6)/" title="SpringCloud学习笔记(6)">
+                        <span class="hidden-mobile">SpringCloud学习笔记(6)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022013938号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

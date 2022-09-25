@@ -247,6 +247,105 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/07/28/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE05%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E5%92%8C%E8%B4%AD%E7%89%A9%E8%BD%A6/" target="_self">
+          电脑商城项目05商品详情和购物车
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/07/28/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE05%E5%95%86%E5%93%81%E8%AF%A6%E6%83%85%E5%92%8C%E8%B4%AD%E7%89%A9%E8%BD%A6/" target="_self">
+        <div>
+          
+          显示商品详情1.显示商品详情-持久层1.1规划需要执行的SQL语句根据商品id显示商品详情的SQL语句 1SELECT * FROM t_product WHERE id&#x3D;?  1.2设计接口和抽象方法在ProductMapper接口中添加抽象方法 123456&#x2F;** * 根据商品id查询商品详情 * @param id 商品id * @return 匹配的商品详情，如果没有匹配的数据则返回nul
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-07-28 15:53" pubdate>
+              2022-07-28
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/07/26/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE04%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80%E5%88%97%E8%A1%A8%E5%B1%95%E7%A4%BA%EF%BC%8C%E8%AE%BE%E4%B8%BA%E9%BB%98%E8%AE%A4%EF%BC%8C%E5%88%A0%E9%99%A4%E5%92%8C%E5%95%86%E5%93%81%E7%83%AD%E9%94%80%E6%8E%92%E8%A1%8C/" target="_self">
+          电脑商城项目04收货地址列表展示，设为默认，删除和商品热销排行
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/07/26/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE04%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80%E5%88%97%E8%A1%A8%E5%B1%95%E7%A4%BA%EF%BC%8C%E8%AE%BE%E4%B8%BA%E9%BB%98%E8%AE%A4%EF%BC%8C%E5%88%A0%E9%99%A4%E5%92%8C%E5%95%86%E5%93%81%E7%83%AD%E9%94%80%E6%8E%92%E8%A1%8C/" target="_self">
+        <div>
+          
+          收货地址列表展示1.收货地址列表展示-持久层1.1规划需要执行的SQL语句数据库数据的查询操作 1select * from t_address where uid ? order by is_default DESC,created_time DESC  其中order by is_default DESC是为了让默认收货地址展示在最上面,order by可以有多个字句,中间用逗号隔开,后面加的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-07-26 15:49" pubdate>
+              2022-07-26
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/07/24/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE03%E5%A4%B4%E5%83%8F%E4%B8%8A%E4%BC%A0%E5%92%8C%E6%96%B0%E5%A2%9E%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80/" target="_self">
+          电脑商城项目03头像上传和新增收货地址
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/07/24/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE03%E5%A4%B4%E5%83%8F%E4%B8%8A%E4%BC%A0%E5%92%8C%E6%96%B0%E5%A2%9E%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80/" target="_self">
+        <div>
+          
+          上传头像错误方法:把文件存到数据库中,需要图片时访问数据库,数据库将文件解析为字节流返回,最后写到本地的某一个文件.这种方法太耗费资源和时间了 正确方法:将对应的文件保存在操作系统上,然后再把这个文件路径记录下来,因为在记录路径的时候是非常便捷和方便的,将来如果要打开这个文件可以依据这个路径找到这个文件,所以说在数据库中保存该文件的路径即可. 稍微大一点的公司都会将所有的静态资源(图片,文件,其他
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-07-24 15:36" pubdate>
+              2022-07-24
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/07/22/%E7%94%B5%E8%84%91%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE02%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95%E5%92%8C%E8%B5%84%E6%96%99%E4%BF%AE%E6%94%B9/" target="_self">
           电脑商城项目02用户注册登录和资料修改
         </a>
@@ -472,110 +571,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/05/26/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)/" target="_self">
-          MyBaties学习笔记(3)
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/05/26/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(3)/" target="_self">
-        <div>
-          
-          动态SQL Mybatis框架的动态SQL技术是一种根据特定条件动态拼装SQL语句的功能，它存在的意义是为了解决拼接SQL语句字符串时的痛点问题  if if标签可通过test属性（即传递过来的数据）的表达式进行判断，若表达式的结果为true，则标签中的内容会执行；反之标签中的内容不会执行  在where后面添加一个恒成立条件 11&#x3D;1   这个恒成立条件并不会影响查询的结果  这个 11&#x3D;1
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-05-26 18:59" pubdate>
-              2022-05-26
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/05/24/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)/" target="_self">
-          MyBaties学习笔记(2)
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/05/24/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(2)/" target="_self">
-        <div>
-          
-          MyBatis的各种查询功能 如果查询出的数据只有一条，可以通过 实体类对象接收 List集合接收 Map集合接收，结果&amp;#123;password&#x3D;123456, sex&#x3D;男, id&#x3D;1, age&#x3D;23, username&#x3D;admin&amp;#125;   如果查询出的数据有多条，一定不能用实体类对象接收，会抛异常TooManyResultsException，可以通过 实体类类型的LIst集合接收
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-05-24 19:37" pubdate>
-              2022-05-24
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/05/23/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/" target="_self">
-          MyBaties学习笔记(1)
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/05/23/MyBaties%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(1)/" target="_self">
-        <div>
-          
-          搭建MyBatis开发环境 IDE：idea  构建工具：maven MySQL版本：MySQL  MyBatis版本：MyBatis  创建maven工程 打包方式：jar  引入依赖 123456789101112131415161718192021&lt;dependencies&gt;	&lt;!-- Mybatis核心 --&gt;	&lt;dependency&gt;		&lt;gro
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-05-23 20:30" pubdate>
-              2022-05-23
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
