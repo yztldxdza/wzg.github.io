@@ -36,22 +36,26 @@
   <meta name="author" content="Dambisa Moyo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="尚医通总结感受：前前后后花了20天终于把这个项目的整体功能跑通了，幸好之前有个备案的域名(就是这个博客)，借助它实现了阿里云的短信服务和OSS对象存储。 总体来说进度挺慢的，大部分时间都用在了修BUG上，特别是版本问题，视频教程的时间是2020年12月，我是2022年10月开始写的中间隔了一年多，很多技术的用法和一年多以前不同了，比如说微信的退款接口发生改变了等。 作为我的第一个微服务项目，我的确">
+    <meta name="description" content="什么是Java虚拟机 Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制，其运行的Java字节码也未必由Java语言编译而成。 JVM平台的各种语言可以共享Java虚拟机带来的跨平台性、优秀的垃圾回器，以及可靠的即时编译器。 Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。  作用 J">
 <meta property="og:type" content="article">
-<meta property="og:title" content="尚医通总结">
-<meta property="og:url" content="https://yztldxdz.top/2022/10/19/%E5%B0%9A%E5%8C%BB%E9%80%9A%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:title" content="JVM上篇内存与垃圾回收-JVM与Java体系结构">
+<meta property="og:url" content="https://yztldxdz.top/2022/11/01/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="王振国的个人博客">
-<meta property="og:description" content="尚医通总结感受：前前后后花了20天终于把这个项目的整体功能跑通了，幸好之前有个备案的域名(就是这个博客)，借助它实现了阿里云的短信服务和OSS对象存储。 总体来说进度挺慢的，大部分时间都用在了修BUG上，特别是版本问题，视频教程的时间是2020年12月，我是2022年10月开始写的中间隔了一年多，很多技术的用法和一年多以前不同了，比如说微信的退款接口发生改变了等。 作为我的第一个微服务项目，我的确">
+<meta property="og:description" content="什么是Java虚拟机 Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制，其运行的Java字节码也未必由Java语言编译而成。 JVM平台的各种语言可以共享Java虚拟机带来的跨平台性、优秀的垃圾回器，以及可靠的即时编译器。 Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。  作用 J">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-19T01:35:26.000Z">
-<meta property="article:modified_time" content="2022-10-19T11:12:36.843Z">
+<meta property="og:image" content="http://cdn.processon.com/617677b107912943ddf963f5?e=1635157442&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:B7TAG_HN3-KtssgCt8QJ73AkF7I=">
+<meta property="og:image" content="http://cdn.processon.com/5ed1a239e401fd0735a2f611?e=1590800457&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:fExc8EcgqNtdkFxDJEuemmIcdr0=">
+<meta property="og:image" content="http://cdn.processon.com/5ed1a2827d9c080702835476?e=1590800530&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:PJekL3fbjdLias5PHGDRjVMhQbc=">
+<meta property="article:published_time" content="2022-11-01T11:42:45.000Z">
+<meta property="article:modified_time" content="2022-11-17T12:25:17.669Z">
 <meta property="article:author" content="Dambisa Moyo">
-<meta property="article:tag" content="项目">
+<meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://cdn.processon.com/617677b107912943ddf963f5?e=1635157442&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:B7TAG_HN3-KtssgCt8QJ73AkF7I=">
   
   
   
-  <title>尚医通总结 - 王振国的个人博客</title>
+  <title>JVM上篇内存与垃圾回收-JVM与Java体系结构 - 王振国的个人博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -218,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="尚医通总结"></span>
+            <span id="subtitle" data-typed-text="JVM上篇内存与垃圾回收-JVM与Java体系结构"></span>
           
         </div>
 
@@ -234,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-10-19 09:35" pubdate>
-          2022年10月19日 上午
+        <time datetime="2022-11-01 19:42" pubdate>
+          2022年11月1日 晚上
         </time>
       </span>
     
@@ -247,7 +251,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2.1k 字
+          3.1k 字
         
       </span>
     
@@ -259,7 +263,7 @@
         
         
           <!-- compatible with older versions-->
-          18 分钟
+          27 分钟
         
       </span>
     
@@ -297,57 +301,189 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">尚医通总结</h1>
+            <h1 style="display: none">JVM上篇内存与垃圾回收-JVM与Java体系结构</h1>
             
             <div class="markdown-body">
               
-              <h1 id="尚医通总结"><a href="#尚医通总结" class="headerlink" title="尚医通总结"></a>尚医通总结</h1><h4 id="感受："><a href="#感受：" class="headerlink" title="感受："></a>感受：</h4><p>前前后后花了20天终于把这个项目的整体功能跑通了，幸好之前有个备案的域名(就是这个博客)，借助它实现了阿里云的短信服务和OSS对象存储。</p>
-<p>总体来说进度挺慢的，大部分时间都用在了修BUG上，特别是版本问题，视频教程的时间是2020年12月，我是2022年10月开始写的中间隔了一年多，很多技术的用法和一年多以前不同了，比如说微信的退款接口发生改变了等。</p>
-<p>作为我的第一个微服务项目，我的确从里面学到了不少东西，比如第三方接口的接入一定要能看得懂官方文档。</p>
-<h4 id="GitHub地址："><a href="#GitHub地址：" class="headerlink" title="GitHub地址："></a>GitHub地址：</h4><p>尚医通项目系统后台：<a target="_blank" rel="noopener" href="https://github.com/yztldxdza/yygh_parent">yztldxdza&#x2F;yygh_parent (github.com)</a></p>
-<p>尚医通项目用户前台：<a target="_blank" rel="noopener" href="https://github.com/yztldxdza/yygh-site">yztldxdza&#x2F;yygh-site (github.com)</a></p>
-<p>尚医通医院后台：<a target="_blank" rel="noopener" href="https://github.com/yztldxdza/vue-admin">yztldxdza&#x2F;vue-admin (github.com)</a></p>
-<h4 id="如何阅读微服务项目？"><a href="#如何阅读微服务项目？" class="headerlink" title="如何阅读微服务项目？"></a><strong>如何阅读微服务项目？</strong></h4><ol>
-<li>了解项目业务</li>
-<li>把项目运行起来</li>
-<li>走完一套完整的业务流程，了解整个系统做了什么事</li>
-<li>了解有哪些服务、以及每个服务的作用（做了什么事情）</li>
-<li>了解服务之间是如何互相通讯的</li>
-<li>根据需求阅读对应服务的源码细节</li>
-</ol>
-<h4 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h4><ol>
-<li>基于Spring Cloud+Nacos实现项目的微服务化，划分项目为公共、用户、订单等服务，提高项目的可扩展性和容错性。</li>
-<li>使用Spring Data注解实现自动Redis缓存，并通过自定义Redis Key Generator来根据类和方法自动生成</li>
-<li>key,降低开发成本、避免key冲突。</li>
-<li>使用Spring Cloud Gateway实现微服务请求转发，并在网关层全局解决跨域、用户鉴权、黑白名单、内网</li>
-<li>服务保护等问题，降低开发成本、提高安全性。</li>
-<li>提供Restful API供外部系统接入并上报数据，并通过API签名认证保障了接口的安全性。</li>
-<li>使用JWT实现单点登录，并支特手机验证码、OAut2微信扫码登录，提高用户真实性和登录安全性</li>
-<li>对接微信支付AP!实现预约付款，并通过全局唯一ⅰd以及支付&#x2F;退款记录表的设计保证了支付操作的幂等性</li>
-<li>使用MongoDB代替MySQL存储读多写少的半结构化数据（如医院信息），实测查询性提高x%。(自己用Meter测试一下)</li>
-<li>基于Docker快速搭建项目依赖服务（如RabbitMQ),，并通过Docker log命令查看日志，降低本地开发运维成本。</li>
-<li>为应对流量高峰，使用RabbitMQ将下单减库存等耗时操作异步化，提升下单接口单机QPS(x至X)</li>
-<li>使用Spring Scheduler实现定时预约提醒功能，并使用RabbitMQ实现定时服务和通知服务的解耦，提高服务可维护性。</li>
-</ol>
-<h4 id="使用到的注解"><a href="#使用到的注解" class="headerlink" title="使用到的注解"></a>使用到的注解</h4><h5 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h5><ul>
-<li>@Configuration：指示一个类声明一个或多个@Bean方法，并且可以由Spring容器处理，以便在运行时为这些bean生成BeanDefinition和服务请求，常用于config配置类</li>
-<li>@ControllerAdvice：@Controller 的增强版。@ControllerAdvice主要用来处理全局数据，一般搭配@ExceptionHandler、@ModelAttribute以及@InitBinder使用。最常见的使用场景就是全局异常处理</li>
-<li>@RestController：等同于@Controller + @ResponseBody。首先表明了这个类是一个控制器类表示方法的返回值直接以指定的格式写入Http response body中，而不是解析为跳转路径。</li>
-<li>格式的转换是通过HttpMessageConverter中的方法实现的，因为它是一个接口，因此由其实现类完成转换。</li>
-<li>如果要求方法返回的是json格式数据，而不是跳转页面，可以直接在类上标注@RestController，而不用在每个方法中标注@ResponseBody，简化了开发过程。</li>
+              <h4 id="什么是Java虚拟机"><a href="#什么是Java虚拟机" class="headerlink" title="什么是Java虚拟机"></a>什么是Java虚拟机</h4><ul>
+<li>Java虚拟机是一台执行Java字节码的虚拟计算机，它拥有独立的运行机制，其运行的Java字节码也未必由Java语言编译而成。</li>
+<li>JVM平台的各种语言可以共享Java虚拟机带来的跨平台性、优秀的垃圾回器，以及可靠的即时编译器。</li>
+<li>Java技术的核心就是Java虚拟机（JVM，Java Virtual Machine），因为所有的Java程序都运行在Java虚拟机内部。</li>
 </ul>
-<h5 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h5><ul>
-<li><p>@Cacheable<br>根据方法对其返回结果进行缓存，下次请求时，如果缓存存在，则直接读取缓存数据返回；如果缓存不存在，则执行方法，并把返回的结果存入缓存中。一般用在查询方法上。<br>@CachePut<br>使用该注解标志的方法，每次都会执行，并将结果存入指定的缓存中。其他方法可以直接从响应的缓存中读取缓存数据，而不需要再去查询数据库。一般用在新增方法上。<br>@CacheEvict<br>使用该注解标志的方法，会清空指定的缓存。一般用在更新或者删除方法上</p>
+<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
+<li>Java虚拟机就是二进制字节码的运行环境，负责装载字节码到其内部，解释&#x2F;编译为对应平台上的机器指令执行。每一条Java指令，Java虚拟机规范中都有详细定义，如怎么取操作数，怎么处理操作数，处理结果放在哪里。</li>
+</ul>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>一次编译，到处运行</li>
+<li>自动内存管理</li>
+<li>自动垃圾回收功能</li>
+</ul>
+<h4 id="Java虚拟机整体架构祥图"><a href="#Java虚拟机整体架构祥图" class="headerlink" title="Java虚拟机整体架构祥图"></a>Java虚拟机整体架构祥图</h4><p><img src="http://cdn.processon.com/617677b107912943ddf963f5?e=1635157442&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:B7TAG_HN3-KtssgCt8QJ73AkF7I=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="Java代码执行过程详图"><a href="#Java代码执行过程详图" class="headerlink" title="Java代码执行过程详图"></a>Java代码执行过程详图</h4><p><img src="http://cdn.processon.com/5ed1a239e401fd0735a2f611?e=1590800457&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:fExc8EcgqNtdkFxDJEuemmIcdr0=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="汇编语言、机器语言、高级语言关系"><a href="#汇编语言、机器语言、高级语言关系" class="headerlink" title="汇编语言、机器语言、高级语言关系"></a>汇编语言、机器语言、高级语言关系</h4><p><img src="http://cdn.processon.com/5ed1a2827d9c080702835476?e=1590800530&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:PJekL3fbjdLias5PHGDRjVMhQbc=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="JVM的架构模型"><a href="#JVM的架构模型" class="headerlink" title="JVM的架构模型"></a>JVM的架构模型</h4><p>Java编译器输入的指令流基本上是一种基于<strong>栈</strong>的指令集架构，另外一种指令集架构则是基于<strong>寄存器</strong>的指令集架构。</p>
+<p><strong>基于栈式架构的特点</strong></p>
+<ul>
+<li>设计和实现更简单，适用于资源受限的系统</li>
+<li>避开了寄存器的分配难题：使用零地址指令方式分配</li>
+<li>指令流中的指令大部分是零地址指令，其执行过程依赖于操作栈。指令集更小，编译器容易实现</li>
+<li>不需要硬件支持，可移植性更好，更好实现跨平台</li>
+</ul>
+<p><strong>基于寄存器架构的特点</strong></p>
+<ul>
+<li>典型的应用是x86的二进制指令集：比如传统的PC以及Android的Davlik虚拟机</li>
+<li>指令集架构则完全依赖硬件，可移植性差</li>
+<li>性能优秀和执行更高效</li>
+<li>花费更少的指令去完成一项操作</li>
+<li>在大部分情况下，基于寄存器架构的指令集往往都以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是以零地址指令为主</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>由于跨平台性的设计，Java的指令都是根据栈来设计的。不同平台CPU架构不同，所以不能设计为基于寄存器的。<strong>栈的优点是跨平台，指令集小，编译器容易实现，缺点是性能下降，实现同样的功能需要更多的指令。</strong></p>
+<h4 id="javap-查看字节码"><a href="#javap-查看字节码" class="headerlink" title="javap 查看字节码"></a>javap 查看字节码</h4><ul>
+<li>-v输出附加信息</li>
+<li>-l输出行号和本地变量表</li>
+<li>-p显示所有类和成员</li>
+<li>-c对代码进行反汇编</li>
+</ul>
+<h4 id="JVM的生命周期"><a href="#JVM的生命周期" class="headerlink" title="JVM的生命周期"></a>JVM的生命周期</h4><p><strong>虚拟机的启动</strong></p>
+<p>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创建一个初始类（initial class）来完成的，这个类是由虚拟机的具体实现指定的。</p>
+<p><strong>虚拟机的执行</strong></p>
+<ul>
+<li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序。</li>
+<li>程序开始执行时他才运行，程序结束时他就停止。</li>
+<li>执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程。</li>
+</ul>
+<p><strong>虚拟机的退出</strong></p>
+<p>有如下的几种情况：</p>
+<ul>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统用现错误而导致Java虚拟机进程终止</li>
+<li>某线程调用Runtime类或system类的exit方法，或Runtime类的halt方法，并且Java安全管理器也允许这次exit或halt操作。</li>
+<li>除此之外，JNI（Java Native Interface）规范描述了用JNI Invocation API来加载或卸载 Java虚拟机时，Java虚拟机的退出情况。</li>
+</ul>
+<h4 id="JVM发展历程"><a href="#JVM发展历程" class="headerlink" title="JVM发展历程"></a>JVM发展历程</h4><ul>
+<li>sun Classic VM<ul>
+<li>世界第一款商用Java虚拟机</li>
+<li>JDK1.4时被淘汰</li>
+<li>只提供了解释器</li>
+<li>如果使用JIT编译器，就需要外挂，但是JIT和解释器不能配合工作</li>
+</ul>
 </li>
-<li><p>@RequestBody对应前端请求中没有{}占位符的情况<br>@PathVariable对应前端请求中有{}占位符的情况，进行值匹配</p>
+<li>Exact VM<ul>
+<li>为了解决上一个虚拟机问题，JDK1.2时，sun提供了此虚拟机</li>
+<li>Exact Memory Management：准确式内存管理<ul>
+<li>虚拟机知道内存中某个位置的数据是什么类型</li>
+</ul>
 </li>
-<li><p>@Cacheable<br>根据方法对其返回结果进行缓存，下次请求时，如果缓存存在，则直接读取缓存数据返回；如果缓存不存在，则执行方法，并把返回的结果存入缓存中。一般用在查询方法上。</p>
+<li>具有现代高性能虚拟机的雏形<ul>
+<li>热点探测</li>
+<li>编译器与解释器混合工作模式</li>
+</ul>
 </li>
-<li><p>@CachePut<br>使用该注解标志的方法，每次都会执行，并将结果存入指定的缓存中。其他方法可以直接从响应的缓存中读取缓存数据，而不需要再去查询数据库。一般用在新增方法上。</p>
-</li>
-<li><p>@CacheEvict<br>使用该注解标志的方法，会清空指定的缓存。一般用在更新或者删除方法上<br>用于数据字典的导入</p>
+<li>只在Solaris平台短暂使用，其他平台还是Classic vm<ul>
+<li>英雄气短，被hotspot虚拟机替换</li>
+</ul>
 </li>
 </ul>
+</li>
+<li>hotspot虚拟机<ul>
+<li>最初由Longview Technologies的小公司设计，1997年被sun公司收购，2009年sun公司被甲骨文收购</li>
+<li>JDK1.3时，HotSpot VM成为默认虚拟机</li>
+<li>绝对市场地位，称霸武林<ul>
+<li>JDK6,8等均默认</li>
+</ul>
+</li>
+<li>HotSpot就是他的热点代码探测技术<ul>
+<li>通过计数器找到最具编译价值代码，触发即时编译或栈上替换</li>
+<li>通过编译器与解释器协同工作，在优化响应时间和最佳执行性能中取得平衡</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>JRockit<ul>
+<li>BEA公司</li>
+<li>专注服务器端应用<ul>
+<li>不太关注程序启动速度，引起JRockit内部不包括解析器实现，全部代码靠即时编译器编译后执行</li>
+</ul>
+</li>
+<li>世界上最快的JVM</li>
+<li>全面的Java运行时解决方案组合<ul>
+<li>JRockit Real Time提供毫秒或微秒级的JVM响应时间，适合财务、军事指挥，电信网络的需要</li>
+<li>MissionControl服务套件，极低的开销，来监控、管理和分析生成环境中的应用程序的工具</li>
+</ul>
+</li>
+<li>2008年BEA被oracle收购</li>
+<li>JDK8中，在HOTSPOT的基础上，移植JRockit的优秀特性</li>
+</ul>
+</li>
+<li>IBM J9<ul>
+<li>全称：IBM Technology for java Virtual Machine 简称IT4J，内部代号J9</li>
+<li>市场定位与HotSpot接近，服务器端、桌面应用，嵌入式等多用途VM</li>
+<li>广泛应用于IBM的各种Java产品<ul>
+<li>IBM产品结合使用性能最好</li>
+</ul>
+</li>
+<li>有影响力的三大商用虚拟机之一</li>
+<li>2017开源，OPEN J9</li>
+</ul>
+</li>
+<li>KVM和CDC&#x2F;CLDC HotSpot<ul>
+<li>JavaME产品线产品<ul>
+<li>智能控制器、传感器、老人手机等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Azul VM<ul>
+<li>与特定硬件平台绑定、软硬件配合的专有虚拟机</li>
+<li>运行于Azul Systems公司的专有硬件Vega系统上的虚拟机</li>
+<li>每个实例可以管理至少数十个CPU和数百GB内存的硬件资源，并提供在巨大内存范围内实现可控的GC时间的垃圾收集器，专有硬件优化的线程调度等优秀特性</li>
+<li>2010年，发布自己的Zing JVM，可以在通用X86平台上提供接近于vega系统的特性</li>
+</ul>
+</li>
+<li>Liquid VM<ul>
+<li>BEA公司开发的，运行在自家Hypervisor系统上</li>
+<li>不需要操作系统支持，本身实现了一个专用操作系统的必要功能，如线程调度、文件系统、网络支持等</li>
+<li>随着JRockit虚拟机终止开发，Liquid VM项目也停止了</li>
+</ul>
+</li>
+<li>Apache Harmony<ul>
+<li>JDK1.5,1.6兼容IBM和In</li>
+<li>tel联合开发的开源JVM，2011年退役Java</li>
+<li>类库代码吸纳进了Android SDK</li>
+</ul>
+</li>
+<li>Microsoft JVM<ul>
+<li>只能在Windows平台运行，xp系统中不用了。</li>
+</ul>
+</li>
+<li>TaobaoJVM<ul>
+<li>基于OpenJDK开发了自己的定制版本AlibabaJDK</li>
+<li>深度定制且开源的高性能服务器版JAVA虚拟机</li>
+<li>GCIH：GC invisible heap，将生命周期较长的Java对象从heap中已到heap之外，并且GC不能管理GCIH内部的Java对象，以此达到降低GC的回收频率和提升GC的回收效率</li>
+<li>GCIH中的对象还能够在多个JAVA虚拟机进程中实现共享</li>
+<li>使用crc32指令实现JVM intrinsic降低JNI的调用开销</li>
+<li>针对大数据场景的ZenGC</li>
+<li>在阿里产品上性能高，硬件严重依赖intel的CPU，损失了兼容性，但是提高了性能</li>
+<li>淘宝、天猫上线，把oracle官方JVM版本全部替换</li>
+</ul>
+</li>
+<li>Dalvik VM<ul>
+<li>谷歌开发，应用于Android系统，安卓2.2提供了JIT，发展迅猛</li>
+<li>只能称作虚拟机，不能称作Java虚拟机，没有遵循Java虚拟机规范</li>
+<li>不能直接执行Java的Class文件</li>
+<li>基于寄存器架构，不是jvm的栈架构</li>
+<li>执行的是编译后的dex文件，执行效率比较高</li>
+<li>安卓5.0使用支持提前编译AOT的ART VM替换Dalvik VM</li>
+</ul>
+</li>
+<li>Grall VM<ul>
+<li>2018年4月，Oracle labs公开了GraalVM。</li>
+<li>跨语言全栈虚拟机，可以作为任何语言的运行平台使用</li>
+</ul>
+</li>
+</ul>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>具体JVM的内存结构，其实取决于其实现，不同厂商的JVM，或者同一厂商发布的不同版本，都有可能存在一定差异。主要以Oracle HotSpot VM为默认虚拟机。</p>
 
               
             </div>
@@ -365,7 +501,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B0%9A%E5%8C%BB%E9%80%9A%E9%A1%B9%E7%9B%AE/" class="category-chain-item">尚医通项目</a>
+  <a href="/categories/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="category-chain-item">JVM上篇内存与垃圾回收</a>
   
   
 
@@ -380,7 +516,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E9%A1%B9%E7%9B%AE/">#项目</a>
+        <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
       
     </div>
   
@@ -392,15 +528,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>尚医通总结</div>
-      <div>https://yztldxdz.top/2022/10/19/尚医通总结/</div>
+      <div>JVM上篇内存与垃圾回收-JVM与Java体系结构</div>
+      <div>https://yztldxdz.top/2022/11/01/JVM上篇内存与垃圾回收-JVM与Java体系结构/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年10月19日</div>
+          <div>2022年11月1日</div>
         </div>
       
       
@@ -430,9 +566,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/01/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" title="JVM上篇内存与垃圾回收-JVM与Java体系结构">
+                      <a href="/2022/11/02/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E6%95%B0%E7%BB%84%E7%AF%87/" title="代码随想录—数组篇">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">JVM上篇内存与垃圾回收-JVM与Java体系结构</span>
+                        <span class="hidden-mobile">代码随想录—数组篇</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -440,8 +576,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/10/19/%E5%B0%9A%E5%8C%BB%E9%80%9A-%E7%94%A8%E6%88%B7%E4%B8%9A%E5%8A%A1/" title="尚医通-用户业务">
-                        <span class="hidden-mobile">尚医通-用户业务</span>
+                      <a href="/2022/10/19/%E5%B0%9A%E5%8C%BB%E9%80%9A%E6%80%BB%E7%BB%93/" title="尚医通总结">
+                        <span class="hidden-mobile">尚医通总结</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
