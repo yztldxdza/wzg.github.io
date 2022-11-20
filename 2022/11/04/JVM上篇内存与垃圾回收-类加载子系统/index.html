@@ -36,25 +36,28 @@
   <meta name="author" content="Dambisa Moyo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="代码随想录—数组篇二分查找二分法是非常重要的基础算法，做题时注意边界的处理和循环不变量。 时间复杂度：O(logn) 模板左闭右闭区间 12345678910111213141516171819class Solution &amp;#123;    public int search(int[] nums, int target) &amp;#123;        &#x2F;&#x2F; 避免当 target 小于nums[0">
+    <meta name="description" content="类加载子系统作用 负责从文件系统或者网络中加载Class文件，Class文件开头有特定标识，魔术，咖啡杯壁 Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定 加载的类信息存放于称为方法区的内存空间，除了类信息，方法区还会存放运行时常量池信息，还可能包括字符串字面量和数字常量 常量池运行时加载到内存中，即运行时常量池     类的加载过程 加载 加载刚好是加载过程的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="代码随想录—数组篇">
-<meta property="og:url" content="https://yztldxdz.top/2022/11/02/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E6%95%B0%E7%BB%84%E7%AF%87/index.html">
+<meta property="og:title" content="JVM上篇内存与垃圾回收-类加载子系统">
+<meta property="og:url" content="https://yztldxdz.top/2022/11/04/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="王振国的个人博客">
-<meta property="og:description" content="代码随想录—数组篇二分查找二分法是非常重要的基础算法，做题时注意边界的处理和循环不变量。 时间复杂度：O(logn) 模板左闭右闭区间 12345678910111213141516171819class Solution &amp;#123;    public int search(int[] nums, int target) &amp;#123;        &#x2F;&#x2F; 避免当 target 小于nums[0">
+<meta property="og:description" content="类加载子系统作用 负责从文件系统或者网络中加载Class文件，Class文件开头有特定标识，魔术，咖啡杯壁 Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定 加载的类信息存放于称为方法区的内存空间，除了类信息，方法区还会存放运行时常量池信息，还可能包括字符串字面量和数字常量 常量池运行时加载到内存中，即运行时常量池     类的加载过程 加载 加载刚好是加载过程的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://code-thinking.cdn.bcebos.com/gifs/209.%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84.gif">
-<meta property="og:image" content="https://code-thinking-1253855093.file.myqcloud.com/pics/%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.png">
-<meta property="article:published_time" content="2022-11-02T11:42:40.000Z">
-<meta property="article:modified_time" content="2022-11-17T12:15:24.819Z">
+<meta property="og:image" content="http://cdn.processon.com/5ed59ae8e401fd1919f9b2bb?e=1591060728&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:1zyQitPhEYAKA4GsWEwwZwgLWMk=">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210507205501.png&sign=08d23987aba2d91d640c0782cf8b58afa9b692a7ad142a81124ca6b908423cf5">
+<meta property="og:image" content="http://cdn.processon.com/5ed6e443f346fb6b02f6b148?e=1591145043&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:4_gU1ZBzIh2mYgtHE6VpBECYtUw=">
+<meta property="og:image" content="http://cdn.processon.com/5ed6f04c5653bb1954973143?e=1591148125&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:qsJEjxVxKgvyv5T5XVKV8aC0kHs=">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210507212811.png&sign=13ae045a27d55160ff512d7f5c1956cf0213869dc0c84090b506e23a533c7baf">
+<meta property="article:published_time" content="2022-11-04T06:10:52.000Z">
+<meta property="article:modified_time" content="2022-11-20T01:17:56.564Z">
 <meta property="article:author" content="Dambisa Moyo">
-<meta property="article:tag" content="算法">
+<meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://code-thinking.cdn.bcebos.com/gifs/209.%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84.gif">
+<meta name="twitter:image" content="http://cdn.processon.com/5ed59ae8e401fd1919f9b2bb?e=1591060728&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:1zyQitPhEYAKA4GsWEwwZwgLWMk=">
   
   
   
-  <title>代码随想录—数组篇 - 王振国的个人博客</title>
+  <title>JVM上篇内存与垃圾回收-类加载子系统 - 王振国的个人博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -221,7 +224,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="代码随想录—数组篇"></span>
+            <span id="subtitle" data-typed-text="JVM上篇内存与垃圾回收-类加载子系统"></span>
           
         </div>
 
@@ -237,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-02 19:42" pubdate>
-          2022年11月2日 晚上
+        <time datetime="2022-11-04 14:10" pubdate>
+          2022年11月4日 下午
         </time>
       </span>
     
@@ -250,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          1.8k 字
+          4.1k 字
         
       </span>
     
@@ -262,7 +265,7 @@
         
         
           <!-- compatible with older versions-->
-          15 分钟
+          35 分钟
         
       </span>
     
@@ -300,49 +303,158 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">代码随想录—数组篇</h1>
+            <h1 style="display: none">JVM上篇内存与垃圾回收-类加载子系统</h1>
             
             <div class="markdown-body">
               
-              <h1 id="代码随想录—数组篇"><a href="#代码随想录—数组篇" class="headerlink" title="代码随想录—数组篇"></a>代码随想录—数组篇</h1><h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><p>二分法是非常重要的基础算法，做题时注意边界的处理和循环不变量。</p>
-<p>时间复杂度：O(logn)</p>
-<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><p>左闭右闭区间</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">search</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> target)</span> &#123;<br>        <span class="hljs-comment">// 避免当 target 小于nums[0] nums[nums.length - 1]时多次循环运算</span><br>        <span class="hljs-keyword">if</span> (target &lt; nums[<span class="hljs-number">0</span>] || target &gt; nums[nums.length - <span class="hljs-number">1</span>]) &#123;<br>            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, right = nums.length - <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (left &lt;= right) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">mid</span> <span class="hljs-operator">=</span> left + ((right - left) &gt;&gt; <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">if</span> (nums[mid] == target)<br>                <span class="hljs-keyword">return</span> mid;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums[mid] &lt; target)<br>                left = mid + <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums[mid] &gt; target)<br>                right = mid - <span class="hljs-number">1</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>左闭右开区间</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">search</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> target)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, right = nums.length;<br>        <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">mid</span> <span class="hljs-operator">=</span> left + ((right - left) &gt;&gt; <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">if</span> (nums[mid] == target)<br>                <span class="hljs-keyword">return</span> mid;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums[mid] &lt; target)<br>                left = mid + <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums[mid] &gt; target)<br>                right = mid;<br>        &#125;<br>        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="相关题目"><a href="#相关题目" class="headerlink" title="相关题目"></a>相关题目</h3><h4 id="35-搜索插入位置"><a href="#35-搜索插入位置" class="headerlink" title="35. 搜索插入位置"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-insert-position/">35. 搜索插入位置</a></h4><h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>这道题就是在二分查找的基础上，增加了边界的思考，在二分查找结束后恰好可以把数组分为两部分：left左边的部分和right右边的部分，而且left左边的部分全部小于target，并以right结尾；right右边的部分全部大于等于target，并以left为首。所以最终答案一定在left的位置。</p>
-<h4 id="34-在排序数组中查找元素的第一个和最后一个位置"><a href="#34-在排序数组中查找元素的第一个和最后一个位置" class="headerlink" title="34. 在排序数组中查找元素的第一个和最后一个位置"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/">34. 在排序数组中查找元素的第一个和最后一个位置</a></h4><h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/solution/zai-pai-xu-shu-zu-zhong-cha-zhao-yuan-su-b1ox/">在排序数组中查找元素的第一个和最后一个位置 - 在排序数组中查找元素的第一个和最后一个位置 - 力扣（LeetCode）</a></p>
-<h4 id="69-x-的平方根"><a href="#69-x-的平方根" class="headerlink" title="69. x 的平方根 "></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sqrtx/">69. x 的平方根 </a></h4><h4 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h4><p>二分查找的下界为 0，上界可以粗略地设定为 x。在二分查找的每一步中，我们只需要比较中间元素mid平方与 x的大小关系，并通过比较的结果调整上下界的范围。</p>
-<h4 id="367-有效的完全平方数"><a href="#367-有效的完全平方数" class="headerlink" title="367. 有效的完全平方数"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/valid-perfect-square/">367. 有效的完全平方数</a></h4><h4 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h4><p>和69类似</p>
-<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><p>双指针法（快慢指针法）：<strong>通过一个快指针和慢指针在一个for循环下完成两个for循环的工作。</strong></p>
-<ul>
-<li>暴力解法时间复杂度：O(n^2)</li>
-<li>双指针时间复杂度：O(n)</li>
+              <h2 id="类加载子系统"><a href="#类加载子系统" class="headerlink" title="类加载子系统"></a>类加载子系统</h2><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
+<li>负责从文件系统或者网络中加载Class文件，Class文件开头有特定标识，魔术，咖啡杯壁</li>
+<li>Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定</li>
+<li>加载的类信息存放于称为方法区的内存空间，除了类信息，方法区还会存放运行时常量池信息，还可能包括字符串字面量和数字常量<ul>
+<li>常量池运行时加载到内存中，即运行时常量池</li>
 </ul>
-<p>双指针法（快慢指针法）在数组和链表的操作中是非常常见的，很多考察数组和链表操作的面试题，都使用双指针法。</p>
-<h3 id="相关题目-1"><a href="#相关题目-1" class="headerlink" title="相关题目"></a>相关题目</h3><h4 id="27-移除元素"><a href="#27-移除元素" class="headerlink" title="27. 移除元素"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element/">27. 移除元素</a></h4><h4 id="思路-4"><a href="#思路-4" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element/solution/yi-chu-yuan-su-by-yztldxdz-6-g1uv/">移除元素 - 移除元素 - 力扣（LeetCode）</a></p>
-<h4 id="26-删除有序数组中的重复项"><a href="#26-删除有序数组中的重复项" class="headerlink" title="26. 删除有序数组中的重复项"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array/">26. 删除有序数组中的重复项</a></h4><h4 id="思路-5"><a href="#思路-5" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/submissions/detail/217928539/">删除有序数组中的重复项 - 提交记录 - 力扣（LeetCode）</a></p>
-<h4 id="283-移动零"><a href="#283-移动零" class="headerlink" title="283. 移动零"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/move-zeroes/">283. 移动零</a></h4><h4 id="思路-6"><a href="#思路-6" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/move-zeroes/solution/yi-dong-ling-by-yztldxdz-6-nq93/">移动零 - 移动零 - 力扣（LeetCode）</a></p>
-<h4 id="844-比较含退格的字符串"><a href="#844-比较含退格的字符串" class="headerlink" title="844. 比较含退格的字符串"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/backspace-string-compare/">844. 比较含退格的字符串</a></h4><h4 id="思路-7"><a href="#思路-7" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/backspace-string-compare/solution/shuang-zhi-zhen-bi-jiao-han-tui-ge-de-zi-8fn8/">比较含退格的字符串</a></p>
-<h4 id="977-有序数组的平方"><a href="#977-有序数组的平方" class="headerlink" title="977. 有序数组的平方"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/squares-of-a-sorted-array/">977. 有序数组的平方</a></h4><h4 id="思路-8"><a href="#思路-8" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/squares-of-a-sorted-array/solution/you-xu-shu-zu-de-ping-fang-by-yztldxdz-6-bbcz/">有序数组的平方 </a></p>
-<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><p>所谓滑动窗口，<strong>就是不断的调节子序列的起始位置和终止位置，从而得出我们要想的结果</strong>。</p>
-<p>实现滑动窗口，主要确定如下三点：</p>
-<ul>
-<li>窗口内是什么？</li>
-<li>如何移动窗口的起始位置？</li>
-<li>如何移动窗口的结束位置？</li>
+</li>
 </ul>
-<p><img src="https://code-thinking.cdn.bcebos.com/gifs/209.%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84.gif" srcset="/img/loading.gif" lazyload></p>
-<h4 id="相关题目推荐"><a href="#相关题目推荐" class="headerlink" title="相关题目推荐"></a>相关题目推荐</h4><h4 id="904-水果成篮"><a href="#904-水果成篮" class="headerlink" title="904. 水果成篮"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/fruit-into-baskets/">904. 水果成篮</a></h4><h4 id="思路-9"><a href="#思路-9" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/fruit-into-baskets/solution/shui-guo-cheng-lan-by-yztldxdz-6-h0ow/">水果成篮</a></p>
-<h4 id="76-最小覆盖子串"><a href="#76-最小覆盖子串" class="headerlink" title="76. 最小覆盖子串"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-window-substring/">76. 最小覆盖子串</a></h4><h4 id="思路-10"><a href="#思路-10" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-window-substring/solution/leetcode-76-zui-xiao-fu-gai-zi-chuan-cja-lmqz/">最小覆盖子串 </a></p>
-<h2 id="模拟行为"><a href="#模拟行为" class="headerlink" title="模拟行为"></a>模拟行为</h2><p>模拟类的题目在数组中很常见，不涉及到什么算法，就是单纯的模拟，十分考察大家对代码的掌控能力。</p>
-<p>在这道题目中，我们再一次介绍到了<strong>循环不变量原则</strong>，其实这也是写程序中的重要原则。</p>
-<h3 id="相关题目-2"><a href="#相关题目-2" class="headerlink" title="相关题目"></a>相关题目</h3><h4 id="59-螺旋矩阵-II"><a href="#59-螺旋矩阵-II" class="headerlink" title="59. 螺旋矩阵 II"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix-ii/">59. 螺旋矩阵 II</a></h4><h4 id="思路-11"><a href="#思路-11" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix-ii/solution/luo-xuan-ju-zhen-ii-by-yztldxdz-6-ujjs/">螺旋矩阵 II - 螺旋矩阵 II - 力扣（LeetCode）</a></p>
-<h4 id="54-螺旋矩阵"><a href="#54-螺旋矩阵" class="headerlink" title="54. 螺旋矩阵"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix/">54. 螺旋矩阵</a></h4><h4 id="思路-12"><a href="#思路-12" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix/solution/luo-xuan-ju-zhen-by-yztldxdz-6-csa7/">螺旋矩阵 - 螺旋矩阵 - 力扣（LeetCode）</a></p>
-<h4 id="剑指-Offer-29-顺时针打印矩阵"><a href="#剑指-Offer-29-顺时针打印矩阵" class="headerlink" title="剑指 Offer 29. 顺时针打印矩阵"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/">剑指 Offer 29. 顺时针打印矩阵</a></h4><h4 id="思路-13"><a href="#思路-13" class="headerlink" title="思路"></a>思路</h4><p>模拟边界，参考54和59</p>
-<p><img src="https://code-thinking-1253855093.file.myqcloud.com/pics/%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://cdn.processon.com/5ed59ae8e401fd1919f9b2bb?e=1591060728&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:1zyQitPhEYAKA4GsWEwwZwgLWMk=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210507205501.png&sign=08d23987aba2d91d640c0782cf8b58afa9b692a7ad142a81124ca6b908423cf5" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><ul>
+<li>加载刚好是加载过程的一个阶段，二者意思不能混淆</li>
+<li>通过一个类的全限定名获取定义此类的二进制字节流<ul>
+<li>本地系统获取</li>
+<li>网络获取，Web Applet</li>
+<li>zip压缩包获取，jar，war</li>
+<li>运行时计算生成，动态代理</li>
+<li>有其他文件生成，jsp</li>
+<li>专有数据库提取.class文件，比较少见</li>
+<li>加密文件中获取，防止Class文件被反编译的保护措施</li>
+</ul>
+</li>
+<li>将这个字节流所代表的的静态存储结果转化为方法区的运行时数据结构</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据访问入口</li>
+</ul>
+<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><ul>
+<li><strong>验证（Verify）：</strong> <ul>
+<li>目的在子确保Class文件的字节流中包含信息符合当前虚拟机要求，保证被加载类的正确性，不会危害虚拟机自身安全。</li>
+<li>主要包括四种验证，文件格式验证，元数据验证，字节码验证，符号引用验证。</li>
+</ul>
+</li>
+<li><strong>准备（Prepare）：</strong> <ul>
+<li>为类变量分配内存并且设置该类变量的默认初始值，即零值。</li>
+<li>这里不包含用final修饰的static，因为final在编译的时候就会分配了，准备阶段会显式初始化；</li>
+<li>这里不会为实例变量分配初始化，类变量会分配在方法区中，而实例变量是会随着对象一起分配到Java堆中。</li>
+</ul>
+</li>
+<li><strong>解析（Resolve）：</strong> <ul>
+<li>将常量池内的符号引用转换为直接引用的过程。</li>
+<li>事实上，解析操作往往会伴随着JVM在执行完初始化之后再执行。</li>
+<li>符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《java虚拟机规范》的Class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</li>
+<li>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的CONSTANT_Class_info，CONSTANT_Fieldref_info、CONSTANT_Methodref_info等。</li>
+</ul>
+</li>
+</ul>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a><strong>初始化</strong></h4><ul>
+<li>初始化阶段就是执行类构造器方法<clinit>()的过程。</li>
+<li>此方法不需定义，是javac编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。</li>
+<li>构造器方法中指令按语句在源文件中出现的顺序执行。</li>
+<li><clinit>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>()）</li>
+<li>若该类具有父类，JVM会保证子类的<clinit>()执行前，父类的<clinit>()已经执行完毕。</li>
+<li>虚拟机必须保证一个类的<clinit>()方法在多线程下被同步加锁。</li>
+</ul>
+<p><strong>补充说明：</strong></p>
+<ul>
+<li>加载、验证、准备、初始化和卸载这五个阶段的顺序是确定的。</li>
+<li>解析阶段不一定，在某些情况下可以在初始化阶段之后再开始，为了支持Java语言的运行时绑定特性（也称为动态绑定或晚期绑定）</li>
+<li>Java虚拟机规范严格规定了，有且只有六种情况，必须立即对类进行初始化<ul>
+<li>遇到new,getstatic，putstatic或invokestatic这四条字节码指令时。<ul>
+<li>使用new关键字实例化对象</li>
+<li>读取或设置一个类型的静态字段（final修饰已在编译期将结果放入常量池的静态字段除外）</li>
+<li>调用一个类型的静态方法的时候</li>
+</ul>
+</li>
+<li>对类型进行反射调用，如果类型没有经过初始化，则需要触发初始化</li>
+<li>初始化类的时候，发现父类没有初始化，则先触发父类初始化</li>
+<li>虚拟机启动时，用户需要指定一个要执行的主类（包含main方法的那个类），虚拟机会初始化这个主类</li>
+<li>只用JDK7中新加入的动态语言支持，如果一个java.lang.invoke.MethodHandler实例最后的解析结果为REF_getStatic,REF_putStatic,REF_invokeStatic，REF_newInvokeSpecial四种类型的方法句柄，并且这个方法对应的类没有进行初始化，则先触发其初始化</li>
+<li>当一个接口中定了JDK8新加入的默认方法时，如果这个接口的实现类发生了初始化，要先将接口进行初始化</li>
+</ul>
+</li>
+<li>除了以上几种情况，其他使用类的方式被看做是对类的被动使用都不会导致类的初始化</li>
+</ul>
+<h3 id="类加载器分类"><a href="#类加载器分类" class="headerlink" title="类加载器分类"></a>类加载器分类</h3><h4 id="引导类加载器和自定义加载器"><a href="#引导类加载器和自定义加载器" class="headerlink" title="引导类加载器和自定义加载器"></a>引导类加载器和自定义加载器</h4><p>概念上，将所有派生于抽象类ClassLoader的类加载器都划分为自定义加载器</p>
+<p><img src="http://cdn.processon.com/5ed6e443f346fb6b02f6b148?e=1591145043&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:4_gU1ZBzIh2mYgtHE6VpBECYtUw=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>对于用户来说定义器来说，默认使用系统类加载器进行加载</p>
+<p>Java的核心类库，使用引导类加载器进行加载</p>
+<h4 id="启动类加载器（引导类加载器，Bootstrap-ClassLoader）"><a href="#启动类加载器（引导类加载器，Bootstrap-ClassLoader）" class="headerlink" title="启动类加载器（引导类加载器，Bootstrap ClassLoader）"></a><strong>启动类加载器（引导类加载器，Bootstrap ClassLoader）</strong></h4><ul>
+<li>这个类加载使用C&#x2F;C++语言实现的，嵌套在JVM内部。</li>
+<li>它用来加载Java的核心库（JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;rt.jar、resources.jar或sun.boot.class.path路径下的内容），用于提供JVM自身需要的类</li>
+<li>并不继承自ava.lang.ClassLoader，没有父加载器。</li>
+<li>加载扩展类和应用程序类加载器，并指定为他们的父类加载器。</li>
+<li>出于安全考虑，Bootstrap启动类加载器只加载包名为java、javax、sun等开头的类</li>
+</ul>
+<h4 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a>扩展类加载器（Extension ClassLoader）</h4><ul>
+<li>Java语言编写，由sun.misc.Launcher$ExtClassLoader实现。</li>
+<li>派生于ClassLoader类</li>
+<li>父类加载器为启动类加载器</li>
+<li>从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的jre&#x2F;1ib&#x2F;ext子目录（扩展目录）下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。</li>
+</ul>
+<h4 id="应用程序类加载器（系统类加载器，AppClassLoader）"><a href="#应用程序类加载器（系统类加载器，AppClassLoader）" class="headerlink" title="应用程序类加载器（系统类加载器，AppClassLoader）"></a>应用程序类加载器（系统类加载器，AppClassLoader）</h4><ul>
+<li>java语言编写，由sun.misc.LaunchersAppClassLoader实现</li>
+<li>派生于ClassLoader类</li>
+<li>父类加载器为扩展类加载器</li>
+<li>它负责加载环境变量classpath或系统属性java.class.path指定路径下的类库</li>
+<li>该类加载是程序中默认的类加载器，一般来说，Java应用的类都是由它来完成加载</li>
+<li>通过ClassLoader#getSystemclassLoader() 方法可以获取到该类加载器</li>
+</ul>
+<h4 id="用户自定义类加载器"><a href="#用户自定义类加载器" class="headerlink" title="用户自定义类加载器"></a><strong>用户自定义类加载器</strong></h4><p>在Java的日常应用程序开发中，类的加载几乎是由上述3种类加载器相互配合执行的，在必要时，我们还可以自定义类加载器，来定制类的加载方式。 为什么要自定义类加载器？</p>
+<ul>
+<li>隔离加载类</li>
+<li>修改类加载的方式</li>
+<li>扩展加载源</li>
+<li>防止源码泄漏</li>
+</ul>
+<p>用户自定义类加载器实现步骤：</p>
+<ol>
+<li>开发人员可以通过继承抽象类ava.lang.ClassLoader类的方式，实现自己的类加载器，以满足一些特殊的需求</li>
+<li>在JDK1.2之前，在自定义类加载器时，总会去继承ClassLoader类并重写loadClass() 方法，从而实现自定义的类加载类，但是在JDK1.2之后已不再建议用户去覆盖loadclass() 方法，而是建议把自定义的类加载逻辑写在findClass()方法中</li>
+<li>在编写自定义类加载器时，如果没有太过于复杂的需求，可以直接继承URLClassLoader类，这样就可以避免自己去编写findClass()  方法及其获取字节码流的方式，使自定义类加载器编写更加简洁。</li>
+</ol>
+<h4 id="关于ClassLoader"><a href="#关于ClassLoader" class="headerlink" title="关于ClassLoader"></a>关于ClassLoader</h4><p>它是一个抽象类，除了启动类加载器，其他类加载器都继承自他</p>
+<p><img src="http://cdn.processon.com/5ed6f04c5653bb1954973143?e=1591148125&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:qsJEjxVxKgvyv5T5XVKV8aC0kHs=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a><strong>双亲委派机制</strong></h3><p>Java虚拟机对class文件采用的是按需加载的方式，也就是说当需要使用该类时才会将它的class文件加载到内存生成class对象。而且加载某个类的class文件时，Java虚拟机采用的是双亲委派模式，即把请求交由父类处理，它是一种任务委派模式。</p>
+<p>工作原理</p>
+<ol>
+<li>如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行；</li>
+<li>如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器；</li>
+<li>如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式。</li>
+</ol>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210507212811.png&sign=13ae045a27d55160ff512d7f5c1956cf0213869dc0c84090b506e23a533c7baf" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
+<li>避免类的重复加载</li>
+<li>保护程序安全，防止核心API被篡改</li>
+</ul>
+<h3 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h3><p>自定义String类，但是在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的文件（rt.jar包中java\lang\String.class），报错信息说没有main方法，就是因为加载的是rt.jar包中的string类。这样可以保证对java核心源代码的保护，这就是沙箱安全机制。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p><strong>如何判断两个class对象是否相同</strong></p>
+<p>在JVM中表示两个class对象是否为同一个类存在两个必要条件：</p>
+<ul>
+<li>类的完整类名必须一致，包括包名。</li>
+<li>加载这个类的ClassLoader（指ClassLoader实例对象）必须相同。</li>
+</ul>
+<p>换句话说，在JVM中，即使这两个类对象（class对象）来源同一个Class文件，被同一个虚拟机所加载，但只要加载它们的ClassLoader实例对象不同，那么这两个类对象也是不相等的。</p>
+<p><strong>对类加载器的引用</strong></p>
+<p>JVM必须知道一个类型是由启动加载器加载的还是由用户类加载器加载的。如果一个类型是由用户类加载器加载的，那么JVM会将这个类加载器的一个引用作为类型信息的一部分保存在方法区中。当解析一个类型到另一个类型的引用的时候，JVM需要保证这两个类型的类加载器是相同的。</p>
+<p><strong>类的主动使用和被动使用</strong></p>
+<p>Java程序对类的使用方式分为：主动使用和被动使用。</p>
+<p>主动使用，又分为七种情况：</p>
+<ul>
+<li>创建类的实例 </li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值 </li>
+<li>调用类的静态方法 </li>
+<li>反射（比如：Class.forName（”com.atguigu.Test”）） </li>
+<li>初始化一个类的子类 </li>
+<li>Java虚拟机启动时被标明为启动类的类 </li>
+<li>JDK 7 开始提供的动态语言支持： java.lang.invoke.MethodHandle实例的解析结果 REF_getStatic、REF_putStatic、REF_invokeStatic句柄对应的类没有初始化，则初始化</li>
+</ul>
+<p>除了以上七种情况，其他使用Java类的方式都被看作是对类的被动使用，都不会导致类的初始化。</p>
 
               
             </div>
@@ -360,7 +472,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/" class="category-chain-item">代码随想录</a>
+  <a href="/categories/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="category-chain-item">JVM上篇内存与垃圾回收</a>
   
   
 
@@ -375,7 +487,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+        <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
       
     </div>
   
@@ -387,15 +499,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>代码随想录—数组篇</div>
-      <div>https://yztldxdz.top/2022/11/02/代码随想录—数组篇/</div>
+      <div>JVM上篇内存与垃圾回收-类加载子系统</div>
+      <div>https://yztldxdz.top/2022/11/04/JVM上篇内存与垃圾回收-类加载子系统/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年11月2日</div>
+          <div>2022年11月4日</div>
         </div>
       
       
@@ -425,9 +537,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/03/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E9%93%BE%E8%A1%A8%E7%AF%87/" title="代码随想录—链表篇">
+                      <a href="/2022/11/05/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E5%93%88%E5%B8%8C%E8%A1%A8%E7%AF%87/" title="代码随想录—哈希表篇">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">代码随想录—链表篇</span>
+                        <span class="hidden-mobile">代码随想录—哈希表篇</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -435,8 +547,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/01/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" title="JVM上篇内存与垃圾回收-JVM与Java体系结构">
-                        <span class="hidden-mobile">JVM上篇内存与垃圾回收-JVM与Java体系结构</span>
+                      <a href="/2022/11/03/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E9%93%BE%E8%A1%A8%E7%AF%87/" title="代码随想录—链表篇">
+                        <span class="hidden-mobile">代码随想录—链表篇</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

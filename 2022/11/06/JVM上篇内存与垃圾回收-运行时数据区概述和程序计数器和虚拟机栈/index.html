@@ -1,0 +1,1041 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JVM上篇内存与垃圾回收-运行时数据区概述 当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈">
+<meta property="og:url" content="https://yztldxdz.top/2022/11/06/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%E5%92%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="JVM上篇内存与垃圾回收-运行时数据区概述 当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173040.png&sign=ce3b6b1756a7cd9ca4868dc05a53eebf53f8acf8fd37f8d030f65b0371753ae4">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173114.png&sign=e8fbfedc5d6d6756987e4670915f9859b7ff946653866bd60c97da1704fd7f73">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173126.png&sign=8a08f328ea68a3332afb7c6e0145dab73c8864b3ad9a6b379d48cddcfe103db6">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509175630.png&sign=245e01d0030362b5a55a62da2111a283b872749d5bbc36991f9e3f80afba2024">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190221.png&sign=d9052977c32da931af7239b76885d8a469edd12130f3c274dc22157e6988ef9f">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190228.png&sign=0dc7f9e12f5277b5e3a1ec7490fb7f14b51fbf06c442e054744b9dea0457a8e5">
+<meta property="og:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190232.png&sign=0b4ab2082957f9df79a343a365c0ee77ad3f8e937b4c9bad55ab5be9f38d1423">
+<meta property="og:image" content="http://cdn.processon.com/5ed986f4f346fb1712e10524?e=1591317764&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:YE_nIZgKRBb0EvHJFHuHyMgDQtQ=">
+<meta property="og:image" content="http://cdn.processon.com/5ed987a11e0853199b509ad0?e=1591317937&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:ZgxAdvwmcJNyzQzoYr81vcZ1FaU=">
+<meta property="og:image" content="http://cdn.processon.com/5ed98b6b6376891862184dd7?e=1591318907&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:HOXL24aD0riV03MrUP0vx8p53F4=">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8ap6yr4a5j30rz0d8gpb.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8apeq8zeij30m30eb0y9.jpg">
+<meta property="article:published_time" content="2022-11-06T07:19:40.000Z">
+<meta property="article:modified_time" content="2022-11-20T01:18:06.659Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="八股文">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173040.png&sign=ce3b6b1756a7cd9ca4868dc05a53eebf53f8acf8fd37f8d030f65b0371753ae4">
+  
+  
+  
+  <title>JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-06 15:19" pubdate>
+          2022年11月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          7.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          61 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="JVM上篇内存与垃圾回收-运行时数据区概述"><a href="#JVM上篇内存与垃圾回收-运行时数据区概述" class="headerlink" title="JVM上篇内存与垃圾回收-运行时数据区概述"></a>JVM上篇内存与垃圾回收-运行时数据区概述</h2><p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173040.png&sign=ce3b6b1756a7cd9ca4868dc05a53eebf53f8acf8fd37f8d030f65b0371753ae4" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区</p>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173114.png&sign=e8fbfedc5d6d6756987e4670915f9859b7ff946653866bd60c97da1704fd7f73" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。</p>
+<p>灰色的为单独线程私有的，红色的为多个线程共享的。即：</p>
+<ul>
+<li>每个线程：独立包括程序计数器、栈、本地栈。</li>
+<li>线程间共享：堆、堆外内存（永久代或元空间、代码缓存）</li>
+</ul>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509173126.png&sign=8a08f328ea68a3332afb7c6e0145dab73c8864b3ad9a6b379d48cddcfe103db6" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="程序计数器-PC寄存器"><a href="#程序计数器-PC寄存器" class="headerlink" title="程序计数器(PC寄存器)"></a>程序计数器(PC寄存器)</h2><p>JVM中的PC寄存器是对物理PC寄存器的一种抽象模拟。</p>
+<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><p>PC寄存器用来存储指向下一条指令的地址，也即将要执行的指令代码。由执行引擎读取下一条指令。</p>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509175630.png&sign=245e01d0030362b5a55a62da2111a283b872749d5bbc36991f9e3f80afba2024" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>它是一块很小的内存空间，几乎可以忽略不记。也是运行速度最快的存储区域。</li>
+<li>在JVM规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。</li>
+<li>运行时数据区中唯一不会出现OOM的区域，没有垃圾回收</li>
+<li>当前线程所执行的字节码的行号指示器<ul>
+<li>为了线程切换后能恢复到正确的位置</li>
+</ul>
+</li>
+<li>每个线程有一个独立的程序计数器，线程之间互不影响。</li>
+<li>如果线程执行的Java方法，则计数器记录正在执行的虚拟机字节码的指令的地址</li>
+<li>如果正在执行的本地方法，这个计数器值则应为空。（undefined）</li>
+</ul>
+<h2 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a><strong>虚拟机栈</strong></h2><p>由于<strong>跨平台性</strong>的设计，Java的指令都是根据栈来设计的。不同平台CPU架构不同，所以不能设计为基于寄存器的。</p>
+<p><strong>优点</strong>是跨平台，指令集小，编译器容易实现，<strong>缺点</strong>是性能下降，实现同样的功能需要更多的指令。</p>
+<h3 id="内存中的栈与堆"><a href="#内存中的栈与堆" class="headerlink" title="内存中的栈与堆"></a>内存中的栈与堆</h3><p>栈是运行时的单位，而堆是存储的单位</p>
+<ul>
+<li>栈解决程序的运行问题，即程序如何执行，或者说如何处理数据。</li>
+<li>堆解决的是数据存储的问题，即数据怎么放，放哪里</li>
+</ul>
+<h4 id="基本内容"><a href="#基本内容" class="headerlink" title="基本内容"></a>基本内容</h4><ul>
+<li>Java虚拟机栈，也叫Java栈，每个线程创建时都会创建一个虚拟机栈，内部保存一个个栈帧，对应着一次次的Java方法调用</li>
+<li>生命周期和线程的一致作用</li>
+</ul>
+<h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><p>主管Java程序的运行，保存方法的局部变量（8种基本数据类型，对象的引用地址），部分结果，并参与方法的调用和返回。</p>
+<ul>
+<li>局部变量 vs 成员变量</li>
+<li>基本数据类型  VS 引用类型变量（类，数组，接口）</li>
+</ul>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>快速有效的存储方式，访问速度仅次于程序计数器</li>
+<li>JVM直接对JAVA栈的操作只有两个<ul>
+<li>每个方法执行，伴随着进栈（入栈，压栈）</li>
+<li>执行结束的出栈</li>
+</ul>
+</li>
+</ul>
+<h4 id="栈中可能出现的异常"><a href="#栈中可能出现的异常" class="headerlink" title="栈中可能出现的异常"></a><strong>栈中可能出现的异常</strong></h4><p>Java 虚拟机规范允许Java栈的大小是动态的或者是固定不变的。</p>
+<ul>
+<li>如果采用固定大小的Java虚拟机栈，那每一个线程的Java虚拟机栈容量可以在线程创建的时候独立选定。如果线程请求分配的栈容量超过Java虚拟机栈允许的最大容量，Java虚拟机将会抛出一个StackOverflowError 异常。 </li>
+<li>如果Java虚拟机栈可以动态扩展，并且在尝试扩展的时候无法申请到足够的内存，或者在创建新的线程时没有足够的内存去创建对应的虚拟机栈，那Java虚拟机将会抛出一个 OutOfMemoryError 异常。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    test();<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> &#123;<br>    test();<br>&#125;<br><span class="hljs-comment">//抛出异常：Exception in thread&quot;main&quot;java.lang.StackoverflowError</span><br><span class="hljs-comment">//程序不断的进行递归调用，而且没有退出条件，就会导致不断地进行压栈。</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="设置栈内存大小"><a href="#设置栈内存大小" class="headerlink" title="设置栈内存大小"></a>设置栈内存大小</h4><p>我们可以使用参数 -Xss选项来设置线程的最大栈空间，栈的大小直接决定了函数调用的最大可达深度</p>
+<h4 id="栈的存储单位"><a href="#栈的存储单位" class="headerlink" title="栈的存储单位"></a>栈的存储单位</h4><ul>
+<li>每个线程都有自己的栈，栈中的数据以栈帧格式存储</li>
+<li>线程上正在执行的每个方法都各自对应一个栈帧</li>
+<li>栈帧是一个内存区块，是一个数据集，维系着方法执行过程中的各个数据信息</li>
+<li>先进后出，后进先出</li>
+<li>一条活动的线程中，一个时间点上，只会有一个活动的栈帧。只有当前正在执行的方法的栈顶栈帧是有效的，这个称为当前栈帧，对应方法是当前方法，对应类是当前类</li>
+<li>执行引擎运行的所有字节码指令只针对当前栈帧进行操作</li>
+<li>如果方法中调用了其他方法，对应的新的栈帧会被创建出来，放在顶端，成为新的当前帧</li>
+</ul>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190221.png&sign=d9052977c32da931af7239b76885d8a469edd12130f3c274dc22157e6988ef9f" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="栈运行原理"><a href="#栈运行原理" class="headerlink" title="栈运行原理"></a>栈运行原理</h4><ul>
+<li>不同线程中包含的栈帧不允许存在相互引用。</li>
+<li>当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着虚拟机会丢弃当前栈帧，使得前一个栈帧重新成为新的栈帧。</li>
+<li>Java方法有两种返回方式<ul>
+<li>一种是正常的函数返回，使用return指令</li>
+<li>另外一种是抛出异常，不管哪种方式，都会导致栈帧被弹出</li>
+</ul>
+</li>
+</ul>
+<h3 id="栈的内部结构"><a href="#栈的内部结构" class="headerlink" title="栈的内部结构"></a>栈的内部结构</h3><p>每个栈帧中存储着：</p>
+<ul>
+<li>局部变量表（Local Variables）</li>
+<li>操作数栈（operand Stack）（或表达式栈）</li>
+<li>动态链接（DynamicLinking）（或指向运行时常量池的方法引用）</li>
+<li>方法返回地址（Return Address）（或方法正常退出或者异常退出的定义）</li>
+<li>一些附加信息</li>
+</ul>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190228.png&sign=0dc7f9e12f5277b5e3a1ec7490fb7f14b51fbf06c442e054744b9dea0457a8e5" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>并行每个线程下的栈都是私有的，因此每个线程都有自己各自的栈，并且每个栈里面都有很多栈帧，栈帧的大小主要由局部变量表 和 操作数栈决定的</p>
+<p><img src="https://www.yuque.com/api/filetransfer/images?url=https://gitee.com/vectorx/ImageCloud/raw/master/img/20210509190232.png&sign=0b4ab2082957f9df79a343a365c0ee77ad3f8e937b4c9bad55ab5be9f38d1423" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h4><ul>
+<li>定义为一个数字数组，主要用于存储方法参数，定义在方法体内部的局部变量，数据类型包括各类基本数据类型，对象引用，以及return address类型</li>
+<li>局部变量表建立在线程的栈上，是线程私有的，因此不存在数据安全问题</li>
+<li>局部变量表容量大小是在编译期确定下来的</li>
+<li>局部变量表存放编译期可知的各种基本数据类型（8种），引用类型（reference）,return address 类型</li>
+<li>最基本的存储单元是slot<ul>
+<li>32位占用一个slot，64位类型（long和double）占用两个slot</li>
+</ul>
+</li>
+<li>局部变量表中的变量只有在当前方法调用中有效，虚拟机通过使用局部变量表完成参数值到参数变量列表的传递过程。</li>
+<li>方法调用结束后，随着方法栈帧的销毁，局部变量表也会随之销毁</li>
+</ul>
+<h4 id="关于Slot的理解"><a href="#关于Slot的理解" class="headerlink" title="关于Slot的理解"></a>关于Slot的理解</h4><ul>
+<li>JVM虚拟机会为局部变量表中的每个Slot都分配一个访问索引，通过这个索引即可成功访问到局部变量表中指定的局部变量值</li>
+<li>如果当前帧是由构造方法或者实例方法创建的，那么该对象引用this，会存放在index为0的slot处，其余的参数表顺序继续排列</li>
+<li>栈帧中的局部变量表中的槽位是可以重复的，如果一个局部变量过了其作用域，那么其作用域之后申明的新的局部变量就有可能会复用过期局部变量的槽位，从而达到节省资源的目的</li>
+</ul>
+<p><img src="http://cdn.processon.com/5ed986f4f346fb1712e10524?e=1591317764&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:YE_nIZgKRBb0EvHJFHuHyMgDQtQ=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="http://cdn.processon.com/5ed987a11e0853199b509ad0?e=1591317937&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:ZgxAdvwmcJNyzQzoYr81vcZ1FaU=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="静态变量与局部变量对比及小结"><a href="#静态变量与局部变量对比及小结" class="headerlink" title="静态变量与局部变量对比及小结"></a>静态变量与局部变量对比及小结</h4><ul>
+<li><p>按照数据类型分</p>
+<ul>
+<li>基本数据类型</li>
+<li>引用数据类型</li>
+</ul>
+</li>
+<li><p>按照声明的位置</p>
+<ul>
+<li>成员变量，在使用前经历过初始化过程<ul>
+<li>类变量<ul>
+<li>链接的准备阶段给类变量默认赋值，初始化阶段显示赋值，即静态代码块赋值</li>
+</ul>
+</li>
+<li>实例变量<ul>
+<li>随着对象的创建，会在堆空间分配实例变量空间，并进行默认赋值</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>局部变量<ul>
+<li>在使用前，必须进显式赋值，否则编译不通过</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>在栈帧中，与性能调优关系最密切的部分，就是局部变量表，方法执行时，虚拟机使用局部变量表完成方法的传递</p>
+</li>
+<li><p>局部变量表中的变量也是重要的垃圾回收根节点，只要被局部变量表中直接或间接引用的对象都不会被回收</p>
+</li>
+</ul>
+<h3 id="操作数栈（Operand-Stack）"><a href="#操作数栈（Operand-Stack）" class="headerlink" title="操作数栈（Operand Stack）"></a><strong>操作数栈（Operand Stack）</strong></h3><p>每一个独立的栈帧除了包含局部变量表以外，还包含一个后进先出（Last-In-First-Out）的 操作数栈，也可以称之为表达式栈（Expression Stack）</p>
+<p>操作数栈，在方法执行过程中，根据字节码指令，往栈中写入数据或提取数据，即入栈（push）和 出栈（pop）</p>
+<ul>
+<li>某些字节码指令将值压入操作数栈，其余的字节码指令将操作数取出栈。使用它们后再把结果压入栈</li>
+<li>比如：执行复制、交换、求和等操作</li>
+</ul>
+<p><img src="http://cdn.processon.com/5ed98b6b6376891862184dd7?e=1591318907&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:HOXL24aD0riV03MrUP0vx8p53F4=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAddOperation</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-type">byte</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">15</span>; <br>    <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">8</span>; <br>    <span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> i + j;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码指令信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAddOperation</span><span class="hljs-params">()</span>; <br>    Code:<br>    <span class="hljs-number">0</span>: bipush <span class="hljs-number">15</span><br>    <span class="hljs-number">2</span>: istore_1 <br>    <span class="hljs-number">3</span>: bipush <span class="hljs-number">8</span><br>    <span class="hljs-number">5</span>: istore_2 <br>    <span class="hljs-number">6</span>:iload_1 <br>    <span class="hljs-number">7</span>:iload_2 <br>    <span class="hljs-number">8</span>:iadd<br>    <span class="hljs-number">9</span>:istore_3 <br>    <span class="hljs-number">10</span>:<span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>操作数栈，主要用于保存计算过程的中间结果，同时<strong>作为计算过程中变量临时的存储空间</strong>。</p>
+<p>操作数栈就是JVM执行引擎的一个工作区，当一个方法刚开始执行的时候，一个新的栈帧也会随之被创建出来，<strong>这个方法的操作数栈是空的</strong>。</p>
+<p>每一个操作数栈都会拥有一个明确的栈深度用于存储数值，其所需的最大深度在编译期就定义好了，保存在方法的Code属性中，为max_stack的值。</p>
+<p>栈中的任何一个元素都是可以任意的Java数据类型</p>
+<ul>
+<li>32bit的类型占用一个栈单位深度</li>
+<li>64bit的类型占用两个栈单位深度</li>
+</ul>
+<p>操作数栈<strong>并非采用访问索引的方式来进行数据访问的</strong>，而是只能通过标准的入栈和出栈操作来完成一次数据访问</p>
+<p><strong>如果被调用的方法带有返回值的话，其返回值将会被压入当前栈帧的操作数栈中</strong>，并更新PC寄存器中下一条需要执行的字节码指令。</p>
+<p>操作数栈中元素的数据类型必须与字节码指令的序列严格匹配，这由编译器在编译器期间进行验证，同时在类加载过程中的类检验阶段的数据流分析阶段要再次验证。</p>
+<p>另外，我们说Java虚拟机的<strong>解释引擎是基于栈的执行引擎</strong>，其中的栈指的就是操作数栈。</p>
+<h4 id="栈顶缓存技术"><a href="#栈顶缓存技术" class="headerlink" title="栈顶缓存技术"></a>栈顶缓存技术</h4><p>由于操作数是存储在内存中，频繁的进行内存读写操作影响执行速度，将栈顶元素全部缓存到物理CPU的寄存器中，依此降低对内存的读写次数，提升执行引擎的执行效率</p>
+<h3 id="动态链接（Dynamic-Linking）"><a href="#动态链接（Dynamic-Linking）" class="headerlink" title="动态链接（Dynamic Linking）"></a><strong>动态链接（Dynamic Linking）</strong></h3><p>动态链接、方法返回地址、附加信息 ： 有些地方被称为帧数据区</p>
+<p>每一个栈帧内部都包含一个指向运行时常量池中该栈帧所属方法的引用。包含这个引用的目的就是为了支持当前方法的代码能够实现动态链接（Dynamic Linking）。比如：invokedynamic指令</p>
+<p>在Java源文件被编译到字节码文件中时，所有的变量和方法引用都作为符号引用（Symbolic Reference）保存在class文件的常量池里。比如：描述一个方法调用了另外的其他方法时，就是通过常量池中指向方法的符号引用来表示的，那么动态链接的作用就是为了将这些符号引用转换为调用方法的直接引用。</p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8ap6yr4a5j30rz0d8gpb.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>为什么需要运行时常量池呢？</p>
+<p>常量池的作用：就是为了提供一些符号和常量，便于指令的识别</p>
+<h4 id="方法的调用：解析与分配"><a href="#方法的调用：解析与分配" class="headerlink" title="方法的调用：解析与分配"></a><strong>方法的调用：解析与分配</strong></h4><p>在JVM中，将符号引用转换为调用方法的直接引用与方法的绑定机制相关</p>
+<h4 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a><strong>静态链接</strong></h4><p>当一个字节码文件被装载进JVM内部时，如果被调用的目标方法在编译期可知，且运行期保持不变时，这种情况下降调用方法的符号引用转换为直接引用的过程称之为静态链接</p>
+<h4 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a><strong>动态链接</strong></h4><p>如果被调用的方法在编译期无法被确定下来，只能够在程序运行期将调用的方法的符号转换为直接引用，由于这种引用转换过程具备动态性，因此也被称之为动态链接。</p>
+<p>静态链接和动态链接不是名词，而是动词，这是理解的关键。</p>
+<p>对应的方法的绑定机制为：早期绑定（Early Binding）和晚期绑定（Late Binding）。绑定是一个字段、方法或者类在符号引用被替换为直接引用的过程，这仅仅发生一次。</p>
+<h4 id="早期绑定"><a href="#早期绑定" class="headerlink" title="早期绑定"></a><strong>早期绑定</strong></h4><p>早期绑定就是指被调用的目标方法如果在编译期可知，且运行期保持不变时，即可将这个方法与所属的类型进行绑定，这样一来，由于明确了被调用的目标方法究竟是哪一个，因此也就可以使用静态链接的方式将符号引用转换为直接引用。</p>
+<h4 id="晚期绑定"><a href="#晚期绑定" class="headerlink" title="晚期绑定"></a><strong>晚期绑定</strong></h4><p>如果被调用的方法在编译期无法被确定下来，只能够在程序运行期根据实际的类型绑定相关的方法，这种绑定方式也就被称之为晚期绑定。</p>
+<p>随着高级语言的横空出世，类似于Java一样的基于面向对象的编程语言如今越来越多，尽管这类编程语言在语法风格上存在一定的差别，但是它们彼此之间始终保持着一个共性，那就是都支持封装、继承和多态等面向对象特性，既然这一类的编程语言具备多态特悄，那么自然也就具备早期绑定和晚期绑定两种绑定方式。</p>
+<h4 id="虚方法和非虚方法"><a href="#虚方法和非虚方法" class="headerlink" title="虚方法和非虚方法"></a><strong>虚方法和非虚方法</strong></h4><p>如果方法在编译期就确定了具体的调用版本，这个版本在运行时是不可变的。这样的方法称为非虚方法。</p>
+<p>静态方法、私有方法、final方法、实例构造器、父类方法都是非虚方法。其他方法称为虚方法。</p>
+<p><strong>普通调用指令：</strong></p>
+<ul>
+<li>invokestatic：调用静态方法，解析阶段确定唯一方法版本</li>
+<li>invokespecial：调用方法、私有及父类方法，解析阶段确定唯一方法版本</li>
+<li>invokevirtual：调用所有虚方法</li>
+<li>invokeinterface：调用接口方法</li>
+</ul>
+<p> <strong>动态调用指令：</strong> </p>
+<ul>
+<li>invokedynamic：动态解析出需要调用的方法，然后执行</li>
+</ul>
+<p>前四条指令固化在虚拟机内部，方法的调用执行不可人为干预，而invokedynamic指令则支持由用户确定方法版本。其中invokestatic指令和invokespecial指令调用的方法称为非虚方法，其余的（fina1修饰的除外）称为虚方法。</p>
+<p><strong>关于invokednamic指令</strong></p>
+<ul>
+<li>JVM字节码指令集一直比较稳定，一直到Java7中才增加了一个invokedynamic指令，这是Java为了实现「动态类型语言」支持而做的一种改进。 </li>
+<li>但是在Java7中并没有提供直接生成invokedynamic指令的方法，需要借助ASM这种底层字节码工具来产生invokedynamic指令。直到Java8的Lambda表达式的出现，invokedynamic指令的生成，在Java中才有了直接的生成方式。 </li>
+<li>Java7中增加的动态语言类型支持的本质是对Java虚拟机规范的修改，而不是对Java语言规则的修改，这一块相对来讲比较复杂，增加了虚拟机中的方法调用，最直接的受益者就是运行在Java平台的动态语言的编译器。</li>
+</ul>
+<p> <strong>动态类型语言和静态类型语言</strong> </p>
+<ul>
+<li>动态类型语言和静态类型语言两者的区别就在于对类型的检查是在编译期还是在运行期，满足前者就是静态类型语言，反之是动态类型语言。</li>
+<li>说的再直白一点就是，静态类型语言是判断变量自身的类型信息；动态类型语言是判断变量值的类型信息，变量没有类型信息，变量值才有类型信息，这是动态语言的一个重要特征。</li>
+</ul>
+<h4 id="方法重写的本质"><a href="#方法重写的本质" class="headerlink" title="方法重写的本质"></a><strong>方法重写的本质</strong></h4><ol>
+<li>找到操作数栈顶的第一个元素所执行的对象的实际类型，记作C。</li>
+<li>如果在类型C中找到与常量中的描述符合简单名称都相符的方法，则进行访问权限校验，如果通过则返回这个方法的直接引用，查找过程结束；如果不通过，则返回java.lang.IllegalAccessError 异常。</li>
+<li>否则，按照继承关系从下往上依次对C的各个父类进行第2步的搜索和验证过程。</li>
+<li>如果始终没有找到合适的方法，则抛出java.1ang.AbstractMethodsrror异常。</li>
+</ol>
+<p><strong>IllegalAccessError介绍</strong></p>
+<p>程序试图访问或修改一个属性或调用一个方法，这个属性或方法，你没有权限访问。一般的，这个会引起编译器异常。这个错误如果发生在运行时，就说明一个类发生了不兼容的改变。</p>
+<h4 id="方法的调用：虚方法表"><a href="#方法的调用：虚方法表" class="headerlink" title="方法的调用：虚方法表"></a><strong>方法的调用：虚方法表</strong></h4><p>在面向对象的编程中，会很频繁的使用到动态分派，如果在每次动态分派的过程中都要重新在类的方法元数据中搜索合适的目标的话就可能影响到执行效率。因此，为了提高性能，JVM采用在类的方法区建立一个虚方法表 （virtual method table）（非虚方法不会出现在表中）来实现。使用索引表来代替查找。</p>
+<p>每个类中都有一个虚方法表，表中存放着各个方法的实际入口。</p>
+<p>虚方法表是什么时候被创建的呢？</p>
+<p>虚方法表会在类加载的链接阶段被创建并开始初始化，类的变量初始值准备完成之后，JVM会把该类的方法表也初始化完毕。</p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8apeq8zeij30m30eb0y9.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="方法返回地址（return-address）"><a href="#方法返回地址（return-address）" class="headerlink" title="方法返回地址（return address）"></a><strong>方法返回地址（return address）</strong></h3><p><strong>存放调用该方法的pc寄存器的值。一个方法的结束，有两种方式：</strong></p>
+<ul>
+<li>正常执行完成</li>
+<li>出现未处理的异常，非正常退出</li>
+</ul>
+<p>无论通过哪种方式退出，在方法退出后都返回到该方法被调用的位置。方法正常退出时，调用者的pc计数器的值作为返回地址，即调用该方法的指令的下一条指令的地址。而通过异常退出的，返回地址是要通过异常表来确定，栈帧中一般不会保存这部分信息。</p>
+<p><strong>当一个方法开始执行后，只有两种方式可以退出这个方法：</strong></p>
+<ol>
+<li>执行引擎遇到任意一个方法返回的字节码指令（return），会有返回值传递给上层的方法调用者，简称正常完成出口； <ol>
+<li>一个方法在正常调用完成之后，究竟需要使用哪一个返回指令，还需要根据方法返回值的实际数据类型而定。</li>
+<li>在字节码指令中，返回指令包含ireturn（当返回值是boolean，byte，char，short和int类型时使用），lreturn（Long类型），freturn（Float类型），dreturn（Double类型），areturn。另外还有一个return指令声明为void的方法，实例初始化方法，类和接口的初始化方法使用。</li>
+</ol>
+</li>
+<li>在方法执行过程中遇到异常（Exception），并且这个异常没有在方法内进行处理，也就是只要在本方法的异常表中没有搜索到匹配的异常处理器，就会导致方法退出，简称异常完成出口。</li>
+</ol>
+<p>方法执行过程中，抛出异常时的异常处理，存储在一个异常处理表，方便在发生异常的时候找到处理异常的代码</p>
+<p>本质上，方法的退出就是当前栈帧出栈的过程。此时，需要恢复上层方法的局部变量表、操作数栈、将返回值压入调用者栈帧的操作数栈、设置PC寄存器值等，让调用者方法继续执行下去。</p>
+<p>正常完成出口和异常完成出口的区别在于：通过异常完成出口退出的不会给他的上层调用者产生任何的返回值。</p>
+<h3 id="栈的相关面试题"><a href="#栈的相关面试题" class="headerlink" title="栈的相关面试题"></a><strong>栈的相关面试题</strong></h3><p>举例栈溢出的情况？（StackOverflowError） </p>
+<p>​	○通过 -Xss设置栈的大小</p>
+<p>●调整栈大小，就能保证不出现溢出么？ </p>
+<p>​	○不能保证不溢出</p>
+<p>●分配的栈内存越大越好么？ </p>
+<p>​	○不是，一定时间内降低了OOM概率，但是会挤占其它的线程空间，因为整个空间是有限的。</p>
+<p>●垃圾回收是否涉及到虚拟机栈？ </p>
+<p>​	○不会</p>
+<p>●方法中定义的局部变量是否线程安全？ </p>
+<p>​	○具体问题具体分析。如果对象是在内部产生，并在内部消亡，没有返回到外部，那么它就是线程安全的，反之则是线程不安全的。</p>
+<table>
+<thead>
+<tr>
+<th>运行时数据区</th>
+<th>是否存在Error</th>
+<th>是否存在GC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>程序计数器</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>虚拟机栈</td>
+<td>是（SOE）</td>
+<td>否</td>
+</tr>
+<tr>
+<td>本地方法栈</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>方法区</td>
+<td>是（OOM）</td>
+<td>是</td>
+</tr>
+<tr>
+<td>堆</td>
+<td>是</td>
+<td>是</td>
+</tr>
+</tbody></table>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="category-chain-item">JVM上篇内存与垃圾回收</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈</div>
+      <div>https://yztldxdz.top/2022/11/06/JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/07/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%AF%87/" title="代码随想录—字符串篇">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">代码随想录—字符串篇</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/05/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E5%93%88%E5%B8%8C%E8%A1%A8%E7%AF%87/" title="代码随想录—哈希表篇">
+                        <span class="hidden-mobile">代码随想录—哈希表篇</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>
