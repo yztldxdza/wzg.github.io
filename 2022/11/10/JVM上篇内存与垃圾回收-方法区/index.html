@@ -1,0 +1,1009 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="方法区从线程共享与否的角度来看 栈、堆、方法区交互关系 方法区的理解 Java虚拟机规范中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但是一些简单的实现，可能不会选择去进行垃圾收集或者进行压缩。对于HotSpot而言，方法区还有一个别名叫Non-Heap（非堆），目的就是要和堆分开 所以方法区看作是一块独立于Java堆的内存空间 方法区和Java堆一样，是各个线程共享的内存区域 方法区在J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM上篇内存与垃圾回收-方法区">
+<meta property="og:url" content="https://yztldxdz.top/2022/11/10/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%96%B9%E6%B3%95%E5%8C%BA/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="方法区从线程共享与否的角度来看 栈、堆、方法区交互关系 方法区的理解 Java虚拟机规范中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但是一些简单的实现，可能不会选择去进行垃圾收集或者进行压缩。对于HotSpot而言，方法区还有一个别名叫Non-Heap（非堆），目的就是要和堆分开 所以方法区看作是一块独立于Java堆的内存空间 方法区和Java堆一样，是各个线程共享的内存区域 方法区在J">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cdn.processon.com/5ee182c35653bb29259000bc?e=1591840980&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:QSK3EDM-oFaoY8tGJnfHOGzH9zk=">
+<meta property="og:image" content="http://cdn.processon.com/5ee183dc6376891e81c275c7?e=1591841261&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:JVUdx5ydUMmJ4WmgJwuyQO5OaGA=">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8buodlg20j30in075myr.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8buun04eqj30vs0i97ah.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8buyixwzgj30te05bwgt.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv08xmraj30uw0hd12a.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv11zkpyj30pz0czgqr.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7ie3klj30x50hk44b.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7tyl5bj30w40h3dms.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7z489zj30wz0hedm8.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv84w6ogj30x20hltfd.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9nszioj30x20hltfd.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9tnzokj30wx0hhtf2.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9zbyuoj30x90hrwkm.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bva5arwwj30x80hojy2.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvabjgu3j30x40hgn3s.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvai0c3uj30wa0h37an.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvanpalnj30wu0hfjxn.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvat99iuj30w60h1grw.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvayid60j30wl0h7dlz.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvb5xk44j30ww0hbq9b.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvbb93ofj30zu0j110c.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvbh044jj310e0j648l.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvc0j7x3j30x70hp0ze.jpg">
+<meta property="og:image" content="http://cdn.processon.com/5ee41d0907912929cb3f37ee?e=1592011545&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:WjuYvY8ZPEv3sKwVB3Lv9-AWRCo=">
+<meta property="og:image" content="http://cdn.processon.com/5ee41d13e0b34d4dba37d05b?e=1592011556&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:rnqbSAMY-gk-thK2OR3Q6buy224=">
+<meta property="og:image" content="http://cdn.processon.com/5ee41d1c07912929cb3f37f1?e=1592011564&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:btmLK8JXyRmeSCka0DkIEntWxJc=">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvgc0rzmj30um0d7jwu.jpg">
+<meta property="article:published_time" content="2022-11-10T11:36:24.000Z">
+<meta property="article:modified_time" content="2022-11-21T12:41:26.489Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="八股文">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://cdn.processon.com/5ee182c35653bb29259000bc?e=1591840980&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:QSK3EDM-oFaoY8tGJnfHOGzH9zk=">
+  
+  
+  
+  <title>JVM上篇内存与垃圾回收-方法区 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JVM上篇内存与垃圾回收-方法区"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-10 19:36" pubdate>
+          2022年11月10日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM上篇内存与垃圾回收-方法区</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a><strong>方法区</strong></h2><h4 id="从线程共享与否的角度来看"><a href="#从线程共享与否的角度来看" class="headerlink" title="从线程共享与否的角度来看"></a>从线程共享与否的角度来看</h4><p><img src="http://cdn.processon.com/5ee182c35653bb29259000bc?e=1591840980&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:QSK3EDM-oFaoY8tGJnfHOGzH9zk=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="栈、堆、方法区交互关系"><a href="#栈、堆、方法区交互关系" class="headerlink" title="栈、堆、方法区交互关系"></a>栈、堆、方法区交互关系</h4><p><img src="http://cdn.processon.com/5ee183dc6376891e81c275c7?e=1591841261&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:JVUdx5ydUMmJ4WmgJwuyQO5OaGA=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="方法区的理解"><a href="#方法区的理解" class="headerlink" title="方法区的理解"></a>方法区的理解</h3><ul>
+<li>Java虚拟机规范中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但是一些简单的实现，可能不会选择去进行垃圾收集或者进行压缩。对于HotSpot而言，方法区还有一个别名叫Non-Heap（非堆），目的就是要和堆分开</li>
+<li>所以方法区看作是一块独立于Java堆的内存空间</li>
+<li>方法区和Java堆一样，是各个线程共享的内存区域</li>
+<li>方法区在JVM启动的时候被创建，并且它的实际的物理内存空间和Java堆区一样，都是可以不连续的</li>
+<li>方法区的大小和堆空间一样，可以选择固定大小或者可扩展</li>
+<li>方法区的大小决定了系统可以保存多少个类，如果定义太多类，加载大量的第三方的Jar包，Tomcat部署过多工程，导致方法区溢出，虚拟机同样会抛出内存溢出OOM：PermGen space或者Metaspace </li>
+<li>关闭JVM就会释放这个区域的内存</li>
+</ul>
+<h4 id="HotSpot中方法区的演进"><a href="#HotSpot中方法区的演进" class="headerlink" title="HotSpot中方法区的演进"></a>HotSpot中方法区的演进</h4><ul>
+<li>在jdk7及以前，习惯上把方法区，称为永久代，jdk8开始，使用元空间取代了永久代<ul>
+<li>元空间的本质和永久带类似，都是对JVM规范中方法区的实现。不过元空间与永久代<strong>最大的区别</strong>在于：元空间不在虚拟机设置的内存中，而是使用本地内存</li>
+<li>根据Jvm规范，如果方法区无法满足新的内存分配需求，将抛出OOM异常</li>
+</ul>
+</li>
+<li>本质上，方法区和永久代并不等价，仅是对HostSpot而言的。</li>
+<li>Java虚拟机规范，对如何实现方法区，不做统一要求，例如BEA JRockit&#x2F;IBM J9中不存在永久代的概念</li>
+<li>现在来看，当年使用永久代，不是好的点子，导致Java程序更容易OOM<ul>
+<li>-XX:MaxPermSize</li>
+</ul>
+</li>
+</ul>
+<h4 id="设置方法区大小与OOM"><a href="#设置方法区大小与OOM" class="headerlink" title="设置方法区大小与OOM"></a>设置方法区大小与OOM</h4><p><strong>jdk7及以前</strong></p>
+<ul>
+<li>通过来设置永久代初始分配空间。默认值是20.75M-XX:Permsize</li>
+<li>通过来设定永久代最大可分配空间。32位机器默认是64M，64位机器模式是82M-XX:MaxPermsize</li>
+<li>当JVM加载的类信息容量超过了这个值，会报异常OutOfMemoryError:PermGen space。</li>
+</ul>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8buodlg20j30in075myr.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><strong>JDK8以后</strong></p>
+<ul>
+<li>元数据区大小可以使用参数 -XX:MetaspaceSize 和 -XX:MaxMetaspaceSize指定</li>
+<li>默认值依赖于平台。windows下，-XX:MetaspaceSize&#x3D;21M -XX:MaxMetaspaceSize&#x3D;-1&#x2F;&#x2F;即没有限制。</li>
+<li>与永久代不同，如果不指定大小，默认情况下，虚拟机会耗尽所有的可用系统内存。如果元数据区发生溢出，虚拟机一样会抛出异常OutOfMemoryError:Metaspace</li>
+<li>-XX:MetaspaceSize：设置初始的元空间大小。对于一个64位的服务器端JVM来说，其默认的-XX:MetaspaceSize值为21MB。这就是初始的高水位线，一旦触及这个水位线，Full GC将会被触发并卸载没用的类（即这些类对应的类加载器不再存活），然后这个高水位线将会重置。新的高水位线的值取决于GC后释放了多少元空间。如果释放的空间不足，那么在不超过MaxMetaspaceSize时，适当提高该值。如果释放空间过多，则适当降低该值。</li>
+<li>如果初始化的高水位线设置过低，上述高水位线调整情况会发生很多次。通过垃圾回收器的日志可以观察到Full GC多次调用。为了避免频繁地GC，建议将-XX:MetaspaceSize设置为一个相对较高的值。</li>
+</ul>
+<h4 id="如何解决OOM"><a href="#如何解决OOM" class="headerlink" title="如何解决OOM"></a>如何解决OOM</h4><ol>
+<li>要解决OOM异常或heap space的异常，一般的手段是首先通过内存映像分析工具（如Eclipse Memory Analyzer）对dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（Memory Leak）还是内存溢出（Memory Overflow） </li>
+<li>如果是内存泄漏，可进一步通过工具查看泄漏对象到GC Roots的引用链。于是就能找到泄漏对象是通过怎样的路径与GCRoots相关联并导致垃圾收集器无法自动回收它们的。掌握了泄漏对象的类型信息，以及GCRoots引用链的信息，就可以比较准确地定位出泄漏代码的位置。 </li>
+<li>如果不存在内存泄漏，换句话说就是内存中的对象确实都还必须存活着，那就应当检查虚拟机的堆参数（-Xmx与-Xms），与机器物理内存对比看是否还可以调大，从代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。</li>
+</ol>
+<h4 id="方法区的内部结构"><a href="#方法区的内部结构" class="headerlink" title="方法区的内部结构"></a><strong>方法区的内部结构</strong></h4><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8buun04eqj30vs0i97ah.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="方法区（Method-Area）存储什么"><a href="#方法区（Method-Area）存储什么" class="headerlink" title="方法区（Method Area）存储什么"></a><strong>方法区（Method Area）存储什么</strong></h4><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8buyixwzgj30te05bwgt.jpg" srcset="/img/loading.gif" lazyload></p>
+<p> <strong>类型信息</strong> </p>
+<p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM必须在方法区中存储以下类型信息：</p>
+<ol>
+<li>这个类型的完整有效名称（全名&#x3D;包名.类名）</li>
+<li>这个类型直接父类的完整有效名（对于interface或是java.lang.object，都没有父类）</li>
+<li>这个类型的修饰符（public，abstract，final的某个子集）</li>
+<li>这个类型直接接口的一个有序列表</li>
+</ol>
+<p> <strong>域（Field）信息</strong> </p>
+<p>JVM必须在方法区中保存类型的所有域的相关信息以及域的声明顺序。</p>
+<p>域的相关信息包括：域名称、域类型、域修饰符（public，private，protected，static，final，volatile，transient的某个子集）</p>
+<p> <strong>方法（Method）信息</strong> </p>
+<p>JVM必须保存所有方法的以下信息，同域信息一样包括声明顺序：</p>
+<ol>
+<li>方法名称</li>
+<li>方法的返回类型（或void）</li>
+<li>方法参数的数量和类型（按顺序）</li>
+<li>方法的修饰符（public，private，protected，static，final，synchronized，native，abstract的一个子集）</li>
+<li>方法的字节码（bytecodes）、操作数栈、局部变量表及大小（abstract和native方法除外）</li>
+<li>异常表（abstract和native方法除外） <ol>
+<li>每个异常处理的开始位置、结束位置、代码处理在程序计数器中的偏移地址、被捕获的异常类的常量池索引</li>
+</ol>
+</li>
+</ol>
+<p> <strong>non-final的类变量</strong> </p>
+<ul>
+<li>静态变量和类关联在一起，随着类的加载而加载，他们成为类数据在逻辑上的一部分</li>
+<li>类变量被类的所有实例共享，即使没有类实例时，你也可以访问它</li>
+</ul>
+<p><strong>全局常量（static final）</strong></p>
+<p>被声明为final的类变量的处理方法则不同，每个全局常量在编译的时候就会被分配了。</p>
+<h3 id="运行时常量池-VS-常量池"><a href="#运行时常量池-VS-常量池" class="headerlink" title="运行时常量池 VS 常量池"></a><strong>运行时常量池 VS 常量池</strong></h3><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv08xmraj30uw0hd12a.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>方法区，内部包含了运行时常量池</li>
+<li>字节码文件，内部包含了常量池</li>
+<li>要弄清楚方法区，需要理解清楚ClassFile，因为加载类的信息都在方法区。</li>
+<li>要弄清楚方法区的运行时常量池，需要理解清楚ClassFile中的常量池。</li>
+</ul>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv11zkpyj30pz0czgqr.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>一个有效的字节码文件中除了包含类的版本信息、字段、方法以及接口等描述符信息外，还包含一项信息就是常量池表（Constant Pool Table），包括各种字面量和对类型、域和方法的符号引用</p>
+<h4 id="为什么要用常量池？"><a href="#为什么要用常量池？" class="headerlink" title="为什么要用常量池？"></a>为什么要用常量池？</h4><p>一个java源文件中的类、接口、编译后产生一个字节码文件。而Java中的字节码需要数据支持，通常这种数据会很大，以至于不能直接存到字节码里。换一种方式，可以存到常量池，这个字节码包含了指向常量池的引用。在动态链接会用到运行时常量池。</p>
+<h4 id="常量池有什么？"><a href="#常量池有什么？" class="headerlink" title="常量池有什么？"></a>常量池有什么？</h4><ul>
+<li>数量值</li>
+<li>字符串值</li>
+<li>类引用</li>
+<li>字段引用</li>
+<li>方法引用</li>
+</ul>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a><strong>小结</strong></h4><p>常量池、可以看做是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等类型</p>
+<h4 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a><strong>运行时常量池</strong></h4><ul>
+<li>运行时常量池（Runtime Constant Pool）是方法区的一部分。</li>
+<li>常量池表（Constant Pool Table）是Class文件的一部分，用于存放编译期生成的各种字面量与符号引用，这部分内容将在类加载后存放到方法区的运行时常量池中。</li>
+<li>运行时常量池，在加载类和接口到虚拟机后，就会创建对应的运行时常量池。</li>
+<li>JVM为每个已加载的类型（类或接口）都维护一个常量池。池中的数据项像数组项一样，是通过索引访问的。</li>
+<li>运行时常量池中包含多种不同的常量，包括编译期就已经明确的数值字面量，也包括到运行期解析后才能够获得的方法或者字段引用。此时不再是常量池中的符号地址了，这里换为真实地址。</li>
+<li>运行时常量池，相对于Class文件常量池的另一重要特征是：具备动态性。</li>
+<li>运行时常量池类似于传统编程语言中的符号表（symboltable），但是它所包含的数据却比符号表要更加丰富一些。</li>
+<li>当创建类或接口的运行时常量池时，如果构造运行时常量池所需的内存空间超过了方法区所能提供的最大值，则JVM会抛OutOfMemoryError异常。</li>
+</ul>
+<h4 id="方法区使用举例"><a href="#方法区使用举例" class="headerlink" title="方法区使用举例"></a><strong>方法区使用举例</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MethodAreaDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String args[])</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> <span class="hljs-number">500</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> x / y;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-number">50</span>;<br>        System.out.println(a+b);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7ie3klj30x50hk44b.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7tyl5bj30w40h3dms.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv7z489zj30wz0hedm8.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv84w6ogj30x20hltfd.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9nszioj30x20hltfd.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9tnzokj30wx0hhtf2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bv9zbyuoj30x90hrwkm.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bva5arwwj30x80hojy2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvabjgu3j30x40hgn3s.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvai0c3uj30wa0h37an.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvanpalnj30wu0hfjxn.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvat99iuj30w60h1grw.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvayid60j30wl0h7dlz.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvb5xk44j30ww0hbq9b.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvbb93ofj30zu0j110c.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvbh044jj310e0j648l.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvc0j7x3j30x70hp0ze.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="方法区演进细节"><a href="#方法区演进细节" class="headerlink" title="方法区演进细节"></a><strong>方法区</strong>演进细节</h4><ol>
+<li>首先明确：只有Hotspot才有永久代。BEA JRockit、IBMJ9等来说，是不存在永久代的概念的。原则上如何实现方法区属于虚拟机实现细节，不受《Java虚拟机规范》管束，并不要求统一</li>
+<li>Hotspot中方法区的变化：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>JDK1.6及之前</th>
+<th>有永久代（permanet），静态变量存储在永久代上</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JDK1.7</td>
+<td>有永久代，但已经逐步 “去永久代”，字符串常量池，静态变量移除，保存在堆中</td>
+</tr>
+<tr>
+<td>JDK1.8</td>
+<td>无永久代，类型信息，字段，方法，常量保存在本地内存的元空间，但字符串常量池、静态变量仍然在堆中。</td>
+</tr>
+</tbody></table>
+<p><img src="http://cdn.processon.com/5ee41d0907912929cb3f37ee?e=1592011545&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:WjuYvY8ZPEv3sKwVB3Lv9-AWRCo=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="http://cdn.processon.com/5ee41d13e0b34d4dba37d05b?e=1592011556&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:rnqbSAMY-gk-thK2OR3Q6buy224=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="http://cdn.processon.com/5ee41d1c07912929cb3f37f1?e=1592011564&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:btmLK8JXyRmeSCka0DkIEntWxJc=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="永久代为什么被元空间替换"><a href="#永久代为什么被元空间替换" class="headerlink" title="永久代为什么被元空间替换"></a>永久代为什么被元空间替换</h4><ul>
+<li>随着 JAVA8的到来，HotSpotVM中再也见不到永久代了，但是并不意味着类的元数据信息也消失了，这些数据被转移到了一个与堆不相连的本地内存区域，这个区域叫做元空间MetaSpace</li>
+<li>由于类的元数据分配在本地内存中，元空间的最大可分配空间就是系统的可用内存空间</li>
+<li>为永久代设置空间大小很难确定，在某些场景下，如果动态加载类过多，就容易产生OOM</li>
+<li>而元空间并不在虚拟机中，而是使用本地内存，因此默认情况下，元空间的大小仅受本地内存限制</li>
+<li>对永久代进行调优是很困难的</li>
+</ul>
+<h4 id="StringTable为什么要调整位置？"><a href="#StringTable为什么要调整位置？" class="headerlink" title="StringTable为什么要调整位置？"></a><strong>StringTable为什么要调整位置？</strong></h4><ul>
+<li>jdk7中将StringTable放到了堆空间中。因为永久代的回收效率很低，在full gc的时候才会触发。而full gc是老年代的空间不足、永久代不足时才会触发。</li>
+<li>这就导致StringTable回收效率不高。而我们开发中会有大量的字符串被创建，回收效率低，导致永久代内存不足。放到堆里，能及时回收内存。</li>
+</ul>
+<h4 id="方法区的垃圾回收"><a href="#方法区的垃圾回收" class="headerlink" title="方法区的垃圾回收"></a><strong>方法区的垃圾回收</strong></h4><p>有些人认为方法区（如Hotspot虚拟机中的元空间或者永久代）是没有垃圾收集行为的，其实不然。《Java虚拟机规范》对方法区的约束是非常宽松的，提到过可以不要求虚拟机在方法区中实现垃圾收集。事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（如JDK11时期的zGC收集器就不支持类卸载）。</p>
+<p>方法区的垃圾收集主要回收两部分内容：常量池中废弃的常量和不再使用的类型。</p>
+<p>先来说说方法区内常量池之中主要存放的两大类常量：字面量和符号引用。字面量比较接近Java语言层次的常量概念，如文本字符串、被声明为final的常量值等。而符号引用则属于编译原理方面的概念，包括下面三类常量：</p>
+<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>HotSpot虚拟机对常量池的回收策略是很明确的，只要常量池中的常量没有被任何地方引用，就可以被回收。</p>
+<p>回收废弃常量与回收Java堆中的对象非常类似。</p>
+<p>判定一个常量是否“废弃”还是相对简单，而要判定一个类型是否属于“不再被使用的类”的条件就比较苛刻了。需要同时满足下面三个条件：</p>
+<ul>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。 </li>
+<li>加载该类的类加载器已经被回收，这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi、JSP的重加载等，否则通常是很难达成的。 </li>
+<li>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ul>
+<p>Java虚拟机被允许对满足上述三个条件的无用类进行回收，这里说的仅仅是“被允许”，而并不是和对象一样，没有引用了就必然会回收。关于是否要对类型进行回收，HotSpot虚拟机提供了-Xnoclassgc参数进行控制，还可以使用-verbose:class 以及 -XX:+TraceClassLoading、-XX:+TraceClassUnLoading查看类加载和卸载信息</p>
+<p>在大量使用反射、动态代理、CGLib等字节码框架，动态生成JSP以及OSGi这类频繁自定义类加载器的场景中，通常都需要Java虚拟机具备类型卸载的能力，以保证不会对方法区造成过大的内存压力。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvgc0rzmj30um0d7jwu.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h4><p><strong>百度：</strong></p>
+<ul>
+<li>说一下JVM内存模型吧，有哪些区？分别干什么的？</li>
+</ul>
+<p><strong>蚂蚁金服：</strong></p>
+<ul>
+<li><p>Java8的内存分代改进 JVM内存分哪几个区，每个区的作用是什么？</p>
+</li>
+<li><p>一面：JVM内存分布&#x2F;内存结构？栈和堆的区别？堆的结构？为什么两个survivor区？</p>
+</li>
+<li><p>二面：Eden和survior的比例分配</p>
+</li>
+</ul>
+<p><strong>小米：</strong></p>
+<ul>
+<li>jvm内存分区，为什么要有新生代和老年代</li>
+</ul>
+<p><strong>字节跳动：</strong></p>
+<ul>
+<li><p>二面：Java的内存分区</p>
+</li>
+<li><p>二面：讲讲vm运行时数据库区 什么时候对象会进入老年代？</p>
+</li>
+</ul>
+<p><strong>京东：</strong></p>
+<ul>
+<li><p>JVM的内存结构，Eden和Survivor比例。</p>
+</li>
+<li><p>JVM内存为什么要分成新生代，老年代，持久代。</p>
+</li>
+<li><p>新生代中为什么要分为Eden和survivor。</p>
+</li>
+</ul>
+<p><strong>天猫：</strong></p>
+<ul>
+<li><p>一面：Jvm内存模型以及分区，需要详细到每个区放什么。</p>
+</li>
+<li><p>一面：JVM的内存模型，Java8做了什么改变</p>
+</li>
+</ul>
+<p><strong>拼多多：</strong></p>
+<ul>
+<li>JVM内存分哪几个区，每个区的作用是什么？</li>
+</ul>
+<p><strong>美团：</strong></p>
+<ul>
+<li><p>java内存分配 jvm的永久代中会发生垃圾回收吗？</p>
+</li>
+<li><p>一面：jvm内存分区，为什么要有新生代和老年代？</p>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="category-chain-item">JVM上篇内存与垃圾回收</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JVM上篇内存与垃圾回收-方法区</div>
+      <div>https://yztldxdz.top/2022/11/10/JVM上篇内存与垃圾回收-方法区/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/11/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91%E7%90%86%E8%AE%BA%E7%AF%87/" title="代码随想录—二叉树理论篇">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">代码随想录—二叉树理论篇</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/09/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97%E7%AF%87/" title="代码随想录—栈与队列篇">
+                        <span class="hidden-mobile">代码随想录—栈与队列篇</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>
