@@ -50,8 +50,10 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/052e61adbb914c3bb5beed6ecf98a02a.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/ffea00d9da91456ea681308e115ab74e.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190723234654153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RaODQ1MTk1NDg1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20201021113745109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RaODQ1MTk1NDg1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20201021113912650.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RaODQ1MTk1NDg1,size_16,color_FFFFFF,t_70#pic_center">
 <meta property="article:published_time" content="2022-11-19T07:22:53.000Z">
-<meta property="article:modified_time" content="2022-11-27T07:42:12.061Z">
+<meta property="article:modified_time" content="2022-11-27T08:09:18.405Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -255,7 +257,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          4.3k 字
+          5.4k 字
         
       </span>
     
@@ -267,7 +269,7 @@
         
         
           <!-- compatible with older versions-->
-          37 分钟
+          46 分钟
         
       </span>
     
@@ -398,6 +400,39 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RunnableDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">//4.创建Runnable的子类对象</span><br>        MyRunnale mr=<span class="hljs-keyword">new</span> <span class="hljs-title class_">MyRunnale</span>(); <br>        <span class="hljs-comment">//5.将子类对象当做参数传递给Thread的构造函数,并开启线程</span><br>        <span class="hljs-comment">//MyRunnale taget=mr; 多态</span><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(mr).start();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) &#123;<br>            System.out.println(<span class="hljs-string">&quot;我是主线程&quot;</span>+i);<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//1.定义一个类实现Runnable</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyRunnale</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Runnable</span>&#123;<br>    <span class="hljs-comment">//2.重写run方法</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//3.将要执行的代码写在run方法中</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) &#123;<br>            System.out.println(<span class="hljs-string">&quot;我是线程&quot;</span>+i);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h4 id="两种实现多线程方式的区别"><a href="#两种实现多线程方式的区别" class="headerlink" title="两种实现多线程方式的区别"></a>两种实现多线程方式的区别</h4><p>(1).查看源码<br>    a.继承Thread:由于子类重写了Thread类的run(),当调用start()时,直接找子类的run()方法<br>    b.实现Runnable:构造函数中传入了Runnable的引用,成员变量记住了它,start()调用run()方法时内部判断成员变量Runnable的引用是否为空,不为空编译时看的是		Runnable的run(),运行时执行的是子类的run()方法<br>(2).继承Thread<br>    a.好处是:可以直接使用Thread类中的方法,代码简单<br>    b.弊端是:如果已经有了父类,就不能用这种方法<br>(3).实现Runnable接口<br>    a.好处是:即使自己定义的线程类有了父类也没有关系,因为有了父类可以实现接口,而且接口可以多现实的<br>    b.弊端是:不能直接使用Thread中的方法需要先获取到线程对象后,才能得到Thread的方法,代码复杂</p>
+<h4 id="Thread-activeCount"><a href="#Thread-activeCount" class="headerlink" title="Thread.activeCount( )"></a>Thread.activeCount( )</h4><p>在IDEA中Thread.activeCount()&#x3D;2,除了main方法的主线程外还有,还多了一个预期外的Monitor Ctrl-Break线程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">threadActiveCount</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">//打印当前线程组的线程</span><br>        Thread.currentThread().getThreadGroup().list();<br>        System.out.println(<span class="hljs-string">&quot;=========&quot;</span>);<br>        <span class="hljs-comment">//idea用的是反射,还有一个monitor监控线程。</span><br>        System.out.println(Thread.activeCount());<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        输出结果:</span><br><span class="hljs-comment">        java.lang.ThreadGroup[name=main,maxpri=10]</span><br><span class="hljs-comment">            Thread[main,5,main]</span><br><span class="hljs-comment">            Thread[Monitor Ctrl-Break,5,main]</span><br><span class="hljs-comment">        =========</span><br><span class="hljs-comment">        2</span><br><span class="hljs-comment">        * */</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20201021113745109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RaODQ1MTk1NDg1,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>在ECLIPSE中得到的结果是1</p>
+<p><img src="https://img-blog.csdnimg.cn/20201021113912650.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RaODQ1MTk1NDg1,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="TimeUnit类"><a href="#TimeUnit类" class="headerlink" title="TimeUnit类"></a>TimeUnit类</h4><p>TimeUnit是java.util.concurrent包下面的一个类,TimeUnit提供了可读性更好的线程暂停操作,通常用来替换Thread.sleep( ) 底层实现还是使用的Thread.sleep( )</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SECONDS</td>
+<td>停顿3秒</td>
+</tr>
+<tr>
+<td>MINUTES</td>
+<td>停顿3分钟</td>
+</tr>
+<tr>
+<td>HOURS</td>
+<td>停顿3小时</td>
+</tr>
+<tr>
+<td>DAYS</td>
+<td>停顿三天</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">//停顿3s</span><br><span class="hljs-keyword">try</span> &#123; TimeUnit.SECONDS.sleep(<span class="hljs-number">3</span>);  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;e.printStackTrace();&#125;<br><span class="hljs-comment">//停顿3分钟</span><br><span class="hljs-keyword">try</span> &#123; TimeUnit.MINUTES.sleep(<span class="hljs-number">3</span>);  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;e.printStackTrace();&#125;<br><span class="hljs-comment">//停顿3h</span><br><span class="hljs-keyword">try</span> &#123; TimeUnit.HOURS.sleep(<span class="hljs-number">3</span>);  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;e.printStackTrace();&#125;<br><span class="hljs-comment">//停顿三天</span><br><span class="hljs-keyword">try</span> &#123; TimeUnit.DAYS.sleep(<span class="hljs-number">3</span>);  &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;e.printStackTrace();&#125;<br></code></pre></td></tr></table></figure>
+
 
               
             </div>
@@ -479,6 +514,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/11/20/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-CompletableFuture/" title="JUC并发编程-CompletableFuture">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JUC并发编程-CompletableFuture</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
