@@ -48,8 +48,9 @@
 <meta property="og:image" content="http://cdn.processon.com/5ed6e443f346fb6b02f6b148?e=1591145043&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:4_gU1ZBzIh2mYgtHE6VpBECYtUw=">
 <meta property="og:image" content="http://cdn.processon.com/5ed6f04c5653bb1954973143?e=1591148125&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:qsJEjxVxKgvyv5T5XVKV8aC0kHs=">
 <meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgh7ghij30fm0caado.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2022-11-04T06:10:52.000Z">
-<meta property="article:modified_time" content="2022-11-20T06:16:42.606Z">
+<meta property="article:modified_time" content="2022-12-13T10:42:48.891Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -253,7 +254,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          4.1k 字
+          4.3k 字
         
       </span>
     
@@ -265,7 +266,7 @@
         
         
           <!-- compatible with older versions-->
-          35 分钟
+          37 分钟
         
       </span>
     
@@ -309,7 +310,7 @@
               
               <h2 id="类加载子系统"><a href="#类加载子系统" class="headerlink" title="类加载子系统"></a>类加载子系统</h2><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><ul>
 <li>负责从文件系统或者网络中加载Class文件，Class文件开头有特定标识，魔术，咖啡杯壁</li>
-<li>Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定</li>
+<li><strong>Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定</strong></li>
 <li>加载的类信息存放于称为方法区的内存空间，除了类信息，方法区还会存放运行时常量池信息，还可能包括字符串字面量和数字常量<ul>
 <li>常量池运行时加载到内存中，即运行时常量池</li>
 </ul>
@@ -341,11 +342,12 @@
 <li><strong>准备（Prepare）：</strong> <ul>
 <li>为类变量分配内存并且设置该类变量的默认初始值，即零值。</li>
 <li>这里不包含用final修饰的static，因为final在编译的时候就会分配了，准备阶段会显式初始化；</li>
-<li>这里不会为实例变量分配初始化，类变量会分配在方法区中，而实例变量是会随着对象一起分配到Java堆中。</li>
+<li>这里不会为实例变量分配初始化，类变量会分配在方法区中，而<strong>实例变量是会随着对象一起分配到Java堆</strong>中。</li>
+<li>实例变量和类变量都是成员变量，前者不是static修饰，后者是。</li>
 </ul>
 </li>
 <li><strong>解析（Resolve）：</strong> <ul>
-<li>将常量池内的符号引用转换为直接引用的过程。</li>
+<li><strong>将常量池内的符号引用转换为直接引用的过程</strong>。</li>
 <li>事实上，解析操作往往会伴随着JVM在执行完初始化之后再执行。</li>
 <li>符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《java虚拟机规范》的Class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</li>
 <li>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的CONSTANT_Class_info，CONSTANT_Fieldref_info、CONSTANT_Methodref_info等。</li>
@@ -353,7 +355,7 @@
 </li>
 </ul>
 <h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a><strong>初始化</strong></h4><ul>
-<li>初始化阶段就是执行类构造器方法<clinit>()的过程。</li>
+<li><strong>初始化阶段就是执行类构造器方法<clinit>()的过程。</strong></li>
 <li>此方法不需定义，是javac编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。</li>
 <li>构造器方法中指令按语句在源文件中出现的顺序执行。</li>
 <li><clinit>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>()）</li>
@@ -387,21 +389,21 @@
 <h4 id="启动类加载器（引导类加载器，Bootstrap-ClassLoader）"><a href="#启动类加载器（引导类加载器，Bootstrap-ClassLoader）" class="headerlink" title="启动类加载器（引导类加载器，Bootstrap ClassLoader）"></a><strong>启动类加载器（引导类加载器，Bootstrap ClassLoader）</strong></h4><ul>
 <li>这个类加载使用C&#x2F;C++语言实现的，嵌套在JVM内部。</li>
 <li>它用来加载Java的核心库（JAVA_HOME&#x2F;jre&#x2F;lib&#x2F;rt.jar、resources.jar或sun.boot.class.path路径下的内容），用于提供JVM自身需要的类</li>
-<li>并不继承自ava.lang.ClassLoader，没有父加载器。</li>
+<li>并不继承自Java.lang.ClassLoader，没有父加载器。</li>
 <li>加载扩展类和应用程序类加载器，并指定为他们的父类加载器。</li>
-<li>出于安全考虑，Bootstrap启动类加载器只加载包名为java、javax、sun等开头的类</li>
+<li>出于安全考虑，Bootstrap启动类加载器只加载包名为<strong>java、javax、sun</strong>等开头的类</li>
 </ul>
 <h4 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a>扩展类加载器（Extension ClassLoader）</h4><ul>
 <li>Java语言编写，由sun.misc.Launcher$ExtClassLoader实现。</li>
 <li>派生于ClassLoader类</li>
 <li>父类加载器为启动类加载器</li>
-<li>从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的jre&#x2F;1ib&#x2F;ext子目录（扩展目录）下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。</li>
+<li>从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的jre&#x2F;1ib&#x2F;<strong>ext</strong>子目录（扩展目录）下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。</li>
 </ul>
 <h4 id="应用程序类加载器（系统类加载器，AppClassLoader）"><a href="#应用程序类加载器（系统类加载器，AppClassLoader）" class="headerlink" title="应用程序类加载器（系统类加载器，AppClassLoader）"></a>应用程序类加载器（系统类加载器，AppClassLoader）</h4><ul>
 <li>java语言编写，由sun.misc.LaunchersAppClassLoader实现</li>
 <li>派生于ClassLoader类</li>
 <li>父类加载器为扩展类加载器</li>
-<li>它负责加载环境变量classpath或系统属性java.class.path指定路径下的类库</li>
+<li>它负责加<strong>载环境变量classpath或系统属性java.class.path指定路径下的类库</strong></li>
 <li>该类加载是程序中默认的类加载器，一般来说，Java应用的类都是由它来完成加载</li>
 <li>通过ClassLoader#getSystemclassLoader() 方法可以获取到该类加载器</li>
 </ul>
@@ -432,7 +434,11 @@
 <li>避免类的重复加载</li>
 <li>保护程序安全，防止核心API被篡改</li>
 </ul>
-<h3 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h3><p>自定义String类，但是在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的文件（rt.jar包中java\lang\String.class），报错信息说没有main方法，就是因为加载的是rt.jar包中的string类。这样可以保证对java核心源代码的保护，这就是沙箱安全机制。</p>
+<h3 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h3><p>沙箱机制就是将Java代码限定在虚拟机JVM特定的运行范围中，并且严格限制代码对本地资源的访问，通过这样的措施来保证对代码的有效隔离，防止对本地系统造成破坏。</p>
+<p><img src="https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>通俗来说就是虚拟机把代码加载到拥有不同权限的域里，然后代码就拥有了该域的所有权限。这样就能控制不同代码拥有不同调用操作系统和本地资源的权限</p>
+<p>例如：</p>
+<p>自定义String类，但是在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的文件（rt.jar包中java\lang\String.class），报错信息说没有main方法，就是因为加载的是rt.jar包中的string类。这样可以保证对java核心源代码的保护，这就是沙箱安全机制。</p>
 <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p><strong>如何判断两个class对象是否相同</strong></p>
 <p>在JVM中表示两个class对象是否为同一个类存在两个必要条件：</p>
 <ul>
