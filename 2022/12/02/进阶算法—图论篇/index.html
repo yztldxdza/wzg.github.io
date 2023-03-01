@@ -1,0 +1,928 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="图相关的算法BFS12345678910111213141516171819202122public class BFS &amp;#123;    public static void bfs(Node node)&amp;#123;        if (node&#x3D;&#x3D;null)&amp;#123;            return;        &amp;#125;        Queue&lt;Node&gt; qu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进阶算法—图论篇">
+<meta property="og:url" content="https://yztldxdz.top/2022/12/02/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95%E2%80%94%E5%9B%BE%E8%AE%BA%E7%AF%87/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="图相关的算法BFS12345678910111213141516171819202122public class BFS &amp;#123;    public static void bfs(Node node)&amp;#123;        if (node&#x3D;&#x3D;null)&amp;#123;            return;        &amp;#125;        Queue&lt;Node&gt; qu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTjzELyR9U6Me6lsXLiaicKVSqu0Kojrgp1licZrIMb1yeQvyRzsgFqWCgA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTT2ke1KQRRsFre7sCQk1tnZibjwMopPmkG68Nm37klTFTGr8T3JFGVNQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTZfNTZ8vNiapEDbqsCS9wPRB8JQKFrZUq6AtNe8BVNQXtwS6T7LdzSyg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTxOgtacXH3GD0xMloYhOibLkIJicr2cicia7LKk1WZ2Xbt52BLDSud39NYg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTEzb5ia5DhjqqfwQdAWvvSKo6icPAMBGiaLNT3k8MIyDT0K4wWNnArdeSg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlT839u7OWkRT4EGykC3D2yuvgtD4ic6cBRTxiawupquicEM09iaMnL7BCLUw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2022-12-02T11:18:35.000Z">
+<meta property="article:modified_time" content="2023-03-01T10:01:04.548Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTjzELyR9U6Me6lsXLiaicKVSqu0Kojrgp1licZrIMb1yeQvyRzsgFqWCgA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+  
+  
+  
+  <title>进阶算法—图论篇 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="进阶算法—图论篇"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-02 19:18" pubdate>
+          2022年12月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          201 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">进阶算法—图论篇</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="图相关的算法"><a href="#图相关的算法" class="headerlink" title="图相关的算法"></a>图相关的算法</h2><h3 id="BFS"><a href="#BFS" class="headerlink" title="BFS"></a>BFS</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BFS</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bfs</span><span class="hljs-params">(Node node)</span>&#123;<br>        <span class="hljs-keyword">if</span> (node==<span class="hljs-literal">null</span>)&#123;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        Queue&lt;Node&gt; queue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>        <span class="hljs-comment">//处理环，标记是否使用过</span><br>        HashSet&lt;Node&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        queue.add(node);<br>        set.add(node);<br>        <span class="hljs-keyword">while</span> (!queue.isEmpty())&#123;<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> queue.poll();<br>            System.out.println(cur.value);<br>            <span class="hljs-keyword">for</span>(Node next: cur.nexts)&#123;<br>                <span class="hljs-keyword">if</span> (!set.contains(next))&#123;<br>                    set.add(next);<br>                    queue.add(next);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从一个单词变成另一个单词类型的题直接套用BFS模板</p>
+<p>对单词的每一位进行变化并用哈希记录每一步变化</p>
+<h4 id="433-最小基因变化"><a href="#433-最小基因变化" class="headerlink" title="433. 最小基因变化"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-genetic-mutation/">433. 最小基因变化</a></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-comment">//基因库</span><br>    Set&lt;String&gt; cnt = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>    <span class="hljs-comment">//标记是否使用过</span><br>    Set&lt;String&gt; visited = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>    <span class="hljs-type">char</span>[] keys = &#123;<span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;G&#x27;</span>, <span class="hljs-string">&#x27;T&#x27;</span>&#125;;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">minMutation</span><span class="hljs-params">(String startGene, String endGene, String[] bank)</span> &#123;<br>        <span class="hljs-keyword">for</span>(String s:bank) cnt.add(s);<br>        <span class="hljs-keyword">if</span>(startGene.equals(endGene)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">if</span>(!cnt.contains(endGene)) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>        Queue&lt;String&gt; queue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;();<br>        queue.add(startGene);<br>        visited.add(startGene);<br>        <span class="hljs-type">int</span> ans=<span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span>(!queue.isEmpty())&#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> queue.size();<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;size;i++)&#123;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> queue.poll();<br>                <span class="hljs-keyword">if</span>(change(cur,endGene,queue)) <span class="hljs-keyword">return</span> ans+<span class="hljs-number">1</span>;<br>            &#125;<br>            ans++;<br>        &#125;<br>        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-comment">//尝试对 cur 修改每一个字符，看看是不是能与 end 匹配</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">change</span><span class="hljs-params">(String cur,String end, Queue&lt;String&gt; queue)</span>&#123;<br>        <span class="hljs-type">char</span>[] cA=cur.toCharArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">8</span>;i++)&#123;<br>            <span class="hljs-comment">// 先保存，然后恢复</span><br>            <span class="hljs-type">char</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span>cA[i];<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">0</span>;j&lt;<span class="hljs-number">4</span>;j++)&#123;<br>                <span class="hljs-keyword">if</span>(keys[j]==temp) <span class="hljs-keyword">continue</span>;<br>                cA[i]=keys[j];<br>                <span class="hljs-type">String</span> <span class="hljs-variable">next</span> <span class="hljs-operator">=</span> String.valueOf(cA);<br>                <span class="hljs-keyword">if</span>(cnt.contains(next))&#123;<br>                    <span class="hljs-keyword">if</span>(next.equals(end)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>                    <span class="hljs-keyword">if</span>(!visited.contains(next))&#123;<br>                        queue.add(next);<br>                        visited.add(next);<br>                    &#125;<br>                &#125;<br>            &#125;<br>            cA[i]=temp;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="127-单词接龙"><a href="#127-单词接龙" class="headerlink" title="127. 单词接龙"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/word-ladder/">127. 单词接龙</a></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">ladderLength</span><span class="hljs-params">(String beginWord, String endWord, List&lt;String&gt; wordList)</span> &#123;<br>        <span class="hljs-comment">// 第 1 步：先将 wordList 放到哈希表里，便于判断某个单词是否在 wordList 里</span><br>        Set&lt;String&gt; wordSet = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;(wordList);<br>        <span class="hljs-keyword">if</span>(wordSet.size()==<span class="hljs-number">0</span>||!wordSet.contains(endWord)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">//防止图中出现环</span><br>        wordSet.remove(beginWord);<br>        <span class="hljs-comment">// 第 2 步：图的广度优先遍历，必须使用队列和表示是否访问过的 set 哈希表</span><br>        Queue&lt;String&gt; queue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>        queue.offer(beginWord);<br>        Set&lt;String&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        set.add(beginWord);<br>        <span class="hljs-comment">// 第 3 步：开始广度优先遍历，包含起点，因此初始化的时候步数为 1</span><br>        <span class="hljs-type">int</span> ans=<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span>(!queue.isEmpty())&#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> queue.size();<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;size;i++)&#123;<br>                <span class="hljs-comment">// 依次遍历当前队列中的单词</span><br>                <span class="hljs-type">String</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> queue.poll();<br>                <span class="hljs-comment">// 如果 cur 能够修改 1 个字符与 endWord 相同，则返回 ans + 1</span><br>                <span class="hljs-keyword">if</span>(change(cur,endWord,queue,set,wordSet)) <span class="hljs-keyword">return</span> ans+<span class="hljs-number">1</span>;<br>            &#125;<br>            ans++;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-comment">//尝试对 currentWord 修改每一个字符，看看是不是能与 endWord 匹配</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">change</span><span class="hljs-params">(String cur,String endWord,Queue&lt;String&gt; queue,Set&lt;String&gt; set,Set&lt;String&gt; wordSet)</span>&#123;<br>        <span class="hljs-type">char</span>[] cA=cur.toCharArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;endWord.length();i++)&#123;<br>            <span class="hljs-comment">// 先保存，然后恢复</span><br>            <span class="hljs-type">char</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> cA[i];<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">char</span> k=<span class="hljs-string">&#x27;a&#x27;</span>;k&lt;=<span class="hljs-string">&#x27;z&#x27;</span>;k++)&#123;<br>                <span class="hljs-keyword">if</span>(k==temp) <span class="hljs-keyword">continue</span>;<br>                cA[i]=k;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">next</span> <span class="hljs-operator">=</span> String.valueOf(cA);<br>                <span class="hljs-keyword">if</span>(wordSet.contains(next))&#123;<br>                    <span class="hljs-keyword">if</span>(next.equals(endWord)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>                    <span class="hljs-keyword">if</span>(!set.contains(next))&#123;<br>                        queue.add(next);<br>                        set.add(next);<br>                    &#125;<br>                &#125;<br>            &#125;<br>            cA[i]=temp;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DFS</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(Node node)</span>&#123;<br>        <span class="hljs-keyword">if</span> (node==<span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span>;<br>        <span class="hljs-comment">//存放路径</span><br>        Deque&lt;Node&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>        <span class="hljs-comment">//防止重复放入</span><br>        HashSet&lt;Node&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        stack.add(node);<br>        set.add(node);<br>        System.out.println(node.value);<br>        <span class="hljs-keyword">while</span> (!stack.isEmpty())&#123;<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> stack.pop();<br>            <span class="hljs-keyword">for</span> (Node next:cur.nexts)&#123;<br>                <span class="hljs-keyword">if</span> (!set.contains(next))&#123;<br>                    stack.push(cur);<br>                    stack.push(next);<br>                    set.add(next);<br>                    System.out.println(next.value);<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="搜索相关的题目"><a href="#搜索相关的题目" class="headerlink" title="搜索相关的题目"></a>搜索相关的题目</h2><h3 id="733-图像渲染"><a href="#733-图像渲染" class="headerlink" title="733. 图像渲染"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/flood-fill/">733. 图像渲染</a></h3><h3 id="1034-边框着色"><a href="#1034-边框着色" class="headerlink" title="1034. 边框着色"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/coloring-a-border/">1034. 边框着色</a></h3><h3 id="785-判断二分图"><a href="#785-判断二分图" class="headerlink" title="785. 判断二分图"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/is-graph-bipartite/">785. 判断二分图</a></h3><h3 id="886-可能的二分法"><a href="#886-可能的二分法" class="headerlink" title="886. 可能的二分法"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/possible-bipartition/">886. 可能的二分法</a></h3><h3 id="529-扫雷游戏"><a href="#529-扫雷游戏" class="headerlink" title="529. 扫雷游戏"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minesweeper/">529. 扫雷游戏</a></h3><h3 id="200-岛屿数量"><a href="#200-岛屿数量" class="headerlink" title="200. 岛屿数量"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/number-of-islands/">200. 岛屿数量</a></h3><h3 id="827-最大人工岛"><a href="#827-最大人工岛" class="headerlink" title="827. 最大人工岛"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/making-a-large-island/">827. 最大人工岛</a></h3><h3 id="695-岛屿的最大面积"><a href="#695-岛屿的最大面积" class="headerlink" title="695. 岛屿的最大面积"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/max-area-of-island/">695. 岛屿的最大面积</a></h3><h3 id="463-岛屿的周长"><a href="#463-岛屿的周长" class="headerlink" title="463. 岛屿的周长"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/island-perimeter/">463. 岛屿的周长</a></h3><h3 id="1254-统计封闭岛屿的数目"><a href="#1254-统计封闭岛屿的数目" class="headerlink" title="1254. 统计封闭岛屿的数目"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/number-of-closed-islands/">1254. 统计封闭岛屿的数目</a></h3><h3 id="130-被围绕的区域"><a href="#130-被围绕的区域" class="headerlink" title="130. 被围绕的区域"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/surrounded-regions/">130. 被围绕的区域</a></h3><h3 id="289-生命游戏"><a href="#289-生命游戏" class="headerlink" title="289. 生命游戏"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/game-of-life/">289. 生命游戏</a></h3><h3 id="1020-飞地的数量"><a href="#1020-飞地的数量" class="headerlink" title="1020. 飞地的数量"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/number-of-enclaves/">1020. 飞地的数量</a></h3><h3 id="1905-统计子岛屿"><a href="#1905-统计子岛屿" class="headerlink" title="1905. 统计子岛屿"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/count-sub-islands/">1905. 统计子岛屿</a></h3><h3 id="417-太平洋大西洋水流问题"><a href="#417-太平洋大西洋水流问题" class="headerlink" title="417. 太平洋大西洋水流问题"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/pacific-atlantic-water-flow/">417. 太平洋大西洋水流问题</a></h3><h3 id="2059-转化数字的最小运算数"><a href="#2059-转化数字的最小运算数" class="headerlink" title="2059. 转化数字的最小运算数"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-operations-to-convert-number/">2059. 转化数字的最小运算数</a></h3><h3 id="433-最小基因变化-1"><a href="#433-最小基因变化-1" class="headerlink" title="433. 最小基因变化"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-genetic-mutation/">433. 最小基因变化</a></h3><h3 id="127-单词接龙-1"><a href="#127-单词接龙-1" class="headerlink" title="127. 单词接龙"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/word-ladder/">127. 单词接龙</a></h3><h3 id="403-青蛙过河"><a href="#403-青蛙过河" class="headerlink" title="403. 青蛙过河"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/frog-jump/">403. 青蛙过河</a></h3><h3 id="675-为高尔夫比赛砍树"><a href="#675-为高尔夫比赛砍树" class="headerlink" title="675. 为高尔夫比赛砍树"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/cut-off-trees-for-golf-event/">675. 为高尔夫比赛砍树</a></h3><h3 id="847-访问所有节点的最短路径"><a href="#847-访问所有节点的最短路径" class="headerlink" title="847. 访问所有节点的最短路径"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/shortest-path-visiting-all-nodes/">847. 访问所有节点的最短路径</a></h3><h3 id="1345-跳跃游戏-IV"><a href="#1345-跳跃游戏-IV" class="headerlink" title="1345. 跳跃游戏 IV"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/jump-game-iv/">1345. 跳跃游戏 IV</a></h3><h2 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h2><p>根据一张有向无环图，把所有要做的事整理出一个顺序</p>
+<p>首先以一个入度为0的点作为起点进行搜索，用完之后删除该点和与之相关的边再以下一个入度为0的点进行搜索。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TopologySort</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;Node&gt; <span class="hljs-title function_">sorted</span><span class="hljs-params">(Graph graph)</span>&#123;<br>            <span class="hljs-comment">//某一个Node,剩余的入度</span><br>        HashMap&lt;Node, Integer&gt; inMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-comment">//入度为0的点才能进入该队列</span><br>        Queue&lt;Node&gt; zero = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span>(Node node:graph.nodes.values())&#123;<br>            inMap.put(node,node.in);<br>            <span class="hljs-keyword">if</span> (node.in==<span class="hljs-number">0</span>)&#123;<br>                zero.add(node);<br>            &#125;<br>        &#125;<br>        List&lt;Node&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">while</span> (!zero.isEmpty())&#123;<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> zero.poll();<br>            result.add(cur);<br>            <span class="hljs-keyword">for</span> (Node next:cur.nexts)&#123;<br>                inMap.put(next,inMap.get(next)-<span class="hljs-number">1</span>);<br>                <span class="hljs-keyword">if</span> (inMap.get(next)==<span class="hljs-number">0</span>)&#123;<br>                    zero.add(next);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="拓扑排序相关题目"><a href="#拓扑排序相关题目" class="headerlink" title="拓扑排序相关题目"></a>拓扑排序相关题目</h2><h3 id="210-课程表-II"><a href="#210-课程表-II" class="headerlink" title="210. 课程表 II"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/course-schedule-ii/">210. 课程表 II</a></h3><h3 id="207-课程表"><a href="#207-课程表" class="headerlink" title="207. 课程表"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/course-schedule/">207. 课程表</a></h3><h3 id="802-找到最终的安全状态"><a href="#802-找到最终的安全状态" class="headerlink" title="802. 找到最终的安全状态"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-eventual-safe-states/">802. 找到最终的安全状态</a></h3><h3 id="329-矩阵中的最长递增路径"><a href="#329-矩阵中的最长递增路径" class="headerlink" title="329. 矩阵中的最长递增路径"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/">329. 矩阵中的最长递增路径</a></h3><h3 id="剑指-Offer-II-115-重建序列"><a href="#剑指-Offer-II-115-重建序列" class="headerlink" title="剑指 Offer II 115. 重建序列"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/ur2n8P/">剑指 Offer II 115. 重建序列</a></h3><h2 id="存图方式"><a href="#存图方式" class="headerlink" title="存图方式"></a><strong>存图方式</strong></h2><h4 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h4><p>这是一种使用二维矩阵来进行存图的方式。</p>
+<p>适用于边数较多的<strong>「稠密图」</strong>使用，当边数量接近点的数量的平方，即 时，可定义为<strong>「稠密图」</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 邻接矩阵数组：w[a][b] = c 代表从 a 到 b 有权重为 c 的边</span><br><span class="hljs-type">int</span>[][] w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N][N];<br><br><span class="hljs-comment">// 加边操作</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> &#123;<br>    w[a][b] = c;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="邻接表"><a href="#邻接表" class="headerlink" title="邻接表"></a>邻接表</h4><p>这也是一种在图论中十分常见的存图方式，与数组存储单链表的实现一致（头插法）。</p>
+<p>这种存图方式又叫<strong>「链式前向星存图」</strong>。</p>
+<p>适用于边数较少的<strong>「稀疏图」</strong>使用，当边数量接近点的数量，即 时，可定义为<strong>「稀疏图」</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-type">int</span>[] he = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N], e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], ne = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M];<br><span class="hljs-type">int</span> idx;<br><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> &#123;<br>    e[idx] = b;<br>    ne[idx] = he[a];<br>    he[a] = idx;<br>    w[idx] = c;<br>    idx++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先 <code>idx</code> 是用来对边进行编号的，然后对存图用到的几个数组作简单解释：</p>
+<ul>
+<li><code>he</code> 数组：存储是某个节点所对应的边的集合（链表）的头结点；</li>
+<li><code>e</code> 数组：由于访问某一条边指向的节点；</li>
+<li><code>ne</code> 数组：由于是以链表的形式进行存边，该数组就是用于找到下一条边；</li>
+<li><code>w</code> 数组：用于记录某条边的权重为多少。</li>
+</ul>
+<p>因此当我们想要遍历所有由 <code>a</code> 点发出的边时，可以使用如下方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> he[a]; i != -<span class="hljs-number">1</span>; i = ne[i]) &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> e[i], c = w[i]; <span class="hljs-comment">// 存在由 a 指向 b 的边，权重为 c</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>这是一种最简单，但是相比上述两种存图方式，使用得较少的存图方式。</p>
+<p>只有当我们需要确保某个操作复杂度严格为 时，才会考虑使用。</p>
+<p>具体的，我们建立一个类来记录有向边信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Edge</span> &#123;<br>    <span class="hljs-comment">// 代表从 a 到 b 有一条权重为 c 的边</span><br>    <span class="hljs-type">int</span> a, b, c;<br>    Edge(<span class="hljs-type">int</span> _a, <span class="hljs-type">int</span> _b, <span class="hljs-type">int</span> _c) &#123;<br>        a = _a; b = _b; c = _c;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通常我们会使用 List 存起所有的边对象，并在需要遍历所有边的时候，进行遍历：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java">List&lt;Edge&gt; es = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>...<br><br><span class="hljs-keyword">for</span> (Edge e : es) &#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="最短路径"><a href="#最短路径" class="headerlink" title="最短路径"></a>最短路径</h2><h4 id="743-网络延迟时间"><a href="#743-网络延迟时间" class="headerlink" title="743. 网络延迟时间"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/network-delay-time/">743. 网络延迟时间</a></h4><h4 id="Floyd（邻接矩阵）"><a href="#Floyd（邻接矩阵）" class="headerlink" title="Floyd（邻接矩阵）"></a><strong>Floyd（邻接矩阵）</strong></h4><p>根据「基本分析」，我们可以使用复杂度为 的「多源汇最短路」算法 Floyd 算法进行求解，同时使用「邻接矩阵」来进行存图。</p>
+<p>跑一遍 Floyd，可以得到<strong>「从任意起点出发，到达任意起点的最短距离」</strong>。</p>
+<p>然后从所有 中取 即是<strong>「从 点出发，到其他点 的最短距离的最大值」</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// 邻接矩阵数组：w[a][b] = c 代表从 a 到 b 有权重为 c 的边</span><br>    <span class="hljs-type">int</span>[][] w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N][N];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-type">int</span> n, k;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        <span class="hljs-comment">// 初始化邻接矩阵</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt;= n; j++) &#123;<br>                w[i][j] = w[j][i] = i == j ? <span class="hljs-number">0</span> : INF;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            w[u][v] = c;<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        floyd();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, w[k][i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt;= INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">floyd</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// floyd 基本流程为三层循环：</span><br>        <span class="hljs-comment">// 枚举中转点 - 枚举起点 - 枚举终点 - 松弛操作        </span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; p &lt;= n; p++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt;= n; j++) &#123;<br>                    w[i][j] = Math.min(w[i][j], w[i][p] + w[p][j]);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n3次方)</li>
+<li>空间复杂度：O(n2次方)</li>
+</ul>
+<h4 id="朴素-Dijkstra（邻接矩阵）"><a href="#朴素-Dijkstra（邻接矩阵）" class="headerlink" title="朴素 Dijkstra（邻接矩阵）"></a><strong>朴素 Dijkstra（邻接矩阵）</strong></h4><p>同理，我们可以使用复杂度为 的「单源最短路」算法朴素 Dijkstra 算法进行求解，同时使用「邻接矩阵」来进行存图。</p>
+<p>根据题意， 点作为源点，跑一遍 Dijkstra 我们可以得到从源点 到其他点 的最短距离。</p>
+<p>再从所有最短路中取 即是<strong>「从 点出发，到其他点 的最短距离的最大值」</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// 邻接矩阵数组：w[a][b] = c 代表从 a 到 b 有权重为 c 的边</span><br>    <span class="hljs-type">int</span>[][] w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N][N];<br>    <span class="hljs-comment">// dist[x] = y 代表从「源点/起点」到 x 的最短距离为 y</span><br>    <span class="hljs-type">int</span>[] dist = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N];<br>    <span class="hljs-comment">// 记录哪些点已经被更新过</span><br>    <span class="hljs-type">boolean</span>[] vis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">boolean</span>[N];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-type">int</span> n, k;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        <span class="hljs-comment">// 初始化邻接矩阵</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt;= n; j++) &#123;<br>                w[i][j] = w[j][i] = i == j ? <span class="hljs-number">0</span> : INF;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            w[u][v] = c;<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        dijkstra();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, dist[i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt; INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">dijkstra</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 起始先将所有的点标记为「未更新」和「距离为正无穷」</span><br>        Arrays.fill(vis, <span class="hljs-literal">false</span>);<br>        Arrays.fill(dist, INF);<br>        <span class="hljs-comment">// 只有起点最短距离为 0</span><br>        dist[k] = <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 迭代 n 次</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; p &lt;= n; p++) &#123;<br>            <span class="hljs-comment">// 每次找到「最短距离最小」且「未被更新」的点 t</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> -<span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>                <span class="hljs-keyword">if</span> (!vis[i] &amp;&amp; (t == -<span class="hljs-number">1</span> || dist[i] &lt; dist[t])) t = i;<br>            &#125;<br>            <span class="hljs-comment">// 标记点 t 为已更新</span><br>            vis[t] = <span class="hljs-literal">true</span>;<br>            <span class="hljs-comment">// 用点 t 的「最小距离」更新其他点</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>                dist[i] = Math.min(dist[i], dist[t] + w[t][i]);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n2次方)</li>
+<li>空间复杂度：O(n2次方)</li>
+</ul>
+<h4 id="堆优化-Dijkstra（邻接表）"><a href="#堆优化-Dijkstra（邻接表）" class="headerlink" title="堆优化 Dijkstra（邻接表）"></a><strong>堆优化 Dijkstra（邻接表）</strong></h4><p>由于边数据范围不算大，我们还可以使用复杂度为 的堆优化 Dijkstra 算法进行求解。</p>
+<p>堆优化 Dijkstra 算法与朴素 Dijkstra 都是「单源最短路」算法。</p>
+<p>跑一遍堆优化 Dijkstra 算法求最短路，再从所有最短路中取 即是<strong>「从 点出发，到其他点 的最短距离的最大值」</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// 邻接表</span><br>    <span class="hljs-type">int</span>[] he = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N], e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], ne = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M];<br>    <span class="hljs-comment">// dist[x] = y 代表从「源点/起点」到 x 的最短距离为 y</span><br>    <span class="hljs-type">int</span>[] dist = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N];<br>    <span class="hljs-comment">// 记录哪些点已经被更新过</span><br>    <span class="hljs-type">boolean</span>[] vis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">boolean</span>[N];<br>    <span class="hljs-type">int</span> n, k, idx;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> &#123;<br>        e[idx] = b;<br>        ne[idx] = he[a];<br>        he[a] = idx;<br>        w[idx] = c;<br>        idx++;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        <span class="hljs-comment">// 初始化链表头</span><br>        Arrays.fill(he, -<span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            add(u, v, c);<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        dijkstra();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, dist[i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt; INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">dijkstra</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 起始先将所有的点标记为「未更新」和「距离为正无穷」</span><br>        Arrays.fill(vis, <span class="hljs-literal">false</span>);<br>        Arrays.fill(dist, INF);<br>        <span class="hljs-comment">// 只有起点最短距离为 0</span><br>        dist[k] = <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 使用「优先队列」存储所有可用于更新的点</span><br>        <span class="hljs-comment">// 以 (点编号, 到起点的距离) 进行存储，优先弹出「最短距离」较小的点</span><br>        PriorityQueue&lt;<span class="hljs-type">int</span>[]&gt; q = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PriorityQueue</span>&lt;&gt;((a,b)-&gt;a[<span class="hljs-number">1</span>]-b[<span class="hljs-number">1</span>]);<br>        q.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;k, <span class="hljs-number">0</span>&#125;);<br>        <span class="hljs-keyword">while</span> (!q.isEmpty()) &#123;<br>            <span class="hljs-comment">// 每次从「优先队列」中弹出</span><br>            <span class="hljs-type">int</span>[] poll = q.poll();<br>            <span class="hljs-type">int</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> poll[<span class="hljs-number">0</span>], step = poll[<span class="hljs-number">1</span>];<br>            <span class="hljs-comment">// 如果弹出的点被标记「已更新」，则跳过</span><br>            <span class="hljs-keyword">if</span> (vis[id]) <span class="hljs-keyword">continue</span>;<br>            <span class="hljs-comment">// 标记该点「已更新」，并使用该点更新其他点的「最短距离」</span><br>            vis[id] = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> he[id]; i != -<span class="hljs-number">1</span>; i = ne[i]) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> e[i];<br>                <span class="hljs-keyword">if</span> (dist[j] &gt; dist[id] + w[i]) &#123;<br>                    dist[j] = dist[id] + w[i];<br>                    q.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;j, dist[j]&#125;);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(mlogn+n)</li>
+<li>空间复杂度：O(m)</li>
+</ul>
+<h4 id="Bellman-Ford（类-amp-邻接表）"><a href="#Bellman-Ford（类-amp-邻接表）" class="headerlink" title="Bellman Ford（类 &amp; 邻接表）"></a><strong>Bellman Ford（类 &amp; 邻接表）</strong></h4><p>虽然题目规定了不存在「负权边」，但我们仍然可以使用可以在「负权图中求最短路」的 Bellman Ford 进行求解，该算法也是「单源最短路」算法，复杂度为 。</p>
+<p>通常为了确保 ，可以单独建一个类代表边，将所有边存入集合中，在 次松弛操作中直接对边集合进行遍历。</p>
+<p>由于本题边的数量级大于点的数量级，因此也能够继续使用「邻接表」的方式进行边的遍历，遍历所有边的复杂度的下界为 O(n)，上界可以确保不超过O(m)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">class</span> <span class="hljs-title class_">Edge</span> &#123;<br>        <span class="hljs-type">int</span> a, b, c;<br>        Edge(<span class="hljs-type">int</span> _a, <span class="hljs-type">int</span> _b, <span class="hljs-type">int</span> _c) &#123;<br>            a = _a; b = _b; c = _c;<br>        &#125;<br>    &#125;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// dist[x] = y 代表从「源点/起点」到 x 的最短距离为 y</span><br>    <span class="hljs-type">int</span>[] dist = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-type">int</span> n, m, k;<br>    <span class="hljs-comment">// 使用类进行存边</span><br>    List&lt;Edge&gt; es = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        m = ts.length;<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            es.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Edge</span>(u, v, c));<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        bf();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, dist[i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt; INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">bf</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 起始先将所有的点标记为「距离为正无穷」</span><br>        Arrays.fill(dist, INF);<br>        <span class="hljs-comment">// 只有起点最短距离为 0</span><br>        dist[k] = <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 迭代 n 次</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; p &lt;= n; p++) &#123;<br>            <span class="hljs-type">int</span>[] prev = dist.clone();<br>            <span class="hljs-comment">// 每次都使用上一次迭代的结果，执行松弛操作</span><br>            <span class="hljs-keyword">for</span> (Edge e : es) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> e.a, b = e.b, c = e.c;<br>                dist[b] = Math.min(dist[b], prev[a] + c);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// 邻接表</span><br>    <span class="hljs-type">int</span>[] he = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N], e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], ne = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M];<br>    <span class="hljs-comment">// dist[x] = y 代表从「源点/起点」到 x 的最短距离为 y</span><br>    <span class="hljs-type">int</span>[] dist = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-type">int</span> n, m, k, idx;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> &#123;<br>        e[idx] = b;<br>        ne[idx] = he[a];<br>        he[a] = idx;<br>        w[idx] = c;<br>        idx++;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        m = ts.length;<br>        <span class="hljs-comment">// 初始化链表头</span><br>        Arrays.fill(he, -<span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            add(u, v, c);<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        bf();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, dist[i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt; INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">bf</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 起始先将所有的点标记为「距离为正无穷」</span><br>        Arrays.fill(dist, INF);<br>        <span class="hljs-comment">// 只有起点最短距离为 0</span><br>        dist[k] = <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 迭代 n 次</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; p &lt;= n; p++) &#123;<br>            <span class="hljs-type">int</span>[] prev = dist.clone();<br>            <span class="hljs-comment">// 每次都使用上一次迭代的结果，执行松弛操作</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; a &lt;= n; a++) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> he[a]; i != -<span class="hljs-number">1</span>; i = ne[i]) &#123;<br>                    <span class="hljs-type">int</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> e[i];<br>                    dist[b] = Math.min(dist[b], prev[a] + w[i]);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n*m)</li>
+<li>空间复杂度：O(m)</li>
+</ul>
+<h4 id="SPFA（邻接表）"><a href="#SPFA（邻接表）" class="headerlink" title="SPFA（邻接表）"></a><strong>SPFA（邻接表）</strong></h4><p>SPFA 是对 Bellman Ford 的优化实现，可以使用队列进行优化，也可以使用栈进行优化。</p>
+<p>通常情况下复杂度为 O(k X m)， 一般为4到5 ，最坏情况下仍为O(n X m) ，当数据为网格图时，复杂度会从 O(k X m)退化为O(n X m)  。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> <span class="hljs-number">110</span>, M = <span class="hljs-number">6010</span>;<br>    <span class="hljs-comment">// 邻接表</span><br>    <span class="hljs-type">int</span>[] he = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N], e = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], ne = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M], w = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[M];<br>    <span class="hljs-comment">// dist[x] = y 代表从「源点/起点」到 x 的最短距离为 y</span><br>    <span class="hljs-type">int</span>[] dist = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[N];<br>    <span class="hljs-comment">// 记录哪一个点「已在队列」中</span><br>    <span class="hljs-type">boolean</span>[] vis = <span class="hljs-keyword">new</span> <span class="hljs-title class_">boolean</span>[N];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">INF</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x3f3f3f3f</span>;<br>    <span class="hljs-type">int</span> n, k, idx;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> c)</span> &#123;<br>        e[idx] = b;<br>        ne[idx] = he[a];<br>        he[a] = idx;<br>        w[idx] = c;<br>        idx++;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">networkDelayTime</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] ts, <span class="hljs-type">int</span> _n, <span class="hljs-type">int</span> _k)</span> &#123;<br>        n = _n; k = _k;<br>        <span class="hljs-comment">// 初始化链表头</span><br>        Arrays.fill(he, -<span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 存图</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] t : ts) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">u</span> <span class="hljs-operator">=</span> t[<span class="hljs-number">0</span>], v = t[<span class="hljs-number">1</span>], c = t[<span class="hljs-number">2</span>];<br>            add(u, v, c);<br>        &#125;<br>        <span class="hljs-comment">// 最短路</span><br>        spfa();<br>        <span class="hljs-comment">// 遍历答案</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; i++) &#123;<br>            ans = Math.max(ans, dist[i]);<br>        &#125;<br>        <span class="hljs-keyword">return</span> ans &gt; INF / <span class="hljs-number">2</span> ? -<span class="hljs-number">1</span> : ans;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">spfa</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 起始先将所有的点标记为「未入队」和「距离为正无穷」</span><br>        Arrays.fill(vis, <span class="hljs-literal">false</span>);<br>        Arrays.fill(dist, INF);<br>        <span class="hljs-comment">// 只有起点最短距离为 0</span><br>        dist[k] = <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 使用「双端队列」存储，存储的是点编号</span><br>        Deque&lt;Integer&gt; d = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;();<br>        <span class="hljs-comment">// 将「源点/起点」进行入队，并标记「已入队」</span><br>        d.addLast(k);<br>        vis[k] = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">while</span> (!d.isEmpty()) &#123;<br>            <span class="hljs-comment">// 每次从「双端队列」中取出，并标记「未入队」</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">poll</span> <span class="hljs-operator">=</span> d.pollFirst();<br>            vis[poll] = <span class="hljs-literal">false</span>;<br>            <span class="hljs-comment">// 尝试使用该点，更新其他点的最短距离</span><br>            <span class="hljs-comment">// 如果更新的点，本身「未入队」则加入队列中，并标记「已入队」</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> he[poll]; i != -<span class="hljs-number">1</span>; i = ne[i]) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> e[i];<br>                <span class="hljs-keyword">if</span> (dist[j] &gt; dist[poll] + w[i]) &#123;<br>                    dist[j] = dist[poll] + w[i];<br>                    <span class="hljs-keyword">if</span> (vis[j]) <span class="hljs-keyword">continue</span>;<br>                    d.addLast(j);<br>                    vis[j] = <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n*m)</li>
+<li>空间复杂度：O(m)</li>
+</ul>
+<h3 id="787-K-站中转内最便宜的航班"><a href="#787-K-站中转内最便宜的航班" class="headerlink" title="787. K 站中转内最便宜的航班"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/cheapest-flights-within-k-stops/">787. K 站中转内最便宜的航班</a></h3><h3 id="882-细分图中的可到达节点"><a href="#882-细分图中的可到达节点" class="headerlink" title="882. 细分图中的可到达节点"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/reachable-nodes-in-subdivided-graph/">882. 细分图中的可到达节点</a></h3><h3 id="1631-最小体力消耗路径"><a href="#1631-最小体力消耗路径" class="headerlink" title="1631. 最小体力消耗路径"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/path-with-minimum-effort/">1631. 最小体力消耗路径</a></h3><h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>1)有若干个样本a、b、c、d…类型假设是V</p>
+<p>2)在并查集中一开始认为每个样本都在单独的集合里</p>
+<p>3)用户可以在任何时候调用如下两个方法：</p>
+<p>boolean isSameSet(Vx,Vy):查询样本x和样本y是否属于一个集合</p>
+<p>void union(Vx,Vy):把x和y各自所在集合的所有样本合并成一个集合</p>
+<p>4)isSameSet7和union方法的代价越低越好</p>
+<h4 id="isSameSet"><a href="#isSameSet" class="headerlink" title="isSameSet"></a>isSameSet</h4><p>某个集合例如a，一直向上找找到最后一个节点，这个节点就是a集合的代表点，如果两个集合的代表点是同一个说明他们属于同一集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isSameSet</span><span class="hljs-params">(V a,V b)</span>&#123;<br>    <span class="hljs-comment">//如果a,b其中一个没有初始化则nodes中没有该样本对应的点</span><br>    <span class="hljs-keyword">if</span> (!nodes.containsKey(a)||!nodes.containsKey(b))&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>            <span class="hljs-comment">//代表点是否为同一个</span><br>    <span class="hljs-keyword">return</span> findFather(nodes.get(a))==findFather(nodes.get(b));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="union"><a href="#union" class="headerlink" title="union"></a>union</h4><p>进行合并的时候将集合数量少的一方挂在数量多的一方下面，少集合的头结点直接连在多集合头结点的下面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">union</span><span class="hljs-params">(V a,V b)</span>&#123;<br>    <span class="hljs-keyword">if</span> (!nodes.containsKey(a)||!nodes.containsKey(b))&#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">//找到a,b的代表点</span><br>    Node&lt;V&gt; aHead = findFather(nodes.get(a));<br>    Node&lt;V&gt; bHead = findFather(nodes.get(b));<br>    <span class="hljs-keyword">if</span> (aHead!=bHead)&#123;<br>        <span class="hljs-type">int</span> aSetSize=sizeMap.get(aHead);<br>        <span class="hljs-type">int</span> bSetSize=sizeMap.get(bHead);<br>        <span class="hljs-comment">//少挂多</span><br>        Node&lt;V&gt; big = aSetSize&gt;=bSetSize?aHead:bHead;<br>        Node&lt;V&gt; small = big==aHead?bHead:aHead;<br>        parents.put(small,big);<br>        sizeMap.put(big,aSetSize+bSetSize);<br>        <span class="hljs-comment">//此时不再是代表点,从sizeMap中移除</span><br>        sizeMap.remove(small);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="findFather"><a href="#findFather" class="headerlink" title="findFather"></a>findFather</h4><p>找到当前节点的代表点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Node&lt;V&gt; <span class="hljs-title function_">findFather</span><span class="hljs-params">(Node&lt;V&gt; cur)</span>&#123;<br>    Deque&lt;Node&lt;V&gt;&gt; path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>        <span class="hljs-comment">//每个节点初始是一个环，如果当前节点==自己的父节点说明已经找到最上面了</span><br>    <span class="hljs-keyword">while</span> (cur!=parents.get(cur))&#123;<br>        path.push(cur);<br>        cur=parents.get(cur);<br>    &#125;<br>    <span class="hljs-comment">//上面处理完后，cur代表点，将沿途进行扁平优化</span><br>    <span class="hljs-keyword">while</span> (!path.isEmpty())&#123;<br>        parents.put(path.pop(),cur);<br>    &#125;<br>    <span class="hljs-keyword">return</span> cur;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>扁平优化</strong></p>
+<h4 id="整体代码"><a href="#整体代码" class="headerlink" title="整体代码"></a>整体代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnionFind</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span>&lt;V&gt;&#123;<br>        V value;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">Node</span><span class="hljs-params">(V value)</span> &#123;<br>            <span class="hljs-built_in">this</span>.value = value;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnionSet</span>&lt;V&gt;&#123;<br>                 <span class="hljs-comment">//V-&gt;节点</span><br>        <span class="hljs-keyword">public</span> Map&lt;V,Node&lt;V&gt;&gt; nodes;<br>                 <span class="hljs-comment">//当前节点，父节点-&gt;向上指的一个指针</span><br>        <span class="hljs-keyword">public</span> Map&lt;Node&lt;V&gt;,Node&lt;V&gt;&gt; parents;<br>                  <span class="hljs-comment">//代表点，代表集合的大小,该表只存放代表点</span><br>        <span class="hljs-keyword">public</span> Map&lt;Node&lt;V&gt;,Integer&gt; sizeMap;<br>                        <span class="hljs-comment">//所有的样本</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">UnionSet</span><span class="hljs-params">(List&lt;V&gt; values)</span>&#123;<br>            <span class="hljs-comment">//初始化，建立对应关系</span><br>            <span class="hljs-keyword">for</span> (V value:values)&#123;<br>                Node&lt;V&gt; node = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>&lt;&gt;(value);<br>                nodes.put(value,node);<br>                parents.put(node,node);<br>                sizeMap.put(node,<span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">//找到当前节点的代表点</span><br>        <span class="hljs-keyword">public</span> Node&lt;V&gt; <span class="hljs-title function_">findFather</span><span class="hljs-params">(Node&lt;V&gt; cur)</span>&#123;<br>            Deque&lt;Node&lt;V&gt;&gt; path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>                <span class="hljs-comment">//每个节点初始是一个环，如果当前节点==自己的父节点说明已经找到最上面了</span><br>            <span class="hljs-keyword">while</span> (cur!=parents.get(cur))&#123;<br>                path.push(cur);<br>                cur=parents.get(cur);<br>            &#125;<br>            <span class="hljs-comment">//上面处理完后，cur代表点，将沿途进行扁平优化</span><br>            <span class="hljs-keyword">while</span> (!path.isEmpty())&#123;<br>                parents.put(path.pop(),cur);<br>            &#125;<br>            <span class="hljs-keyword">return</span> cur;<br>        &#125;<br><br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 查询样本a和样本b是否属于一个集合</span><br><span class="hljs-comment">         * 两个集合的代表点是同一个说明他们属于同一集合</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isSameSet</span><span class="hljs-params">(V a,V b)</span>&#123;<br>            <span class="hljs-comment">//如果a,b其中一个没有初始化则nodes中没有该样本对应的点</span><br>            <span class="hljs-keyword">if</span> (!nodes.containsKey(a)||!nodes.containsKey(b))&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br>                    <span class="hljs-comment">//代表点是否为同一个</span><br>            <span class="hljs-keyword">return</span> findFather(nodes.get(a))==findFather(nodes.get(b));<br>        &#125;<br><br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 把a和b各自所在集合的所有样本合并成一个集合</span><br><span class="hljs-comment">         * 将集合数量少的一方挂在数量多的一方下面</span><br><span class="hljs-comment">         * 少集合的头结点直接连在多集合头结点的下面</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">union</span><span class="hljs-params">(V a,V b)</span>&#123;<br>            <span class="hljs-keyword">if</span> (!nodes.containsKey(a)||!nodes.containsKey(b))&#123;<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-comment">//找到a,b的代表点</span><br>            Node&lt;V&gt; aHead = findFather(nodes.get(a));<br>            Node&lt;V&gt; bHead = findFather(nodes.get(b));<br>            <span class="hljs-keyword">if</span> (aHead!=bHead)&#123;<br>                <span class="hljs-type">int</span> aSetSize=sizeMap.get(aHead);<br>                <span class="hljs-type">int</span> bSetSize=sizeMap.get(bHead);<br>                <span class="hljs-comment">//少挂多</span><br>                Node&lt;V&gt; big = aSetSize&gt;=bSetSize?aHead:bHead;<br>                Node&lt;V&gt; small = big==aHead?bHead:aHead;<br>                parents.put(small,big);<br>                sizeMap.put(big,aSetSize+bSetSize);<br>                <span class="hljs-comment">//此时不再是代表点,从sizeMap中移除</span><br>                sizeMap.remove(small);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="并查集例1"><a href="#并查集例1" class="headerlink" title="并查集例1"></a>并查集例1</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> *  (1,10,13) (2,10,37) (400,500,37)</span><br><span class="hljs-comment"> *  如果两个user,a,b,c中任一字段相同则为同一个人</span><br><span class="hljs-comment"> *  请合并users返回合并后的用户数量</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Lenovo</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnionFind1</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">mergeUsers</span><span class="hljs-params">(List&lt;User&gt; users)</span>&#123;<br>        UnionSet&lt;User&gt; unionFind = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnionSet</span>&lt;&gt;(users);<br>        <span class="hljs-comment">//建立三个字段的对应关系表</span><br>        HashMap&lt;String, User&gt; mapA = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        HashMap&lt;String, User&gt; mapB = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        HashMap&lt;String, User&gt; mapC = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (User user:users)&#123;<br>            <span class="hljs-comment">//如果该字段出现过说明是同一个人，进行合并</span><br>            <span class="hljs-keyword">if</span> (mapA.containsKey(user.a))&#123;<br>                unionFind.union(user,mapA.get(user.a));<br>            &#125;<span class="hljs-keyword">else</span> &#123;<br>                mapA.put(user.a,user);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (mapB.containsKey(user.b))&#123;<br>                unionFind.union(user,mapB.get(user.b));<br>            &#125;<span class="hljs-keyword">else</span> &#123;<br>                mapB.put(user.b,user);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (mapC.containsKey(user.c))&#123;<br>                unionFind.union(user,mapC.get(user.c));<br>            &#125;<span class="hljs-keyword">else</span> &#123;<br>                mapC.put(user.c,user);<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">//sizeMap中存放的就是合并后的人数</span><br>        <span class="hljs-keyword">return</span> unionFind.getSize();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="图的基本生成"><a href="#图的基本生成" class="headerlink" title="图的基本生成"></a>图的基本生成</h2><h4 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> &#123;<br>    <span class="hljs-comment">//当前节点的值</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> value;<br>    <span class="hljs-comment">//入度：有几个节点指向当前节点</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> in;<br>    <span class="hljs-comment">//出度：当前节点指向几个节点</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> out;<br>    <span class="hljs-comment">//当前节点指向节点的集合</span><br>    <span class="hljs-keyword">public</span> ArrayList&lt;Node&gt; nexts;<br>    <span class="hljs-comment">//从该节点出发的边集合</span><br>    <span class="hljs-keyword">public</span> ArrayList&lt;Edge&gt; edges;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Node</span><span class="hljs-params">(<span class="hljs-type">int</span> value)</span> &#123;<br>        <span class="hljs-built_in">this</span>.value = value;<br>        in=<span class="hljs-number">0</span>;<br>        out=<span class="hljs-number">0</span>;<br>        nexts=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        edges=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Edge"><a href="#Edge" class="headerlink" title="Edge"></a>Edge</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 有向边</span><br><span class="hljs-comment"> * 无向边=两条有向边</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Edge</span> &#123;<br>    <span class="hljs-comment">//权重,边的值</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> weight;<br>    <span class="hljs-comment">//从那个节点出来的</span><br>    <span class="hljs-keyword">public</span> Node form;<br>    <span class="hljs-comment">//到那个节点去</span><br>    <span class="hljs-keyword">public</span> Node to;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Edge</span><span class="hljs-params">(<span class="hljs-type">int</span> weight, Node form, Node to)</span> &#123;<br>        <span class="hljs-built_in">this</span>.weight = weight;<br>        <span class="hljs-built_in">this</span>.form = form;<br>        <span class="hljs-built_in">this</span>.to = to;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Graph"><a href="#Graph" class="headerlink" title="Graph"></a>Graph</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Graph</span> &#123;<br>    <span class="hljs-comment">//点集</span><br>    <span class="hljs-keyword">public</span> HashMap&lt;Integer, Node&gt; nodes;<br>    <span class="hljs-comment">//边集</span><br>    <span class="hljs-keyword">public</span> HashSet&lt;Edge&gt; edges;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Graph</span><span class="hljs-params">()</span> &#123;<br>        nodes=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        edges=<span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Create"><a href="#Create" class="headerlink" title="Create"></a>Create</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据邻接表生成图</span><br><span class="hljs-comment"> * [0,1,7]  从0城市到1城市有条边，权重为7</span><br><span class="hljs-comment"> * [1,2,6]</span><br><span class="hljs-comment"> * [2,3,5]</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateGraph</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Graph <span class="hljs-title function_">createGraph</span><span class="hljs-params">(Integer[][] matrix)</span>&#123;<br>        <span class="hljs-type">Graph</span> <span class="hljs-variable">graph</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Graph</span>();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; matrix.length; i++) &#123;<br>            <span class="hljs-type">Integer</span> <span class="hljs-variable">from</span> <span class="hljs-operator">=</span> matrix[i][<span class="hljs-number">0</span>];<br>            <span class="hljs-type">Integer</span> <span class="hljs-variable">to</span> <span class="hljs-operator">=</span> matrix[i][<span class="hljs-number">1</span>];<br>            <span class="hljs-type">Integer</span> <span class="hljs-variable">weight</span> <span class="hljs-operator">=</span> matrix[i][<span class="hljs-number">2</span>];<br>            <span class="hljs-comment">//如果城市是第一次出现则加入点集</span><br>            <span class="hljs-keyword">if</span> (!graph.nodes.containsKey(from))&#123;<br>                graph.nodes.put(from,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>(from));<br>            &#125;<br>            <span class="hljs-keyword">if</span> (!graph.nodes.containsKey(to))&#123;<br>                graph.nodes.put(to,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>(to));<br>            &#125;<br>            <span class="hljs-comment">//创建点</span><br>            <span class="hljs-type">Node</span> <span class="hljs-variable">fromNode</span> <span class="hljs-operator">=</span> graph.nodes.get(from);<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">toNode</span> <span class="hljs-operator">=</span> graph.nodes.get(to);<br>            <span class="hljs-type">Edge</span> <span class="hljs-variable">newEdge</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Edge</span>(weight, fromNode, toNode);<br>            <span class="hljs-comment">//产生连接关系</span><br>            fromNode.nexts.add(toNode);<br>            fromNode.out++;<br>            toNode.in++;<br>            fromNode.edges.add(newEdge);<br>            graph.edges.add(newEdge);<br>        &#125;<br>        <span class="hljs-keyword">return</span> graph;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="最小生成树-Kruskal"><a href="#最小生成树-Kruskal" class="headerlink" title="最小生成树(Kruskal)"></a>最小生成树(Kruskal)</h2><p>用最少的权值连通所有的节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Kruskal</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 自定义比较器</span><br><span class="hljs-comment">     * 按照边的权值从小到大排序</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EdgeComparator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Comparator</span>&lt;Edge&gt;&#123;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(Edge o1, Edge o2)</span> &#123;<br>            <span class="hljs-keyword">return</span> o1.weight-o2.weight;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Set&lt;Edge&gt; <span class="hljs-title function_">kruskal</span><span class="hljs-params">(Graph graph)</span>&#123;<br>        <span class="hljs-type">UnionFind</span> <span class="hljs-variable">unionFind</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnionFind</span>();<br>        <span class="hljs-comment">//初始化并查集</span><br>        unionFind.makeSets(graph.nodes.values());<br>        <span class="hljs-comment">//小根堆</span><br>        PriorityQueue&lt;Edge&gt; priorityQueue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PriorityQueue</span>&lt;&gt;(<span class="hljs-keyword">new</span> <span class="hljs-title class_">EdgeComparator</span>());<br>        <span class="hljs-comment">//先把所有的边加入小根堆自动排序</span><br>        <span class="hljs-keyword">for</span> (Edge edge: graph.edges)&#123;<br>            priorityQueue.add(edge);<br>        &#125;<br>        Set&lt;Edge&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">while</span> (!priorityQueue.isEmpty())&#123;<br>            <span class="hljs-type">Edge</span> <span class="hljs-variable">edge</span> <span class="hljs-operator">=</span> priorityQueue.poll();<br>            <span class="hljs-comment">//如果两个点没有连通则选择当前边</span><br>            <span class="hljs-keyword">if</span> (!unionFind.isSameSet(edge.form, edge.to))&#123;<br>                result.add(edge);<br>                unionFind.union(edge.form, edge.to);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 并查集</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnionFind</span> &#123;<br>        <span class="hljs-comment">// key 某一个节点， value key节点往上的节点</span><br>        <span class="hljs-keyword">private</span> HashMap&lt;Node, Node&gt; fatherMap;<br>        <span class="hljs-comment">// key 某一个集合的代表节点, value key所在集合的节点个数</span><br>        <span class="hljs-keyword">private</span> HashMap&lt;Node, Integer&gt; sizeMap;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">UnionFind</span><span class="hljs-params">()</span> &#123;<br>            fatherMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>            sizeMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        &#125;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">makeSets</span><span class="hljs-params">(Collection&lt;Node&gt; nodes)</span> &#123;<br>            fatherMap.clear();<br>            sizeMap.clear();<br>            <span class="hljs-keyword">for</span> (Node node : nodes) &#123;<br>                fatherMap.put(node, node);<br>                sizeMap.put(node, <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">private</span> Node <span class="hljs-title function_">findFather</span><span class="hljs-params">(Node n)</span> &#123;<br>            Stack&lt;Node&gt; path = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;&gt;();<br>            <span class="hljs-keyword">while</span>(n != fatherMap.get(n)) &#123;<br>                path.add(n);<br>                n = fatherMap.get(n);<br>            &#125;<br>            <span class="hljs-keyword">while</span>(!path.isEmpty()) &#123;<br>                fatherMap.put(path.pop(), n);<br>            &#125;<br>            <span class="hljs-keyword">return</span> n;<br>        &#125;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isSameSet</span><span class="hljs-params">(Node a, Node b)</span> &#123;<br>            <span class="hljs-keyword">return</span> findFather(a) == findFather(b);<br>        &#125;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">union</span><span class="hljs-params">(Node a, Node b)</span> &#123;<br>            <span class="hljs-keyword">if</span> (a == <span class="hljs-literal">null</span> || b == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">aDai</span> <span class="hljs-operator">=</span> findFather(a);<br>            <span class="hljs-type">Node</span> <span class="hljs-variable">bDai</span> <span class="hljs-operator">=</span> findFather(b);<br>            <span class="hljs-keyword">if</span> (aDai != bDai) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">aSetSize</span> <span class="hljs-operator">=</span> sizeMap.get(aDai);<br>                <span class="hljs-type">int</span> <span class="hljs-variable">bSetSize</span> <span class="hljs-operator">=</span> sizeMap.get(bDai);<br>                <span class="hljs-keyword">if</span> (aSetSize &lt;= bSetSize) &#123;<br>                    fatherMap.put(aDai, bDai);<br>                    sizeMap.put(bDai, aSetSize + bSetSize);<br>                    sizeMap.remove(aDai);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    fatherMap.put(bDai, aDai);<br>                    sizeMap.put(aDai, aSetSize + bSetSize);<br>                    sizeMap.remove(bDai);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="dfs-与-bfs-区别"><a href="#dfs-与-bfs-区别" class="headerlink" title="dfs 与 bfs 区别"></a>dfs 与 bfs 区别</h2><p>深度优先搜索（dfs），和广度优先有什么区别（bfs）</p>
+<ul>
+<li>dfs是可一个方向去搜，不到黄河不回头，直到遇到绝境了，搜不下去了，在换方向（换方向的过程就涉及到了回溯）。</li>
+<li>bfs是先把本节点所连接的所有节点遍历一遍，走到下一个节点的时候，再把连接节点的所有节点遍历一遍，搜索方向更像是广度，四面八方的搜索过程。</li>
+</ul>
+<h2 id="dfs-搜索过程"><a href="#dfs-搜索过程" class="headerlink" title="dfs 搜索过程"></a>dfs 搜索过程</h2><p>上面说道dfs是可一个方向搜，不到黄河不回头。那么我们来举一个例子。</p>
+<p>如图一，是一个无向图，我们要搜索从节点1到节点6的所有路径。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTjzELyR9U6Me6lsXLiaicKVSqu0Kojrgp1licZrIMb1yeQvyRzsgFqWCgA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图一</p>
+<p>那么dfs搜索的第一条路径是这样的：（假设第一次延默认方向，就找到了节点6），图二</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTT2ke1KQRRsFre7sCQk1tnZibjwMopPmkG68Nm37klTFTGr8T3JFGVNQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图二</p>
+<p>此时我们找到了节点6，（遇到黄河了，是不是应该回头了），那么应该再去搜索其他方向了。如图三：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTZfNTZ8vNiapEDbqsCS9wPRB8JQKFrZUq6AtNe8BVNQXtwS6T7LdzSyg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图三</p>
+<p>路径2撤销了，改变了方向，走路径3（红色线）， 接着也找到终点6。那么撤销路径2，改为路径3，在dfs中其实就是回溯的过程（这一点很重要，很多录友不理解dfs代码中回溯是用来干什么的）</p>
+<p>又找到了一条从节点1到节点6的路径，又到黄河了，此时再回头，下图图四中，路径4撤销（回溯的过程），改为路径5。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTxOgtacXH3GD0xMloYhOibLkIJicr2cicia7LKk1WZ2Xbt52BLDSud39NYg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图四</p>
+<p>又找到了一条从节点1到节点6的路径，又到黄河了，此时再回头，下图图五，路径6撤销（回溯的过程），改为路径7，路径8  和 路径7，路径9， 结果发现死路一条，都走到了自己走过的节点。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlTEzb5ia5DhjqqfwQdAWvvSKo6icPAMBGiaLNT3k8MIyDT0K4wWNnArdeSg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图五</p>
+<p>那么节点2所连接路径和节点3所链接的路径 都走过了，撤销路径只能向上回退，去选择撤销当初节点4的选择，也就是撤销路径5，改为路径10 。如图图六：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/ciaqDnJprwv6Dwa9Ee9voIX47ufb3iaRlT839u7OWkRT4EGykC3D2yuvgtD4ic6cBRTxiawupquicEM09iaMnL7BCLUw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片">图六</p>
+<p>上图演示中，其实我并没有把 所有的 从节点1 到节点6的dfs（深度优先搜索）的过程都画出来，那样太冗余了，但 已经把dfs 关键的地方都涉及到了，关键就两点：</p>
+<ul>
+<li>搜索方向，是认准一个方向搜，直到碰壁之后在换方向</li>
+<li>换方向是撤销原路径，改为节点链接的下一个路径，回溯的过程。</li>
+</ul>
+<h2 id="代码框架"><a href="#代码框架" class="headerlink" title="代码框架"></a>代码框架</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(参数)</span> &#123;<br>    <span class="hljs-keyword">if</span> (终止条件) &#123;<br>        存放结果;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (选择：本节点所连接的其他节点) &#123;<br>        处理节点;<br>        dfs(图，选择的节点); <span class="hljs-comment">// 递归</span><br>        回溯，撤销处理结果<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="797-所有可能的路径"><a href="#797-所有可能的路径" class="headerlink" title="797. 所有可能的路径"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/all-paths-from-source-to-target/">797. 所有可能的路径</a></h4><h4 id="841-钥匙和房间"><a href="#841-钥匙和房间" class="headerlink" title="841. 钥匙和房间"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/keys-and-rooms/">841. 钥匙和房间</a></h4><h4 id="130-被围绕的区域-1"><a href="#130-被围绕的区域-1" class="headerlink" title="130. 被围绕的区域"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/surrounded-regions/">130. 被围绕的区域</a></h4><h2 id="岛屿问题"><a href="#岛屿问题" class="headerlink" title="岛屿问题"></a>岛屿问题</h2><p>我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的。而我们今天要讨论的 DFS 问题，是在一种「网格」结构中进行的。岛屿问题是这类网格 DFS 问题的典型代表。网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。</p>
+<p>网格问题的基本概念<br>我们首先明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。</p>
+<p>网格问题是由m×n 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。</p>
+<p>岛屿问题是一类典型的网格问题。每个格子中的数字可能是 0 或者 1。我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。</p>
+<p>在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等。不过这些问题，基本都可以用 DFS 遍历来解决。</p>
+<h2 id="DFS-的基本结构"><a href="#DFS-的基本结构" class="headerlink" title="DFS 的基本结构"></a>DFS 的基本结构</h2><p>网格结构要比二叉树结构稍微复杂一些，它其实是一种简化版的图结构。要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历。我们写的二叉树 DFS 遍历一般是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">traverse</span><span class="hljs-params">(TreeNode root)</span> &#123;<br>    <span class="hljs-comment">// 判断 base case</span><br>    <span class="hljs-keyword">if</span> (root == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 访问两个相邻结点：左子结点、右子结点</span><br>    traverse(root.left);<br>    traverse(root.right);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>可以看到，二叉树的 DFS 有两个要素：「访问相邻结点」和「判断 base case」。</p>
+<p>第一个要素是访问相邻结点。二叉树的相邻结点非常简单，只有左子结点和右子结点两个。二叉树本身就是一个递归定义的结构：一棵二叉树，它的左子树和右子树也是一棵二叉树。那么我们的 DFS 遍历只需要递归调用左子树和右子树即可。</p>
+<p>第二个要素是 判断 base case。一般来说，二叉树遍历的 base case 是 root &#x3D;&#x3D; null。这样一个条件判断其实有两个含义：一方面，这表示 root 指向的子树为空，不需要再往下遍历了。另一方面，在 root &#x3D;&#x3D; null 的时候及时返回，可以让后面的 root.left 和 root.right 操作不会出现空指针异常。</p>
+<p>对于网格上的 DFS，我们完全可以参考二叉树的 DFS，写出网格 DFS 的两个要素：</p>
+<p>首先，网格结构中的格子有多少相邻结点？答案是上下左右四个。对于格子 (r, c) 来说（r 和 c 分别代表行坐标和列坐标），四个相邻的格子分别是 (r-1, c)、(r+1, c)、(r, c-1)、(r, c+1)。换句话说，网格结构是「四叉」的</p>
+<p>其次，网格 DFS 中的 base case 是什么？从二叉树的 base case 对应过来，应该是网格中不需要继续遍历、grid[r][c] 会出现数组下标越界异常的格子，也就是那些超出网格范围的格子。</p>
+<p>这一点稍微有些反直觉，坐标竟然可以临时超出网格的范围？这种方法我称为「先污染后治理」—— 甭管当前是在哪个格子，先往四个方向走一步再说，如果发现走出了网格范围再赶紧返回。这跟二叉树的遍历方法是一样的，先递归调用，发现 root &#x3D;&#x3D; null 再返回。</p>
+<p>这样，我们得到了网格 DFS 遍历的框架代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] grid, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span> &#123;<br>    <span class="hljs-comment">// 判断 base case</span><br>    <span class="hljs-comment">// 如果坐标 (r, c) 超出了网格范围，直接返回</span><br>    <span class="hljs-keyword">if</span> (!inArea(grid, r, c)) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 访问上、下、左、右四个相邻结点</span><br>    dfs(grid, r - <span class="hljs-number">1</span>, c);<br>    dfs(grid, r + <span class="hljs-number">1</span>, c);<br>    dfs(grid, r, c - <span class="hljs-number">1</span>);<br>    dfs(grid, r, c + <span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-comment">// 判断坐标 (r, c) 是否在网格中</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">inArea</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] grid, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> &lt;= r &amp;&amp; r &lt; grid.length <br>        	&amp;&amp; <span class="hljs-number">0</span> &lt;= c &amp;&amp; c &lt; grid[<span class="hljs-number">0</span>].length;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="如何避免重复遍历"><a href="#如何避免重复遍历" class="headerlink" title="如何避免重复遍历"></a>如何避免重复遍历</h2><p>网格结构的 DFS 与二叉树的 DFS 最大的不同之处在于，遍历中可能遇到遍历过的结点。这是因为，网格结构本质上是一个「图」，我们可以把每个格子看成图中的结点，每个结点有向上下左右的四条边。在图中遍历时，自然可能遇到重复遍历结点。</p>
+<p>这时候，DFS 可能会不停地「兜圈子」，永远停不下来</p>
+<p>如何避免这样的重复遍历呢？答案是标记已经遍历过的格子。以岛屿问题为例，我们需要在所有值为 1 的陆地格子上做 DFS 遍历。每走过一个陆地格子，就把格子的值改为 2，这样当我们遇到 2 的时候，就知道这是遍历过的格子了。也就是说，每个格子可能取三个值：</p>
+<p>0 —— 海洋格子<br>1 —— 陆地格子（未遍历过）<br>2 —— 陆地格子（已遍历过）<br>我们在框架代码中加入避免重复遍历的语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">dfs</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] grid, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span> &#123;<br>    <span class="hljs-comment">// 判断 base case</span><br>    <span class="hljs-keyword">if</span> (!inArea(grid, r, c)) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 如果这个格子不是岛屿，直接返回</span><br>    <span class="hljs-keyword">if</span> (grid[r][c] != <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    grid[r][c] = <span class="hljs-number">2</span>; <span class="hljs-comment">// 将格子标记为「已遍历过」</span><br>    <br>    <span class="hljs-comment">// 访问上、下、左、右四个相邻结点</span><br>    dfs(grid, r - <span class="hljs-number">1</span>, c);<br>    dfs(grid, r + <span class="hljs-number">1</span>, c);<br>    dfs(grid, r, c - <span class="hljs-number">1</span>);<br>    dfs(grid, r, c + <span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-comment">// 判断坐标 (r, c) 是否在网格中</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">inArea</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] grid, <span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> &lt;= r &amp;&amp; r &lt; grid.length <br>        	&amp;&amp; <span class="hljs-number">0</span> &lt;= c &amp;&amp; c &lt; grid[<span class="hljs-number">0</span>].length;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="695-岛屿的最大面积-1"><a href="#695-岛屿的最大面积-1" class="headerlink" title="695. 岛屿的最大面积"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/max-area-of-island/">695. 岛屿的最大面积</a></h4><h4 id="463-岛屿的周长-1"><a href="#463-岛屿的周长-1" class="headerlink" title="463. 岛屿的周长"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/island-perimeter/">463. 岛屿的周长</a></h4><h4 id="200-岛屿数量-1"><a href="#200-岛屿数量-1" class="headerlink" title="200. 岛屿数量"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/number-of-islands/">200. 岛屿数量</a></h4>
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95/" class="category-chain-item">进阶算法</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>进阶算法—图论篇</div>
+      <div>https://yztldxdz.top/2022/12/02/进阶算法—图论篇/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月2日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/03/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80+%E5%AF%B9%E8%B1%A1%E5%A4%B4+Synchronized+%E9%94%81%E5%8D%87%E7%BA%A7/" title="JUC并发编程-对象内存布局+对象头+Synchronized+锁升级">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JUC并发编程-对象内存布局+对象头+Synchronized+锁升级</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/02/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-ThreadLocal/" title="JUC并发编程-ThreadLocal">
+                        <span class="hidden-mobile">JUC并发编程-ThreadLocal</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

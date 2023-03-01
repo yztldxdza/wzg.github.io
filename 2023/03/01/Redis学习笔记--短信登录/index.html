@@ -1,0 +1,876 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="内容概述 短信登录  这部分会使用Redis共享session来实现   商户查询缓存  这部分要理解缓存击穿，缓存穿透，缓存雪崩等问题，对于这些概念的理解不仅仅是停留在概念上，更是能在代码中看到对应的内容   优惠卷秒杀  这部分我们可以学会Redis的计数器功能，结合Lua完成高性能的Redis操作，同时学会Redis分布式锁的原理，包括Redis的三种消息队列   附近的商户  利用Redi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习笔记--短信登录">
+<meta property="og:url" content="https://yztldxdz.top/2023/03/01/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="内容概述 短信登录  这部分会使用Redis共享session来实现   商户查询缓存  这部分要理解缓存击穿，缓存穿透，缓存雪崩等问题，对于这些概念的理解不仅仅是停留在概念上，更是能在代码中看到对应的内容   优惠卷秒杀  这部分我们可以学会Redis的计数器功能，结合Lua完成高性能的Redis操作，同时学会Redis分布式锁的原理，包括Redis的三种消息队列   附近的商户  利用Redi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6353775b16f2c2beb140da1d.jpg">
+<meta property="article:published_time" content="2023-03-01T07:16:14.000Z">
+<meta property="article:modified_time" content="2023-03-01T11:42:52.811Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6353775b16f2c2beb140da1d.jpg">
+  
+  
+  
+  <title>Redis学习笔记--短信登录 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis学习笔记--短信登录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-01 15:16" pubdate>
+          2023年3月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          9.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis学习笔记--短信登录</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="内容概述"><a href="#内容概述" class="headerlink" title="内容概述"></a>内容概述</h1><ul>
+<li><p><code>短信登录</code></p>
+<ul>
+<li>这部分会使用Redis共享session来实现</li>
+</ul>
+</li>
+<li><p><code>商户查询缓存</code></p>
+<ul>
+<li>这部分要理解缓存击穿，缓存穿透，缓存雪崩等问题，对于这些概念的理解不仅仅是停留在概念上，更是能在代码中看到对应的内容</li>
+</ul>
+</li>
+<li><p><code>优惠卷秒杀</code></p>
+<ul>
+<li>这部分我们可以学会Redis的计数器功能，结合Lua完成高性能的Redis操作，同时学会Redis分布式锁的原理，包括Redis的三种消息队列</li>
+</ul>
+</li>
+<li><p><code>附近的商户</code></p>
+<ul>
+<li>利用Redis的GEOHash(新数据结构，前面没有应用场景就没介绍)来完成对于地理坐标的操作</li>
+</ul>
+</li>
+<li><p><code>UV统计</code></p>
+<ul>
+<li>主要是使用Redis来完成统计功能</li>
+</ul>
+</li>
+<li><p><code>用户签到</code></p>
+<ul>
+<li>使用Redis的BitMap数据统计功能</li>
+</ul>
+</li>
+<li><p><code>好友关注</code></p>
+<ul>
+<li>基于Set集合的关注、取消关注，共同关注等等功能，这部分在上篇的练习题中出现过，这次我们在项目中来使用一下</li>
+</ul>
+</li>
+<li><pre><code class="hljs">达人探店
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><br>  - 基于<span class="hljs-title class_">List</span>来完成点赞列表的操作，同时基于<span class="hljs-title class_">SortedSet</span>来完成点赞的排行榜功能<br><br><span class="hljs-comment"># 短信登录</span><br><br><span class="hljs-comment">## 导入项目</span><br><br>在实现功能之前，我们先来导入项目，让项目跑起来<br><br><span class="hljs-comment">### 导入SQL</span><br><br>黑马已经在资料中提供好了<span class="hljs-title class_">SQL</span>文件，这里简单分析一下提供的表<br><br>|        表        |           说明            |<br>| <span class="hljs-symbol">:--------------</span>: | <span class="hljs-symbol">:-----------------------</span>: |<br>|     tb_user      |          用户表           |<br>|   tb_user_info   |        用户详情表         |<br>|     tb_shop      |        商户信息表         |<br>|   tb_shop_type   |        商户类型表         |<br>|     tb_blog      | 用户日记表（达人探店日记) |<br>|    tb_follow     |        用户关注表         |<br>|    tb_voucher    |         优惠券表          |<br>| tb_voucher_order |      优惠券的订单表       |<br><br><span class="hljs-comment">### 有关当前模型</span><br><br>- 该项目采用的是前后端分离开发模式<br>- 手机或者app端发起请求，请求我们的<span class="hljs-title class_">Nginx</span>服务器，<span class="hljs-title class_">Nginx</span>基于七层模型走的<span class="hljs-title class_">HTTP</span>协议，可以实现基于<span class="hljs-title class_">Lua</span>直接绕开<span class="hljs-title class_">Tomcat</span>访问<span class="hljs-title class_">Redis</span>，也可以作为静态资源服务器，轻松扛下上万并发， 负载均衡到下游<span class="hljs-title class_">Tomcat</span>服务器，打散流量，我们都知道一台<span class="hljs-number">4</span>核<span class="hljs-number">8</span>G的<span class="hljs-title class_">Tomcat</span>，在优化和处理简单业务的加持下，大不了就处理<span class="hljs-number">1000</span>左右的并发， 经过<span class="hljs-title class_">Nginx</span>的负载均衡分流后，利用集群支撑起整个项目，同时<span class="hljs-title class_">Nginx</span>在部署了前端项目后，更是可以做到动静分离，进一步降低<span class="hljs-title class_">Tomcat</span>服务的压力，这些功能都得靠<span class="hljs-title class_">Nginx</span>起作用，所以<span class="hljs-title class_">Nginx</span>是整个项目中重要的一环。<br>- 在<span class="hljs-title class_">Tomcat</span>支撑起并发流量后，我们如果让<span class="hljs-title class_">Tomcat</span>直接去访问<span class="hljs-title class_">Mysql</span>，根据经验<span class="hljs-title class_">Mysql</span>企业级服务器只要上点并发，一般是<span class="hljs-number">16</span>或<span class="hljs-number">32</span> 核心cpu，<span class="hljs-number">32</span> 或<span class="hljs-number">64</span>G内存，像企业级mysql加上固态硬盘能够支撑的并发，大概就是<span class="hljs-number">4000</span>起~<span class="hljs-number">7000</span>左右，上万并发， 瞬间就会让<span class="hljs-title class_">Mysql</span>服务器的cpu，硬盘全部打满，容易崩溃，所以我们在高并发场景下，会选择使用mysql集群，同时为了进一步降低<span class="hljs-title class_">Mysql</span>的压力，同时增加访问的性能，我们也会加入<span class="hljs-title class_">Redis</span>，同时使用<span class="hljs-title class_">Redis</span>集群使得<span class="hljs-title class_">Redis</span>对外提供更好的服务。<br><br>[![img](<span class="hljs-symbol">https:</span>//pic1.imgdb.cn/item/<span class="hljs-number">6353709216</span>f2c2beb134e44b.jpg)](<span class="hljs-symbol">https:</span>//pic1.imgdb.cn/item/<span class="hljs-number">6353709216</span>f2c2beb134e44b.jpg)<br><br><span class="hljs-comment">### 导入后端项目</span><br><br>- 黑马已经提供好了后端项目源码压缩包，我们将其解压之后，放到自己的workspace里<br>- 然后修改<span class="hljs-title class_">MySQL</span>和<span class="hljs-title class_">Reids</span>的连接要素为自己的，随后启动项目<br>- 访问<span class="hljs-symbol">http:</span>//<span class="hljs-symbol">localhost:</span><span class="hljs-number">8081</span>/shop-type/list， 如果可以看到<span class="hljs-title class_">JSON</span>数据，则说明导入成功<br><br><span class="hljs-comment">### 导入前端工程</span><br><br>- 黑马已经提供好了前端项目源码压缩包，我们将其解压之后，放到自己的workSpace里<br><br>- 然后在nginx所在目录打开一个cmd窗口，输入命令，即可启动项目<br><br>  ```bash<br>  start nginx.exe<br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p>访问<a target="_blank" rel="noopener" href="http://localhost:8080/%EF%BC%8C">http://localhost:8080/，</a> 打开开发者模式，可以看到页面<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6353775b16f2c2beb140da1d.jpg"><img src="https://pic1.imgdb.cn/item/6353775b16f2c2beb140da1d.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+</ul>
+<h2 id="基于Session实现登录流程"><a href="#基于Session实现登录流程" class="headerlink" title="基于Session实现登录流程"></a>基于Session实现登录流程</h2><ol>
+<li>发送验证码<br>用户在提交手机号后，会校验手机号是否合法，如果不合法，则要求用户重新输入手机号<br>如果手机号合法，后台此时生成对应的验证码，同时将验证码进行保存，然后再通过短信的方式将验证码发送给用户</li>
+<li>短信验证码登录、注册<br>用户将验证码和手机号进行输入，后台从session中拿到当前验证码，然后和用户输入的验证码进行校验，如果不一致，则无法通过校验，如果一致，则后台根据手机号查询用户，如果用户不存在，则为用户创建账号信息，保存到数据库，无论是否存在，都会将用户信息保存到session中，方便后续获得当前登录信息</li>
+<li>校验登录状态<br>用户在请求的时候，会从cookie中携带JsessionId到后台，后台通过JsessionId从session中拿到用户信息，如果没有session信息，则进行拦截，如果有session信息，则将用户信息保存到threadLocal中，并放行</li>
+</ol>
+<h2 id="实现发送短信验证码功能"><a href="#实现发送短信验证码功能" class="headerlink" title="实现发送短信验证码功能"></a>实现发送短信验证码功能</h2><ul>
+<li><p>输入手机号，点击发送验证码按钮，查看发送的请求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/user/code?phone=15832165478">http://localhost:8080/api/user/code?phone=15832165478</a><br>请求方法: POST</p>
+</blockquote>
+</li>
+<li><p>调用UserController中的code方法，携带参数是<code>phone</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">	<span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 发送手机验证码</span><br><span class="hljs-comment">    */</span><br><span class="hljs-meta">@PostMapping(&quot;code&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">sendCode</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;phone&quot;)</span> String phone, HttpSession session)</span> &#123;<br>    <span class="hljs-comment">// TODO 发送短信验证码并保存验证码</span><br>    <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;功能未完成&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>但是这里并不会真的使用短信服务发送验证码，只是随机生成了一个验证码</p>
+</li>
+<li><p>由于这里貌似没有设置前端的手机号正则判断，所以我们只需要去数据库中修改phone的字段类型，将varchar(11)改为varchar(100)</p>
+</li>
+<li><p>导入邮箱验证需要的maven坐标</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/javax.activation/activation --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.activation<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>activation<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/javax.mail/mail --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.mail<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mail<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.4.7<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.commons<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>commons-email<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>然后编写一个工具类，用于发送邮件验证码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Arrays;<br><span class="hljs-keyword">import</span> java.util.Collections;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Properties;<br><br><span class="hljs-keyword">import</span> javax.mail.Authenticator;<br><span class="hljs-keyword">import</span> javax.mail.MessagingException;<br><span class="hljs-keyword">import</span> javax.mail.PasswordAuthentication;<br><span class="hljs-keyword">import</span> javax.mail.Session;<br><span class="hljs-keyword">import</span> javax.mail.Transport;<br><span class="hljs-keyword">import</span> javax.mail.internet.InternetAddress;<br><span class="hljs-keyword">import</span> javax.mail.internet.MimeMessage;<br><span class="hljs-keyword">import</span> javax.mail.internet.MimeMessage.RecipientType;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MailUtils</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> MessagingException &#123;<br>        <span class="hljs-comment">//可以在这里直接测试方法，填自己的邮箱即可</span><br>        sendTestMail(<span class="hljs-string">&quot;2757312346@qq.com&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">MailUtils</span>().achieveCode());<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendTestMail</span><span class="hljs-params">(String email, String code)</span> <span class="hljs-keyword">throws</span> MessagingException &#123;<br>        <span class="hljs-comment">// 创建Properties 类用于记录邮箱的一些属性</span><br>        <span class="hljs-type">Properties</span> <span class="hljs-variable">props</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Properties</span>();<br>        <span class="hljs-comment">// 表示SMTP发送邮件，必须进行身份验证</span><br>        props.put(<span class="hljs-string">&quot;mail.smtp.auth&quot;</span>, <span class="hljs-string">&quot;true&quot;</span>);<br>        <span class="hljs-comment">//此处填写SMTP服务器</span><br>        props.put(<span class="hljs-string">&quot;mail.smtp.host&quot;</span>, <span class="hljs-string">&quot;smtp.qq.com&quot;</span>);<br>        <span class="hljs-comment">//端口号，QQ邮箱端口587</span><br>        props.put(<span class="hljs-string">&quot;mail.smtp.port&quot;</span>, <span class="hljs-string">&quot;587&quot;</span>);<br>        <span class="hljs-comment">// 此处填写，写信人的账号</span><br>        props.put(<span class="hljs-string">&quot;mail.user&quot;</span>, <span class="hljs-string">&quot;2757312346@qq.com&quot;</span>);<br>        <span class="hljs-comment">// 此处填写16位STMP口令</span><br>        props.put(<span class="hljs-string">&quot;mail.password&quot;</span>, <span class="hljs-string">&quot;tnpnxopiyvcxfgjb&quot;</span>);<br>        <span class="hljs-comment">// 构建授权信息，用于进行SMTP进行身份验证</span><br>        <span class="hljs-type">Authenticator</span> <span class="hljs-variable">authenticator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Authenticator</span>() &#123;<br>            <span class="hljs-keyword">protected</span> PasswordAuthentication <span class="hljs-title function_">getPasswordAuthentication</span><span class="hljs-params">()</span> &#123;<br>                <span class="hljs-comment">// 用户名、密码</span><br>                <span class="hljs-type">String</span> <span class="hljs-variable">userName</span> <span class="hljs-operator">=</span> props.getProperty(<span class="hljs-string">&quot;mail.user&quot;</span>);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">password</span> <span class="hljs-operator">=</span> props.getProperty(<span class="hljs-string">&quot;mail.password&quot;</span>);<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PasswordAuthentication</span>(userName, password);<br>            &#125;<br>        &#125;;<br>        <span class="hljs-comment">// 使用环境属性和授权信息，创建邮件会话</span><br>        <span class="hljs-type">Session</span> <span class="hljs-variable">mailSession</span> <span class="hljs-operator">=</span> Session.getInstance(props, authenticator);<br>        <span class="hljs-comment">// 创建邮件消息</span><br>        <span class="hljs-type">MimeMessage</span> <span class="hljs-variable">message</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MimeMessage</span>(mailSession);<br>        <span class="hljs-comment">// 设置发件人</span><br>        <span class="hljs-type">InternetAddress</span> <span class="hljs-variable">form</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InternetAddress</span>(props.getProperty(<span class="hljs-string">&quot;mail.user&quot;</span>));<br>        message.setFrom(form);<br>        <span class="hljs-comment">// 设置收件人的邮箱</span><br>        <span class="hljs-type">InternetAddress</span> <span class="hljs-variable">to</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InternetAddress</span>(email);<br>        message.setRecipient(RecipientType.TO, to);<br>        <span class="hljs-comment">// 设置邮件标题</span><br>        message.setSubject(<span class="hljs-string">&quot;Kyle&#x27;s Blog 邮件测试&quot;</span>);<br>        <span class="hljs-comment">// 设置邮件的内容体</span><br>        message.setContent(<span class="hljs-string">&quot;尊敬的用户:你好!\n注册验证码为:&quot;</span> + code + <span class="hljs-string">&quot;(有效期为一分钟,请勿告知他人)&quot;</span>, <span class="hljs-string">&quot;text/html;charset=UTF-8&quot;</span>);<br>        <span class="hljs-comment">// 最后当然就是发送邮件啦</span><br>        Transport.send(message);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">achieveCode</span><span class="hljs-params">()</span> &#123;  <span class="hljs-comment">//由于数字 1 、 0 和字母 O 、l 有时分不清楚，所以，没有数字 1 、 0</span><br>        String[] beforeShuffle = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;2&quot;</span>, <span class="hljs-string">&quot;3&quot;</span>, <span class="hljs-string">&quot;4&quot;</span>, <span class="hljs-string">&quot;5&quot;</span>, <span class="hljs-string">&quot;6&quot;</span>, <span class="hljs-string">&quot;7&quot;</span>, <span class="hljs-string">&quot;8&quot;</span>, <span class="hljs-string">&quot;9&quot;</span>, <span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;C&quot;</span>, <span class="hljs-string">&quot;D&quot;</span>, <span class="hljs-string">&quot;E&quot;</span>, <span class="hljs-string">&quot;F&quot;</span>,<br>                <span class="hljs-string">&quot;G&quot;</span>, <span class="hljs-string">&quot;H&quot;</span>, <span class="hljs-string">&quot;I&quot;</span>, <span class="hljs-string">&quot;J&quot;</span>, <span class="hljs-string">&quot;K&quot;</span>, <span class="hljs-string">&quot;L&quot;</span>, <span class="hljs-string">&quot;M&quot;</span>, <span class="hljs-string">&quot;N&quot;</span>, <span class="hljs-string">&quot;O&quot;</span>, <span class="hljs-string">&quot;P&quot;</span>, <span class="hljs-string">&quot;Q&quot;</span>, <span class="hljs-string">&quot;R&quot;</span>, <span class="hljs-string">&quot;S&quot;</span>, <span class="hljs-string">&quot;T&quot;</span>, <span class="hljs-string">&quot;U&quot;</span>, <span class="hljs-string">&quot;V&quot;</span>, <span class="hljs-string">&quot;W&quot;</span>, <span class="hljs-string">&quot;X&quot;</span>, <span class="hljs-string">&quot;Y&quot;</span>, <span class="hljs-string">&quot;Z&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>,<br>                <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-string">&quot;e&quot;</span>, <span class="hljs-string">&quot;f&quot;</span>, <span class="hljs-string">&quot;g&quot;</span>, <span class="hljs-string">&quot;h&quot;</span>, <span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-string">&quot;j&quot;</span>, <span class="hljs-string">&quot;k&quot;</span>, <span class="hljs-string">&quot;l&quot;</span>, <span class="hljs-string">&quot;m&quot;</span>, <span class="hljs-string">&quot;n&quot;</span>, <span class="hljs-string">&quot;o&quot;</span>, <span class="hljs-string">&quot;p&quot;</span>, <span class="hljs-string">&quot;q&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>, <span class="hljs-string">&quot;s&quot;</span>, <span class="hljs-string">&quot;t&quot;</span>, <span class="hljs-string">&quot;u&quot;</span>, <span class="hljs-string">&quot;v&quot;</span>,<br>                <span class="hljs-string">&quot;w&quot;</span>, <span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-string">&quot;y&quot;</span>, <span class="hljs-string">&quot;z&quot;</span>&#125;;<br>        List&lt;String&gt; list = Arrays.asList(beforeShuffle);<span class="hljs-comment">//将数组转换为集合</span><br>        Collections.shuffle(list);  <span class="hljs-comment">//打乱集合顺序</span><br>        <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br>        <span class="hljs-keyword">for</span> (String s : list) &#123;<br>            sb.append(s); <span class="hljs-comment">//将集合转化为字符串</span><br>        &#125;<br>        <span class="hljs-keyword">return</span> sb.substring(<span class="hljs-number">3</span>, <span class="hljs-number">8</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>修改sendCode方法，逻辑如下</p>
+<ul>
+<li><p>验证手机号&#x2F;邮箱格式</p>
+<ul>
+<li><p>不正确则返回错误信息</p>
+</li>
+<li><p>正确则发送验证码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 发送手机验证码</span><br><span class="hljs-comment">*/</span><br><span class="hljs-meta">@PostMapping(&quot;/code&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">sendCode</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;phone&quot;)</span> String phone, HttpSession session)</span> <span class="hljs-keyword">throws</span> MessagingException &#123;<br>    <span class="hljs-comment">// TODO 发送短信验证码并保存验证码</span><br>    <span class="hljs-keyword">if</span> (RegexUtils.isEmailInvalid(phone)) &#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;邮箱格式不正确&quot;</span>);<br>    &#125;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> MailUtils.achieveCode();<br>    session.setAttribute(phone, code);<br>    log.info(<span class="hljs-string">&quot;发送登录验证码：&#123;&#125;&quot;</span>, code);<br>    MailUtils.sendTestMail(phone, code);<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>然后输入邮箱，发送验证码，看看能否接收到验证码</p>
+</li>
+<li><p>测试没有问题之后，我们继续来编写登录功能，点击登录按钮，查看发送的请求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/user/login">http://localhost:8080/api/user/login</a><br>请求方法: POST</p>
+</blockquote>
+</li>
+<li><p>看样子是UserController中的login方法，携带的参数也就是我们的邮箱和验证码</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs JSON"><span class="hljs-punctuation">&#123;</span>phone<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1586385296@qq.com&quot;</span><span class="hljs-punctuation">,</span> code<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;iMPKc&quot;</span><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>提供的代码如下，看样子是把邮箱和验证码封装到了LoginFormDto中</p>
+<ul>
+<li><p>login</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 登录功能</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> loginForm 登录参数，包含手机号、验证码；或者手机号、密码</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@PostMapping(&quot;/login&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">login</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> LoginFormDTO loginForm, HttpSession session)</span>&#123;<br>    <span class="hljs-comment">// TODO 实现登录功能</span><br>    <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;功能未完成&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>LoginFormDTO</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginFormDTO</span> &#123;<br>    <span class="hljs-keyword">private</span> String phone;<br>    <span class="hljs-keyword">private</span> String code;<br>    <span class="hljs-keyword">private</span> String password;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>修改login方法，逻辑如下</p>
+<ul>
+<li>校验手机号&#x2F;邮箱<ul>
+<li>不正确则返回错误信息</li>
+<li>正确则继续校验验证码<ul>
+<li>不一致则报错</li>
+<li>一致则先根据手机号&#x2F;邮箱查询用户<ul>
+<li>用户不存在则创建</li>
+<li>存在则继续执行程序</li>
+</ul>
+</li>
+<li>保存用户信息到session中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>login</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 登录功能</span><br><span class="hljs-comment">*</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> loginForm 登录参数，包含手机号、验证码；或者手机号、密码</span><br><span class="hljs-comment">*/</span><br><span class="hljs-meta">@PostMapping(&quot;/login&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">login</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> LoginFormDTO loginForm, HttpSession session)</span> &#123;<br>    <span class="hljs-comment">// TODO 实现登录功能</span><br>    <span class="hljs-comment">//获取登录账号</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">phone</span> <span class="hljs-operator">=</span> loginForm.getPhone();<br>    <span class="hljs-comment">//获取登录验证码</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> loginForm.getCode();<br>    <span class="hljs-comment">//获取session中的验证码</span><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">cacheCode</span> <span class="hljs-operator">=</span> session.getAttribute(phone);<br><br>    <span class="hljs-comment">//1. 校验邮箱</span><br>    <span class="hljs-keyword">if</span> (RegexUtils.isEmailInvalid(phone)) &#123;<br>        <span class="hljs-comment">//2. 不符合格式则报错</span><br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;邮箱格式不正确！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//3. 校验验证码</span><br>    log.info(<span class="hljs-string">&quot;code:&#123;&#125;,cacheCode&#123;&#125;&quot;</span>, code, cacheCode);<br>    <span class="hljs-keyword">if</span> (code == <span class="hljs-literal">null</span> || !cacheCode.toString().equals(code)) &#123;<br>        <span class="hljs-comment">//4. 不一致则报错</span><br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;验证码不一致！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//5. 根据账号查询用户是否存在</span><br>    LambdaQueryWrapper&lt;User&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>    queryWrapper.eq(User::getPhone, phone);<br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> userService.getOne(queryWrapper);<br>    <span class="hljs-comment">//6. 如果不存在则创建</span><br>    <span class="hljs-keyword">if</span> (user == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 创建的逻辑封装成了一个方法</span><br>        user = createUserWithPhone(phone);<br>    &#125;<br>    <span class="hljs-comment">//7. 保存用户信息到session中</span><br>    session.setAttribute(<span class="hljs-string">&quot;user&quot;</span>, user);<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>createUserWithPhone</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> User <span class="hljs-title function_">createUserWithPhone</span><span class="hljs-params">(String phone)</span> &#123;<br>    <span class="hljs-comment">//创建用户</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br>    <span class="hljs-comment">//设置手机号</span><br>    user.setPhone(phone);<br>    <span class="hljs-comment">//设置昵称(默认名)，一个固定前缀+随机字符串</span><br>    user.setNickName(<span class="hljs-string">&quot;user_&quot;</span> + RandomUtil.randomString(<span class="hljs-number">8</span>));<br>    <span class="hljs-comment">//保存到数据库</span><br>    userService.save(user);<br>    <span class="hljs-keyword">return</span> user;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Redis/" class="category-chain-item">Redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE/">#项目</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis学习笔记--短信登录</div>
+      <div>https://yztldxdz.top/2023/03/01/Redis学习笔记--短信登录/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/17/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94Nxlogn%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%AF%87/" title="Nxlogn排序算法">
+                        <span class="hidden-mobile">Nxlogn排序算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

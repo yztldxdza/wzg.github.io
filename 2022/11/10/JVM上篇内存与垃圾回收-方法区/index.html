@@ -71,8 +71,10 @@
 <meta property="og:image" content="http://cdn.processon.com/5ee41d13e0b34d4dba37d05b?e=1592011556&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:rnqbSAMY-gk-thK2OR3Q6buy224=">
 <meta property="og:image" content="http://cdn.processon.com/5ee41d1c07912929cb3f37f1?e=1592011564&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:btmLK8JXyRmeSCka0DkIEntWxJc=">
 <meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bvgc0rzmj30um0d7jwu.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h9dwgj5avoj30l80ammyo.jpg">
+<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h9dwkq8l1aj30l30dhta3.jpg">
 <meta property="article:published_time" content="2022-11-10T11:36:24.000Z">
-<meta property="article:modified_time" content="2022-11-21T12:41:26.489Z">
+<meta property="article:modified_time" content="2022-12-23T10:07:17.169Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -276,7 +278,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          5.6k 字
+          5.7k 字
         
       </span>
     
@@ -288,7 +290,7 @@
         
         
           <!-- compatible with older versions-->
-          47 分钟
+          48 分钟
         
       </span>
     
@@ -515,23 +517,30 @@
 <ul>
 <li><p>Java8的内存分代改进 JVM内存分哪几个区，每个区的作用是什么？</p>
 </li>
-<li><p>一面：JVM内存分布&#x2F;内存结构？栈和堆的区别？堆的结构？为什么两个survivor区？</p>
+<li><p>一面：JVM内存分布&#x2F;内存结构？栈和堆的区别(各自的功能)？堆的结构？为什么两个survivor区？</p>
+<ul>
+<li>两个survivor区是为了解决内存碎片化的问题</li>
+</ul>
 </li>
 <li><p>二面：Eden和survior的比例分配</p>
 </li>
 </ul>
 <p><strong>小米：</strong></p>
 <ul>
-<li>jvm内存分区，为什么要有新生代和老年代</li>
+<li>jvm内存分区，为什么要有新生代和老年代<ul>
+<li>新生代存在的唯一理由是优化垃圾回收(GC)的性能。更具体说，把堆划分为新生代和老年代有2个好处：简化了新对象的分配(只在新生代分配内存),可以更有效的清除不再需要的对象(即死对象)(新生代和老年代使用不同的GC算法)</li>
+</ul>
+</li>
 </ul>
 <p><strong>字节跳动：</strong></p>
 <ul>
 <li><p>二面：Java的内存分区</p>
 </li>
-<li><p>二面：讲讲vm运行时数据库区 什么时候对象会进入老年代？</p>
+<li><p>二面：讲讲Jvm运行时数据库区 什么时候对象会进入老年代？</p>
 </li>
 </ul>
 <p><strong>京东：</strong></p>
+<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h9dwgj5avoj30l80ammyo.jpg" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li><p>JVM的内存结构，Eden和Survivor比例。</p>
 </li>
@@ -556,6 +565,8 @@
 <li><p>java内存分配 jvm的永久代中会发生垃圾回收吗？</p>
 </li>
 <li><p>一面：jvm内存分区，为什么要有新生代和老年代？</p>
+</li>
+<li><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h9dwkq8l1aj30l30dhta3.jpg" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ul>
 
@@ -640,9 +651,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/11/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91%E7%90%86%E8%AE%BA%E7%AF%87/" title="代码随想录—二叉树理论篇">
+                      <a href="/2022/11/11/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91%E7%90%86%E8%AE%BA%E7%AF%87/" title="基础算法—二叉树理论篇">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">代码随想录—二叉树理论篇</span>
+                        <span class="hidden-mobile">基础算法—二叉树理论篇</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -650,8 +661,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/09/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95%E2%80%94%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97%E7%AF%87/" title="代码随想录—栈与队列篇">
-                        <span class="hidden-mobile">代码随想录—栈与队列篇</span>
+                      <a href="/2022/11/09/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97%E7%AF%87/" title="基础算法—栈与队列篇">
+                        <span class="hidden-mobile">基础算法—栈与队列篇</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
