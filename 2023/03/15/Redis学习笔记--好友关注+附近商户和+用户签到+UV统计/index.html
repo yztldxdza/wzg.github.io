@@ -1,0 +1,1406 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="好友关注关注和取消关注 当我们进入到笔记详情页面时，会发送一个请求，判断当前登录用户是否关注了笔记博主  请求网址: http:&#x2F;&#x2F;localhost:8080&#x2F;api&#x2F;follow&#x2F;or&#x2F;not&#x2F;2请求方法: GET   当我们点击关注按钮时，会发送一个请求，实现关注&#x2F;取关  请求网址: http:&#x2F;&#x2F;localhost:8080&#x2F;api&#x2F;follow&#x2F;2&#x2F;true请求方法: PUT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习笔记--好友关注+附近商户和+用户签到+UV统计">
+<meta property="og:url" content="https://yztldxdz.top/2023/03/15/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E5%A5%BD%E5%8F%8B%E5%85%B3%E6%B3%A8+%E9%99%84%E8%BF%91%E5%95%86%E6%88%B7%E5%92%8C+%E7%94%A8%E6%88%B7%E7%AD%BE%E5%88%B0+UV%E7%BB%9F%E8%AE%A1/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="好友关注关注和取消关注 当我们进入到笔记详情页面时，会发送一个请求，判断当前登录用户是否关注了笔记博主  请求网址: http:&#x2F;&#x2F;localhost:8080&#x2F;api&#x2F;follow&#x2F;or&#x2F;not&#x2F;2请求方法: GET   当我们点击关注按钮时，会发送一个请求，实现关注&#x2F;取关  请求网址: http:&#x2F;&#x2F;localhost:8080&#x2F;api&#x2F;follow&#x2F;2&#x2F;true请求方法: PUT">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/63633ca816f2c2beb12b772e.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/63635de616f2c2beb15b17cb.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6363632816f2c2beb162b6de.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6363737716f2c2beb17fae7b.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6363826516f2c2beb1992291.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/636383e816f2c2beb1a0ab75.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6363841b16f2c2beb1a1e1e3.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/63638cce16f2c2beb1b72c2f.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/63638cdb16f2c2beb1b743f5.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6363a7da16f2c2beb1e17702.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6364c8c216f2c2beb16eb996.jpg">
+<meta property="article:published_time" content="2023-03-15T07:16:14.000Z">
+<meta property="article:modified_time" content="2023-03-06T08:23:29.582Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/63633ca816f2c2beb12b772e.jpg">
+  
+  
+  
+  <title>Redis学习笔记--好友关注+附近商户和+用户签到+UV统计 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis学习笔记--好友关注+附近商户和+用户签到+UV统计"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-15 15:16" pubdate>
+          2023年3月15日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          25k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          211 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis学习笔记--好友关注+附近商户和+用户签到+UV统计</h1>
+            
+            <div class="markdown-body">
+              
+              <h1 id="好友关注"><a href="#好友关注" class="headerlink" title="好友关注"></a>好友关注</h1><h2 id="关注和取消关注"><a href="#关注和取消关注" class="headerlink" title="关注和取消关注"></a>关注和取消关注</h2><ul>
+<li><p>当我们进入到笔记详情页面时，会发送一个请求，判断当前登录用户是否关注了笔记博主</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/follow/or/not/2">http://localhost:8080/api/follow/or/not/2</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>当我们点击关注按钮时，会发送一个请求，实现关注&#x2F;取关</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/follow/2/true">http://localhost:8080/api/follow/2/true</a><br>请求方法: PUT</p>
+</blockquote>
+</li>
+<li><p>关注是User之间的关系，是博主与粉丝的关系，数据库中有一张tb_follow表来标示</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">Field</th>
+<th align="center">Type</th>
+<th align="center">Collation</th>
+<th align="center">Null</th>
+<th align="center">Key</th>
+<th align="center">Default</th>
+<th align="center">Extra</th>
+<th align="center">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">id</td>
+<td align="center">bigint</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center">PRI</td>
+<td align="center">(NULL)</td>
+<td align="center">auto_increment</td>
+<td align="center">主键</td>
+</tr>
+<tr>
+<td align="center">user_id</td>
+<td align="center">bigint unsigned</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">用户id</td>
+</tr>
+<tr>
+<td align="center">follow_user_id</td>
+<td align="center">bigint unsigned</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">关联的用户id</td>
+</tr>
+<tr>
+<td align="center">create_time</td>
+<td align="center">timestamp</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">CURRENT_TIMESTAMP</td>
+<td align="center">DEFAULT_GENERATED</td>
+<td align="center">创建时间</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>对应的实体类如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@EqualsAndHashCode(callSuper = false)</span><br><span class="hljs-meta">@Accessors(chain = true)</span><br><span class="hljs-meta">@TableName(&quot;tb_follow&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Follow</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">serialVersionUID</span> <span class="hljs-operator">=</span> <span class="hljs-number">1L</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 主键</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br>    <span class="hljs-keyword">private</span> Long id;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 用户id</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Long userId;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 关联的用户id</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> Long followUserId;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建时间</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> LocalDateTime createTime;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>那我们现在来Controller层中编写对应的两个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/follow&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FollowController</span> &#123;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> IFollowService followService;<br>    <span class="hljs-comment">//判断当前用户是否关注了该博主</span><br>    <span class="hljs-meta">@GetMapping(&quot;/or/not/&#123;id&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> Result <span class="hljs-title function_">isFollow</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long followUserId)</span> &#123;<br>        <span class="hljs-keyword">return</span> followService.isFollow(followUserId);<br>    &#125;<br>    <span class="hljs-comment">//实现取关/关注</span><br>    <span class="hljs-meta">@PutMapping(&quot;/&#123;id&#125;/&#123;isFollow&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> Result <span class="hljs-title function_">follow</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long followUserId, <span class="hljs-meta">@PathVariable(&quot;isFollow&quot;)</span> Boolean isFellow)</span> &#123;<br>        <span class="hljs-keyword">return</span> followService.follow(followUserId,isFellow);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>具体的业务逻辑我们还是放在FellowServiceImpl中来编写</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FollowServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ServiceImpl</span>&lt;FollowMapper, Follow&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IFollowService</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Result <span class="hljs-title function_">isFollow</span><span class="hljs-params">(Long followUserId)</span> &#123;<br>        <span class="hljs-comment">//获取当前登录的userId</span><br>        <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>        LambdaQueryWrapper&lt;Follow&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>        <span class="hljs-comment">//查询当前用户是否关注了该笔记的博主</span><br>        queryWrapper.eq(Follow::getUserId, userId).eq(Follow::getFollowUserId, followUserId);<br>        <span class="hljs-comment">//只查询一个count就行了</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.count(queryWrapper);<br>        <span class="hljs-keyword">return</span> Result.ok(count &gt; <span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Result <span class="hljs-title function_">follow</span><span class="hljs-params">(Long followUserId, Boolean isFellow)</span> &#123;<br>        <span class="hljs-comment">//获取当前用户id</span><br>        <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>        <span class="hljs-comment">//判断是否关注</span><br>        <span class="hljs-keyword">if</span> (isFellow) &#123;<br>            <span class="hljs-comment">//关注，则将信息保存到数据库</span><br>            <span class="hljs-type">Follow</span> <span class="hljs-variable">follow</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Follow</span>();<br>            follow.setUserId(userId);<br>            follow.setFollowUserId(followUserId);<br>            save(follow);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">//取关，则将数据从数据库中移除</span><br>            LambdaQueryWrapper&lt;Follow&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>            queryWrapper.eq(Follow::getUserId, userId).eq(Follow::getFollowUserId, followUserId);<br>            remove(queryWrapper);<br>        &#125;<br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>测试效果如下<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/63633ca816f2c2beb12b772e.jpg"><img src="https://pic1.imgdb.cn/item/63633ca816f2c2beb12b772e.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+</ul>
+<h2 id="共同关注"><a href="#共同关注" class="headerlink" title="共同关注"></a>共同关注</h2><ul>
+<li><p>点击用户头像，进入到用户详情页，可以查看用户发布的笔记，和共同关注列表<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/63635de616f2c2beb15b17cb.jpg"><img src="https://pic1.imgdb.cn/item/63635de616f2c2beb15b17cb.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+<li><p>但现在我们还没写具体的业务逻辑，所以现在暂时看不到数据</p>
+</li>
+<li><p>检测NetWork选项卡，查看发送的请求</p>
+<ul>
+<li><p>查询用户信息</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/user/2">http://localhost:8080/api/user/2</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>查看共同关注</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/follow/common/undefined">http://localhost:8080/api/follow/common/undefined</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>编写<code>查询用户信息</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long userId)</span> &#123;<br>    <span class="hljs-comment">// 查询详情</span><br>    <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> userService.getById(userId);<br>    <span class="hljs-keyword">if</span> (user == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 没有详情，应该是第一次查看详情</span><br>        <span class="hljs-keyword">return</span> Result.ok();<br>    &#125;<br>    <span class="hljs-type">UserDTO</span> <span class="hljs-variable">userDTO</span> <span class="hljs-operator">=</span> BeanUtil.copyProperties(user, UserDTO.class);<br>    <span class="hljs-comment">// 返回</span><br>    <span class="hljs-keyword">return</span> Result.ok(userDTO);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>重启服务器，现在可以看到用户信息，但是不能看到用户发布的笔记信息，查看NetWork检测的请求，我们还需要完成这个需求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/blog/of/user?&amp;id=2&amp;current=1">http://localhost:8080/api/blog/of/user?&amp;id=2&amp;current=1</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>编写<code>查询用户笔记</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs JAVA">    <span class="hljs-meta">@GetMapping(&quot;/of/user&quot;)</span><br>    <span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogByUserId</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(value = &quot;current&quot;, defaultValue = &quot;1&quot;)</span> Integer current, <span class="hljs-meta">@RequestParam(&quot;id&quot;)</span> Long id)</span> &#123;<br>        LambdaQueryWrapper&lt;Blog&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>        queryWrapper.eq(Blog::getUserId, id);<br>        Page&lt;Blog&gt; pageInfo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Page</span>&lt;&gt;(current, SystemConstants.MAX_PAGE_SIZE);<br>        blogService.page(pageInfo, queryWrapper);<br>        List&lt;Blog&gt; records = pageInfo.getRecords();<br>        <span class="hljs-keyword">return</span> Result.ok(records);<br>    &#125;<br><br><br><span class="hljs-comment">//下面这是老师的代码，个人感觉我的可读性更高[doge]</span><br><span class="hljs-comment">// BlogController  根据id查询博主的探店笔记</span><br><span class="hljs-meta">@GetMapping(&quot;/of/user&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogByUserId</span><span class="hljs-params">(</span><br><span class="hljs-params">		<span class="hljs-meta">@RequestParam(value = &quot;current&quot;, defaultValue = &quot;1&quot;)</span> Integer current,</span><br><span class="hljs-params">		<span class="hljs-meta">@RequestParam(&quot;id&quot;)</span> Long id)</span> &#123;<br>	<span class="hljs-comment">// 根据用户查询</span><br>	Page&lt;Blog&gt; page = blogService.query()<br>			.eq(<span class="hljs-string">&quot;user_id&quot;</span>, id).page(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Page</span>&lt;&gt;(current, SystemConstants.MAX_PAGE_SIZE));<br>	<span class="hljs-comment">// 获取当前页数据</span><br>	List&lt;Blog&gt; records = page.getRecords();<br>	<span class="hljs-keyword">return</span> Result.ok(records);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>效果如下<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6363632816f2c2beb162b6de.jpg"><img src="https://pic1.imgdb.cn/item/6363632816f2c2beb162b6de.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+<li><p>接下来我们来看看怎么实现共同关注</p>
+<p>需求：利用Redis中恰当的数据结构，实现共同关注功能，在博主个人页面展示出当前用户与博主的共同关注</p>
+</li>
+<li><p>实现方式当然是我们之前学过的set集合，在set集合中，有交集并集补集的api，可以把二者关注的人放入到set集合中，然后通过api查询两个set集合的交集</p>
+</li>
+<li><p>那我们就得先修改我们之前的关注逻辑，在关注博主的同时，需要将数据放到set集合中，方便后期我们实现共同关注，当取消关注时，也需要将数据从set集合中删除</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Resource</span><br><span class="hljs-keyword">private</span> StringRedisTemplate stringRedisTemplate;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">follow</span><span class="hljs-params">(Long followUserId, Boolean isFellow)</span> &#123;<br>    <span class="hljs-comment">//获取当前用户id</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;follows:&quot;</span> + userId;<br>    <span class="hljs-comment">//判断是否关注</span><br>    <span class="hljs-keyword">if</span> (isFellow) &#123;<br>        <span class="hljs-comment">//关注，则将信息保存到数据库</span><br>        <span class="hljs-type">Follow</span> <span class="hljs-variable">follow</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Follow</span>();<br>        follow.setUserId(userId);<br>        follow.setFollowUserId(followUserId);<br>        <span class="hljs-comment">//如果保存成功</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">success</span> <span class="hljs-operator">=</span> save(follow);<br>        <span class="hljs-comment">//则将数据也写入Redis</span><br>        <span class="hljs-keyword">if</span> (success) &#123;<br>            stringRedisTemplate.opsForSet().add(key, followUserId.toString());<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">//取关，则将数据从数据库中移除</span><br>        LambdaQueryWrapper&lt;Follow&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>        queryWrapper.eq(Follow::getUserId, userId).eq(Follow::getFollowUserId, followUserId);<br>        <span class="hljs-comment">//如果取关成功</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">success</span> <span class="hljs-operator">=</span> remove(queryWrapper);<br>        <span class="hljs-comment">//则将数据也从Redis中移除</span><br>        <span class="hljs-keyword">if</span> (success)&#123;<br>            stringRedisTemplate.opsForSet().remove(key,followUserId.toString());<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>那么接下来，我们实现共同关注代码</p>
+</li>
+</ul>
+<p>Controller层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/common/&#123;id&#125;&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">followCommons</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> Long id)</span>&#123;<br>    <span class="hljs-keyword">return</span> followService.followCommons(id);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Impl</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">followCommons</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//获取当前用户id</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key1</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;follows:&quot;</span> + id;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key2</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;follows:&quot;</span> + userId;<br>    <span class="hljs-comment">//对当前用户和博主用户的关注列表取交集</span><br>    Set&lt;String&gt; intersect = stringRedisTemplate.opsForSet().intersect(key1, key2);<br>    <span class="hljs-keyword">if</span> (intersect == <span class="hljs-literal">null</span> || intersect.isEmpty()) &#123;<br>        <span class="hljs-comment">//无交集就返回个空集合</span><br>        <span class="hljs-keyword">return</span> Result.ok(Collections.emptyList());<br>    &#125;<br>    <span class="hljs-comment">//将结果转为list</span><br>    List&lt;Long&gt; ids = intersect.stream().map(Long::valueOf).collect(Collectors.toList());<br>    <span class="hljs-comment">//之后根据ids去查询共同关注的用户，封装成UserDto再返回</span><br>    List&lt;UserDTO&gt; userDTOS = userService.listByIds(ids).stream().map(user -&gt;<br>            BeanUtil.copyProperties(user, UserDTO.class)).collect(Collectors.toList());<br>    <span class="hljs-keyword">return</span> Result.ok(userDTOS);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>最终效果如下<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6363737716f2c2beb17fae7b.jpg"><img src="https://pic1.imgdb.cn/item/6363737716f2c2beb17fae7b.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+<h2 id="Feed流实现方案"><a href="#Feed流实现方案" class="headerlink" title="Feed流实现方案"></a>Feed流实现方案</h2><ul>
+<li>当我们关注了用户之后，这个用户发布了动态，那我们应该把这些数据推送给用户，这个需求，我们又称其为Feed流，关注推送也叫作Feed流，直译为投喂，为用户提供沉浸式体验，通过无限下拉刷新获取新的信息，</li>
+<li>对于传统的模式内容检索：用户需要主动通过搜索引擎或者是其他方式去查找想看的内容</li>
+<li>对于新型Feed流的效果：系统分析用户到底想看什么，然后直接把内容推送给用户，从而使用户能更加节约时间，不用去主动搜素</li>
+<li>Feed流的实现有两种模式<ol>
+<li>Timeline：不做内容筛选，简单的按照内容发布时间排序，常用于好友或关注(B站关注的up，朋友圈等)<ul>
+<li>优点：信息全面，不会有缺失，并且实现也相对简单</li>
+<li>缺点：信息噪音较多，用户不一定感兴趣，内容获取效率低</li>
+</ul>
+</li>
+<li>智能排序：利用智能算法屏蔽掉违规的、用户不感兴趣的内容，推送用户感兴趣的信息来吸引用户<ul>
+<li>优点：投喂用户感兴趣的信息，用户粘度很高，容易沉迷</li>
+<li>缺点：如果算法不精准，可能会起到反作用（给你推的你都不爱看）</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>那我们这里针对好友的操作，采用的是Timeline方式，只需要拿到我们关注用户的信息，然后按照时间排序即可</li>
+<li>采用Timeline模式，有三种具体的实现方案<ol>
+<li>拉模式</li>
+<li>推模式</li>
+<li>推拉结合</li>
+</ol>
+</li>
+<li>拉模式：也叫读扩散<ul>
+<li>该模式的核心含义是：当张三和李四、王五发了消息之后，都会保存到自己的发件箱中，如果赵六要读取消息，那么他会读取他自己的收件箱，此时系统会从他关注的人群中，将他关注人的信息全都进行拉取，然后进行排序</li>
+<li>优点：比较节约空间，因为赵六在读取信息时，并没有重复读取，并且读取完之后，可以将他的收件箱清除</li>
+<li>缺点：有延迟，当用户读取数据时，才会去关注的人的时发件箱中拉取信息，假设该用户关注了海量用户，那么此时就会拉取很多信息，对服务器压力巨大<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6363826516f2c2beb1992291.jpg"><img src="https://pic1.imgdb.cn/item/6363826516f2c2beb1992291.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+</li>
+<li>推模式：也叫写扩散<ul>
+<li>推模式是没有写邮箱的，当张三写了一个内容，此时会主动把张三写的内容发送到它粉丝的收件箱中，假设此时李四再来读取，就不用再去临时拉取了</li>
+<li>优点：时效快，不用临时拉取</li>
+<li>缺点：内存压力大，假设一个大V发了一个动态，很多人关注他，那么就会写很多份数据到粉丝那边去<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/636383e816f2c2beb1a0ab75.jpg"><img src="https://pic1.imgdb.cn/item/636383e816f2c2beb1a0ab75.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+</li>
+<li>推拉结合：页脚读写混合，兼具推和拉两种模式的优点<ul>
+<li>推拉模式是一个折中的方案，站在发件人这一边，如果是普通人，那么我们采用写扩散的方式，直接把数据写入到他的粉丝收件箱中，因为普通人的粉丝数量较少，所以这样不会产生太大压力。但如果是大V，那么他是直接将数据写入一份到发件箱中去，在直接写一份到活跃粉丝的收件箱中，站在收件人这边来看，如果是活跃粉丝，那么大V和普通人发的都会写到自己的收件箱里，但如果是普通粉丝，由于上线不是很频繁，所以等他们上线的时候，再从发件箱中去拉取信息。<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6363841b16f2c2beb1a1e1e3.jpg"><img src="https://pic1.imgdb.cn/item/6363841b16f2c2beb1a1e1e3.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+</li>
+</ul>
+<h2 id="推送到粉丝收件箱"><a href="#推送到粉丝收件箱" class="headerlink" title="推送到粉丝收件箱"></a>推送到粉丝收件箱</h2><ul>
+<li><p>需求：</p>
+<ol>
+<li>修改新增探店笔记的业务，在保存blog到数据库的同时，推送到粉丝的收件箱</li>
+<li>收件箱满足可以根据时间戳排序，必须使用Redis的数据结构实现</li>
+<li>查询收件箱数据时，课实现分页查询</li>
+</ol>
+</li>
+<li><p>Feed流中的数据会不断更新，所以数据的角标也会不断变化，所以我们不能使用传统的分页模式</p>
+</li>
+<li><p>假设在t1时刻，我们取读取第一页，此时page &#x3D; 1，size &#x3D; 5，那么我们拿到的就是<code>10~6</code>这几条记录，假设t2时刻有发布了一条新纪录，那么在t3时刻，我们来读取第二页，此时page &#x3D; 2，size &#x3D; 5，那么此时读取的数据是从6开始的，读到的是<code>6~2</code>，那么我们就读到了重复的数据，所以我们要使用Feed流的分页，不能使用传统的分页<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/63638cce16f2c2beb1b72c2f.jpg"><img src="https://pic1.imgdb.cn/item/63638cce16f2c2beb1b72c2f.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+<li><p>Feed流的滚动分页</p>
+<ul>
+<li>我们需要记录每次操作的最后一条，然后从这个位置去开始读数据</li>
+<li>举个例子：我们从t1时刻开始，拿到第一页数据，拿到了<code>10~6</code>，然后记录下当前最后一次读取的记录，就是6，t2时刻发布了新纪录，此时这个11在最上面，但不会影响我们之前拿到的6，此时t3时刻来读取第二页，第二页读数据的时候，从<code>6-1=5</code>开始读，这样就拿到了<code>5~1</code>的记录。我们在这个地方可以使用SortedSet来做，使用时间戳来充当表中的<code>1~10</code><br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/63638cdb16f2c2beb1b743f5.jpg"><img src="https://pic1.imgdb.cn/item/63638cdb16f2c2beb1b743f5.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+</li>
+<li><p>核心思路：我们保存完探店笔记后，获取当前用户的粉丝列表，然后将数据推送给粉丝</p>
+</li>
+<li><p>那现在我们就需要修改保存笔记的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">saveBlog</span><span class="hljs-params">(Blog blog)</span> &#123;<br>    <span class="hljs-comment">// 获取登录用户</span><br>    <span class="hljs-type">UserDTO</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> UserHolder.getUser();<br>    blog.setUserId(user.getId());<br>    <span class="hljs-comment">// 保存探店博文</span><br>    save(blog);<br>    <span class="hljs-comment">// 条件构造器</span><br>    LambdaQueryWrapper&lt;Follow&gt; queryWrapper = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LambdaQueryWrapper</span>&lt;&gt;();<br>    <span class="hljs-comment">// 从follow表最中，查找当前用户的粉丝  select * from follow where follow_user_id = user_id</span><br>    queryWrapper.eq(Follow::getFollowUserId, user.getId());<br>    <span class="hljs-comment">//获取当前用户的粉丝</span><br>    List&lt;Follow&gt; follows = followService.list(queryWrapper);<br>    <span class="hljs-keyword">for</span> (Follow follow : follows) &#123;<br>        <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> follow.getUserId();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> FEED_KEY + userId;<br>        <span class="hljs-comment">//推送数据</span><br>        stringRedisTemplate.opsForZSet().add(key, blog.getId().toString(), System.currentTimeMillis());<br>    &#125;<br>    <span class="hljs-comment">// 返回id</span><br>    <span class="hljs-keyword">return</span> Result.ok(blog.getId());<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="实现分页查询收件箱"><a href="#实现分页查询收件箱" class="headerlink" title="实现分页查询收件箱"></a>实现分页查询收件箱</h2><ul>
+<li><p>需求：在个人主页的<code>关注栏</code>中，查询并展示推送的Blog信息</p>
+</li>
+<li><p>具体步骤如下</p>
+<ol>
+<li>每次查询完成之后，我们要分析出查询出的最小时间戳，这个值会作为下一次的查询条件</li>
+<li>我们需要找到与上一次查询相同的查询个数，并作为偏移量，下次查询的时候，跳过这些查询过的数据，拿到我们需要的数据（例如时间戳8 6 6 5 5 4，我们每次查询3个，第一次是8 6 6，此时最小时间戳是6，如果不设置偏移量，会从第一个6之后开始查询，那么查询到的就是6 5 5，而不是5 5 4，如果这里说的不清楚，那就看后续的代码）</li>
+</ol>
+</li>
+<li><p>综上：我们的请求参数中需要携带lastId和offset，即上一次查询时的最小时间戳和偏移量，这两个参数</p>
+</li>
+<li><p>编写一个通用的实体类，不一定只对blog进行分页查询，这里用泛型做一个通用的分页查询，list是封装返回的结果，minTime是记录的最小时间戳，offset是记录偏移量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollResult</span> &#123;<br>    <span class="hljs-keyword">private</span> List&lt;?&gt; list;<br>    <span class="hljs-keyword">private</span> Long minTime;<br>    <span class="hljs-keyword">private</span> Integer offset;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>点击个人主页中的<code>关注</code>栏，查看发送的请求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/blog/of/follow?&amp;lastId=1667472294526">http://localhost:8080/api/blog/of/follow?&amp;lastId=1667472294526</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>在BlogController中创建对应的方法，具体实现去ServiceImpl中完成</p>
+</li>
+</ul>
+<p>tabName</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/of/follow&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogOfFollow</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;lastId&quot;)</span> Long max, <span class="hljs-meta">@RequestParam(value = &quot;offset&quot;,defaultValue = &quot;0&quot;)</span> Integer offset)</span> &#123;<br>    <span class="hljs-keyword">return</span> blogService.queryBlogOfFollow(max,offset);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Impl具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryBlogOfFollow</span><span class="hljs-params">(Long max, Integer offset)</span> &#123;<br>    <span class="hljs-comment">//1. 获取当前用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">//2. 查询该用户收件箱（之前我们存的key是固定前缀 + 粉丝id），所以根据当前用户id就可以查询是否有关注的人发了笔记</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> FEED_KEY + userId;<br>    Set&lt;ZSetOperations.TypedTuple&lt;String&gt;&gt; typeTuples = stringRedisTemplate.opsForZSet()<br>            .reverseRangeByScoreWithScores(key, <span class="hljs-number">0</span>, max, offset, <span class="hljs-number">2</span>);<br>    <span class="hljs-comment">//3. 非空判断</span><br>    <span class="hljs-keyword">if</span> (typeTuples == <span class="hljs-literal">null</span> || typeTuples.isEmpty())&#123;<br>        <span class="hljs-keyword">return</span> Result.ok(Collections.emptyList());<br>    &#125;<br>    <span class="hljs-comment">//4. 解析数据，blogId、minTime（时间戳）、offset，这里指定创建的list大小，可以略微提高效率，因为我们知道这个list就得是这么大</span><br>    ArrayList&lt;Long&gt; ids = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(typeTuples.size());<br>    <span class="hljs-type">long</span> <span class="hljs-variable">minTime</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">os</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (ZSetOperations.TypedTuple&lt;String&gt; typeTuple : typeTuples) &#123;<br>        <span class="hljs-comment">//4.1 获取id</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> typeTuple.getValue();<br>        ids.add(Long.valueOf(id));<br>        <span class="hljs-comment">//4.2 获取score（时间戳）</span><br>        <span class="hljs-type">long</span> <span class="hljs-variable">time</span> <span class="hljs-operator">=</span> typeTuple.getScore().longValue();<br>        <span class="hljs-keyword">if</span> (time == minTime)&#123;<br>            os++;<br>        &#125;<span class="hljs-keyword">else</span> &#123;<br>            minTime = time;<br>            os = <span class="hljs-number">1</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">//解决SQL的in不能排序问题，手动指定排序为传入的ids</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">idsStr</span> <span class="hljs-operator">=</span> StrUtil.join(<span class="hljs-string">&quot;,&quot;</span>);<br>    <span class="hljs-comment">//5. 根据id查询blog</span><br>    List&lt;Blog&gt; blogs = query().in(<span class="hljs-string">&quot;id&quot;</span>, ids).last(<span class="hljs-string">&quot;ORDER BY FIELD(id,&quot;</span> + idsStr + <span class="hljs-string">&quot;)&quot;</span>).list()<br>    <span class="hljs-keyword">for</span> (Blog blog : blogs) &#123;<br>        <span class="hljs-comment">//5.1 查询发布该blog的用户信息</span><br>        queryBlogUser(blog);<br>        <span class="hljs-comment">//5.2 查询当前用户是否给该blog点过赞</span><br>        isBlogLiked(blog);<br>    &#125;<br>    <span class="hljs-comment">//6. 封装结果并返回</span><br>    <span class="hljs-type">ScrollResult</span> <span class="hljs-variable">scrollResult</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ScrollResult</span>();<br>    scrollResult.setList(blogs);<br>    scrollResult.setOffset(os);<br>    scrollResult.setMinTime(minTime);<br>    <span class="hljs-keyword">return</span> Result.ok(scrollResult);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>最终效果如下，在最上方显示的都是我们最新发布的动态<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6363a7da16f2c2beb1e17702.jpg"><img src="https://pic1.imgdb.cn/item/6363a7da16f2c2beb1e17702.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+<h1 id="附近商户"><a href="#附近商户" class="headerlink" title="附近商户"></a>附近商户</h1><h2 id="GEO数据结构的基本用法"><a href="#GEO数据结构的基本用法" class="headerlink" title="GEO数据结构的基本用法"></a>GEO数据结构的基本用法</h2><ul>
+<li><p>GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据，常见的命令有</p>
+<ul>
+<li><p>GEOADD：添加一个地理空间信息，包含：经度（longitude）、纬度（latitude）、值（member）</p>
+<ul>
+<li><p>命令格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEOADD key longitude latitude member [longitude latitude member …]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>返回值：添加到sorted set元素的数⽬，但不包括已更新score的元素</p>
+</li>
+<li><p>复杂度：每⼀个元素添加是O(log(N)) ，N是sorted set的元素数量</p>
+</li>
+<li><p>举例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEOADD china 13.361389 38.115556 <span class="hljs-string">&quot;shanghai&quot;</span> 15.087269 37.502669 <span class="hljs-string">&quot;beijing&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEODIST：计算指定的两个点之间的距离并返回</p>
+<ul>
+<li><p>命令格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEODIST key member1 member2 [m|km|ft|mi]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>如果两个位置之间的其中⼀个不存在， 那么命令返回空值。</p>
+</li>
+<li><p>指定单位的参数 unit 必须是以下单位的其中⼀个：</p>
+<ul>
+<li>m 表⽰单位为⽶。</li>
+<li>km 表⽰单位为千⽶。</li>
+<li>mi 表⽰单位为英⾥。</li>
+<li>ft 表⽰单位为英尺。</li>
+</ul>
+</li>
+<li><p>如果⽤户没有显式地指定单位参数， 那么 GEODIST 默认使⽤⽶作为单位。</p>
+</li>
+<li><p>GEODIST 命令在计算距离时会假设地球为完美的球形， 在极限情况下， 这⼀假设最⼤会造成 0.5% 的误差</p>
+</li>
+<li><p>返回值：计算出的距离会以双精度浮点数的形式被返回。 如果给定的位置元素不存在， 那么命令返回空值</p>
+</li>
+<li><p>举例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEODIST china beijing shanghai km<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEOHASH：将指定member的坐标转化为hash字符串形式并返回</p>
+<ul>
+<li><p>命令格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEOHASH key member [member …]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>通常使用表示位置的元素使用不同的技术，使用Geohash位置52点整数编码。由于编码和解码过程中所使用的初始最小和最大坐标不同，编码的编码也不同于标准。此命令返回一个标准的Geohash，在维基百科和geohash.org网站都有相关描述</p>
+</li>
+<li><p>返回值：一个数组， 数组的每个项都是一个 geohash 。 命令返回的 geohash 的位置与用户给定的位置元素的位置一一对应</p>
+</li>
+<li><p>复杂度：O(log(N)) for each member requested, where N is the number of elements in the sorted set</p>
+</li>
+<li><p>举例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs BASH">云服务器:0&gt;GEOHASH china beijing shanghai<br>1) <span class="hljs-string">&quot;sqdtr74hyu0&quot;</span><br>2) <span class="hljs-string">&quot;sqc8b49rny0&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEOPOS：返回指定member的坐标</p>
+<ul>
+<li><p>格式：GEOPOS key member [member …]</p>
+</li>
+<li><p>给定一个sorted set表示的空间索引，密集使用 geoadd 命令，它以获得指定成员的坐标往往是有益的。当空间索引填充通过 geoadd 的坐标转换成一个52位Geohash，所以返回的坐标可能不完全以添加元素的，但小的错误可能会出台。</p>
+</li>
+<li><p>因为 GEOPOS 命令接受可变数量的位置元素作为输入， 所以即使用户只给定了一个位置元素， 命令也会返回数组回复</p>
+</li>
+<li><p>返回值：GEOPOS 命令返回一个数组， 数组中的每个项都由两个元素组成： 第一个元素为给定位置元素的经度， 而第二个元素则为给定位置元素的纬度。当给定的位置元素不存在时， 对应的数组项为空值</p>
+</li>
+<li><p>复杂度：O(log(N)) for each member requested, where N is the number of elements in the sorted set</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs BASH">云服务器:0&gt;geopos china beijing shanghai<br>1)  1) <span class="hljs-string">&quot;15.08726745843887329&quot;</span><br>    2) <span class="hljs-string">&quot;37.50266842333162032&quot;</span><br><br>2)  1) <span class="hljs-string">&quot;13.36138933897018433&quot;</span><br>    2) <span class="hljs-string">&quot;38.11555639549629859&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEOGADIUS：指定圆心、半径，找到该园内包含的所有member，并按照与圆心之间的距离排序后返回，6.2之后已废弃</p>
+<ul>
+<li><p>命令格式</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">BASH<br>GEORADIUS key longitude latitude radius m|km|ft|mi <span class="hljs-comment">[WITHCOORD]</span> <span class="hljs-comment">[WITHDIST]</span> <span class="hljs-comment">[WITHHASH]</span> <br><span class="hljs-comment">[COUNT count <span class="hljs-comment">[ANY]</span>]</span> <span class="hljs-comment">[ASC|DESC]</span> <span class="hljs-comment">[STORE key]</span> <span class="hljs-comment">[STOREDIST key]</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>范围可以使用以下其中一个单位：</p>
+<ul>
+<li>m 表示单位为米。</li>
+<li>km 表示单位为千米。</li>
+<li>mi 表示单位为英里。</li>
+<li>ft 表示单位为英尺。</li>
+</ul>
+</li>
+<li><p>在给定以下可选项时， 命令会返回额外的信息：</p>
+<ul>
+<li>WITHDIST: 在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回。 距离的单位和用户给定的范围单位保持一致。</li>
+<li>WITHCOORD: 将位置元素的经度和维度也一并返回。</li>
+<li>WITHHASH: 以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值。 这个选项主要用于底层应用或者调试， 实际中的作用并不大。</li>
+</ul>
+</li>
+<li><p>命令默认返回未排序的位置元素。 通过以下两个参数， 用户可以指定被返回位置元素的排序方式：</p>
+<ul>
+<li>ASC: 根据中心的位置， 按照从近到远的方式返回位置元素。</li>
+<li>DESC: 根据中心的位置， 按照从远到近的方式返回位置元素。</li>
+</ul>
+</li>
+<li><p>在默认情况下， GEORADIUS 命令会返回所有匹配的位置元素。 虽然用户可以使用 COUNT 选项去获取前 N 个匹配元素， 但是因为命令在内部可能会需要对所有被匹配的元素进行处理， 所以在对一个非常大的区域进行搜索时， 即使只使用 COUNT 选项去获取少量元素， 命令的执行速度也可能会非常慢。 但是从另一方面来说， 使用 COUNT 选项去减少需要返回的元素数量， 对于减少带宽来说仍然是非常有用的</p>
+</li>
+<li><p>返回值：</p>
+<ul>
+<li>在没有给定任何 WITH 选项的情况下， 命令只会返回一个像 [“New York”,”Milan”,”Paris”] 这样的线性（linear）列表。</li>
+<li>在指定了 WITHCOORD 、 WITHDIST 、 WITHHASH 等选项的情况下， 命令返回一个二层嵌套数组， 内层的每个子数组就表示一个元素。</li>
+<li>在返回嵌套数组时， 子数组的第一个元素总是位置元素的名字。 至于额外的信息， 则会作为子数组的后续元素， 按照以下顺序被返回：<ul>
+<li>以浮点数格式返回的中心与位置元素之间的距离， 单位与用户指定范围时的单位一致。</li>
+<li>geohash 整数。</li>
+<li>由两个元素组成的坐标，分别为经度和纬度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>举例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs BASH">云服务器:0&gt;GEORADIUS china 15 37 200 km WITHDIST WITHCOORD<br>1)  1) <span class="hljs-string">&quot;shanghai&quot;</span><br>    2) <span class="hljs-string">&quot;190.4424&quot;</span><br>    3)  1) <span class="hljs-string">&quot;13.36138933897018433&quot;</span><br>        2) <span class="hljs-string">&quot;38.11555639549629859&quot;</span><br><br>2)  1) <span class="hljs-string">&quot;beijing&quot;</span><br>    2) <span class="hljs-string">&quot;56.4413&quot;</span><br>    3)  1) <span class="hljs-string">&quot;15.08726745843887329&quot;</span><br>        2) <span class="hljs-string">&quot;37.50266842333162032&quot;</span><br><br>云服务器:0&gt;GEORADIUS china 15 37 200 km WITHDIST<br>1)  1) <span class="hljs-string">&quot;shanghai&quot;</span><br>    2) <span class="hljs-string">&quot;190.4424&quot;</span><br><br>2)  1) <span class="hljs-string">&quot;beijing&quot;</span><br>    2) <span class="hljs-string">&quot;56.4413&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEOSEARCH：在指定范围内搜索member，并按照与制定点之间的距离排序后返回，范围可以使圆形或矩形，6.2的新功能</p>
+<p>命令格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEOSEARCH key [FROMMEMBER member] [FROMLONLAT longitude latitude] [BYRADIUS radius m|km|ft|mi] <br>[BYBOX width height m|km|ft|mi] [ASC|DESC] [COUNT count [ANY]] [WITHCOORD] [WITHDIST] [WITHHASH]<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>举例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs BASH">云服务器:0&gt;geosearch china FROMLONLAT 15 37 BYRADIUS 200 km ASC WITHCOORD WITHDIST<br>1)  1) <span class="hljs-string">&quot;beijing&quot;</span><br>    2) <span class="hljs-string">&quot;56.4413&quot;</span><br>    3)  1) <span class="hljs-string">&quot;15.08726745843887329&quot;</span><br>        2) <span class="hljs-string">&quot;37.50266842333162032&quot;</span><br><br><br>2)  1) <span class="hljs-string">&quot;shanghai&quot;</span><br>    2) <span class="hljs-string">&quot;190.4424&quot;</span><br>    3)  1) <span class="hljs-string">&quot;13.36138933897018433&quot;</span><br>        2) <span class="hljs-string">&quot;38.11555639549629859&quot;</span><br><br><br><br>云服务器:0&gt;geosearch china FROMLONLAT 15 37 BYBOX 400 400 km DESC WITHCOORD WITHDIST<br>1)  1) <span class="hljs-string">&quot;shanghai&quot;</span><br>    2) <span class="hljs-string">&quot;190.4424&quot;</span><br>    3)  1) <span class="hljs-string">&quot;13.36138933897018433&quot;</span><br>        2) <span class="hljs-string">&quot;38.11555639549629859&quot;</span><br><br><br>2)  1) <span class="hljs-string">&quot;beijing&quot;</span><br>    2) <span class="hljs-string">&quot;56.4413&quot;</span><br>    3)  S1) <span class="hljs-string">&quot;15.08726745843887329&quot;</span><br>        2) <span class="hljs-string">&quot;37.50266842333162032&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>GEOSEARCHSTORE：与GEOSEARCH功能一致，不过可以把结果存储到一个指定的key，也是6.2的新功能</p>
+<ul>
+<li><p>命令格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs BASH">GEOSEARCHSTORE destination <span class="hljs-built_in">source</span> [FROMMEMBER member] [FROMLONLAT longitude latitude] <br>[BYRADIUS radius m|km|ft|mi] [BYBOX width height m|km|ft|mi] <br>[ASC|DESC] [COUNT count [ANY]] [STOREDIST]<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>这个命令和 GEORADIUS 命令一样， 都可以找出位于指定范围内的元素， 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的， 而不是像 GEORADIUS 那样， 使用输入的经度和纬度来决定中心点</p>
+</li>
+<li><p>指定成员的位置被用作查询的中心。</p>
+</li>
+<li><p>关于 GEORADIUSBYMEMBER 命令的更多信息， 请参考 GEORADIUS 命令的文档</p>
+</li>
+<li><p>复杂度：O(N+log(M)) where N is the number of elements inside the bounding box of the circular area delimited by center and radius and M is the number of items inside the index</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs BASH">云服务器:0&gt;GEORADIUSBYMEMBER china beijing 200 km<br>1) <span class="hljs-string">&quot;shanghai&quot;</span><br>2) <span class="hljs-string">&quot;beijing&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="导入店铺数据到GEO"><a href="#导入店铺数据到GEO" class="headerlink" title="导入店铺数据到GEO"></a>导入店铺数据到GEO</h2><ul>
+<li>具体场景说明，例如美团&#x2F;饿了么这种外卖App，你是可以看到商家离你有多远的，那我们现在也要实现这个功能。</li>
+<li>我们可以使用GEO来实现该功能，以当前坐标为圆心，同时绑定相同的店家类型type，以及分页信息，把这几个条件插入后台，后台查询出对应的数据再返回</li>
+<li>那现在我们要做的就是：将数据库中的数据导入到Redis中去，GEO在Redis中就是一个member和一个经纬度，经纬度对应的就是tb_shop中的x和y，而member，我们用shop_id来存，因为Redis只是一个内存级数据库，如果存海量的数据，还是力不从心，所以我们只存一个id，用的时候再拿id去SQL数据库中查询shop信息</li>
+<li>但是此时还有一个问题，我们在redis中没有存储shop_type，无法根据店铺类型来对数据进行筛选，解决办法就是将type_id作为key，存入同一个GEO集合即可</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>shop:geo:美食</td>
+<td>海底捞</td>
+<td>40691512240174598</td>
+</tr>
+<tr>
+<td>吉野家</td>
+<td>40691519846517915</td>
+<td></td>
+</tr>
+<tr>
+<td>shop:geo:KTV</td>
+<td>KTV 01</td>
+<td>40691165486458787</td>
+</tr>
+<tr>
+<td>KTV 02</td>
+<td>40691514154651657</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadShopData</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-comment">//1. 查询所有店铺信息</span><br>    List&lt;Shop&gt; shopList = shopService.list();<br>    <span class="hljs-comment">//2. 按照typeId，将店铺进行分组</span><br>    Map&lt;Long, List&lt;Shop&gt;&gt; map = shopList.stream().collect(Collectors.groupingBy(Shop::getTypeId));<br>    <span class="hljs-comment">//3. 逐个写入Redis</span><br>    <span class="hljs-keyword">for</span> (Map.Entry&lt;Long, List&lt;Shop&gt;&gt; entry : map.entrySet()) &#123;<br>        <span class="hljs-comment">//3.1 获取类型id</span><br>        <span class="hljs-type">Long</span> <span class="hljs-variable">typeId</span> <span class="hljs-operator">=</span> entry.getKey();<br>        <span class="hljs-comment">//3.2 获取同类型店铺的集合</span><br>        List&lt;Shop&gt; shops = entry.getValue();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> SHOP_GEO_KEY + typeId;<br>        <span class="hljs-keyword">for</span> (Shop shop : shops) &#123;<br>            <span class="hljs-comment">//3.3 写入redis GEOADD key 经度 纬度 member</span><br>            stringRedisTemplate.opsForGeo().add(key,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(shop.getX(),shop.getY()),shop.getId().toString());<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>但是上面的代码不够优雅，是一条一条写入的，效率较低，那我们现在来改进一下，这样只需要写入等同于type_id数量的次数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadShopData</span><span class="hljs-params">()</span> &#123;<br>    List&lt;Shop&gt; shopList = shopService.list();<br>    Map&lt;Long, List&lt;Shop&gt;&gt; map = shopList.stream().collect(Collectors.groupingBy(Shop::getTypeId));<br>    <span class="hljs-keyword">for</span> (Map.Entry&lt;Long, List&lt;Shop&gt;&gt; entry : map.entrySet()) &#123;<br>        <span class="hljs-type">Long</span> <span class="hljs-variable">typeId</span> <span class="hljs-operator">=</span> entry.getKey();<br>        List&lt;Shop&gt; shops = entry.getValue();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> SHOP_GEO_KEY + typeId;<br>        List&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt; locations = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(shops.size());<br>        <span class="hljs-keyword">for</span> (Shop shop : shops) &#123;<br>            <span class="hljs-comment">//将当前type的商铺都添加到locations集合中</span><br>            locations.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisGeoCommands</span>.GeoLocation&lt;&gt;(shop.getId().toString(), <span class="hljs-keyword">new</span> <span class="hljs-title class_">Point</span>(shop.getX(), shop.getY())));<br>        &#125;<br>        <span class="hljs-comment">//批量写入</span><br>        stringRedisTemplate.opsForGeo().add(key, locations);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>代码编写完毕，我们启动测试方法，然后去Redis图形化界面中查看是否有对应的数据</p>
+</li>
+</ul>
+<h2 id="实现附近商户功能"><a href="#实现附近商户功能" class="headerlink" title="实现附近商户功能"></a>实现附近商户功能</h2><ul>
+<li><p>SpringDataRedis的2.3.9版本并不支持Redis 6.2提供的GEOSEARCH命令，因此我们需要提示其版本，修改自己的pom.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs XML"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.data<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lettuce-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.lettuce<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.data<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.6.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.lettuce<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lettuce-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>6.1.6.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>点击距离分类，查看发送的请求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/shop/of/type?&amp;typeId=1&amp;current=1&amp;x=120.149993&amp;y=30.334229">http://localhost:8080/api/shop/of/type?&amp;typeId=1&amp;current=1&amp;x=120.149993&amp;y=30.334229</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>看样子是ShopController中的方法，那我们现在来修改其代码，除了typeId，分页码，我们还需要其坐标</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@GetMapping(&quot;/of/type&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryShopByType</span><span class="hljs-params">(</span><br><span class="hljs-params">        <span class="hljs-meta">@RequestParam(&quot;typeId&quot;)</span> Integer typeId,</span><br><span class="hljs-params">        <span class="hljs-meta">@RequestParam(value = &quot;current&quot;, defaultValue = &quot;1&quot;)</span> Integer current,</span><br><span class="hljs-params">        <span class="hljs-meta">@RequestParam(value = &quot;x&quot;, required = false)</span> Double x,</span><br><span class="hljs-params">        <span class="hljs-meta">@RequestParam(value = &quot;y&quot;, required = false)</span> Double y</span><br><span class="hljs-params">)</span> &#123;<br>   <span class="hljs-keyword">return</span> shopService.queryShopByType(typeId,current,x,y);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>具体业务逻辑依旧是写在ShopServiceImpl中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryShopByType</span><span class="hljs-params">(Integer typeId, Integer current, Double x, Double y)</span> &#123;<br>    <span class="hljs-comment">//1. 判断是否需要根据距离查询</span><br>    <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span> || y == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 根据类型分页查询</span><br>        Page&lt;Shop&gt; page = query()<br>                .eq(<span class="hljs-string">&quot;type_id&quot;</span>, typeId)<br>                .page(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Page</span>&lt;&gt;(current, SystemConstants.DEFAULT_PAGE_SIZE));<br>        <span class="hljs-comment">// 返回数据</span><br>        <span class="hljs-keyword">return</span> Result.ok(page.getRecords());<br>    &#125;<br>    <span class="hljs-comment">//2. 计算分页查询参数</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">from</span> <span class="hljs-operator">=</span> (current - <span class="hljs-number">1</span>) * SystemConstants.MAX_PAGE_SIZE;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">end</span> <span class="hljs-operator">=</span> current * SystemConstants.MAX_PAGE_SIZE;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> SHOP_GEO_KEY + typeId;<br>    <span class="hljs-comment">//3. 查询redis、按照距离排序、分页; 结果：shopId、distance</span><br>    <span class="hljs-comment">//GEOSEARCH key FROMLONLAT x y BYRADIUS 5000 m WITHDIST</span><br>    GeoResults&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt; results = stringRedisTemplate.opsForGeo().search(key,<br>            GeoReference.fromCoordinate(x, y),<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Distance</span>(<span class="hljs-number">5000</span>),<br>            RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs().includeDistance().limit(end));<br>    <span class="hljs-keyword">if</span> (results == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.ok(Collections.emptyList());<br>    &#125;<br>    <span class="hljs-comment">//4. 解析出id</span><br>    List&lt;GeoResult&lt;RedisGeoCommands.GeoLocation&lt;String&gt;&gt;&gt; list = results.getContent();<br>    <span class="hljs-keyword">if</span> (list.size() &lt; from) &#123;<br>        <span class="hljs-comment">//起始查询位置大于数据总量，则说明没数据了，返回空集合</span><br>        <span class="hljs-keyword">return</span> Result.ok(Collections.emptyList());<br>    &#125;<br>    ArrayList&lt;Long&gt; ids = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(list.size());<br>    HashMap&lt;String, Distance&gt; distanceMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;(list.size());<br>    list.stream().skip(from).forEach(result -&gt; &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">shopIdStr</span> <span class="hljs-operator">=</span> result.getContent().getName();<br>        ids.add(Long.valueOf(shopIdStr));<br>        <span class="hljs-type">Distance</span> <span class="hljs-variable">distance</span> <span class="hljs-operator">=</span> result.getDistance();<br>        distanceMap.put(shopIdStr, distance);<br>    &#125;);<br>    <span class="hljs-comment">//5. 根据id查询shop</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">idsStr</span> <span class="hljs-operator">=</span> StrUtil.join(<span class="hljs-string">&quot;,&quot;</span>, ids);<br>    List&lt;Shop&gt; shops = query().in(<span class="hljs-string">&quot;id&quot;</span>, ids).last(<span class="hljs-string">&quot;ORDER BY FIELD( id,&quot;</span> + idsStr + <span class="hljs-string">&quot;)&quot;</span>).list();<br>    <span class="hljs-keyword">for</span> (Shop shop : shops) &#123;<br>        <span class="hljs-comment">//设置shop的举例属性，从distanceMap中根据shopId查询</span><br>        shop.setDistance(distanceMap.get(shop.getId().toString()).getValue());<br>    &#125;<br>    <span class="hljs-comment">//6. 返回</span><br>    <span class="hljs-keyword">return</span> Result.ok(shops);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>最终效果如下，可以显示出距离<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6364c8c216f2c2beb16eb996.jpg"><img src="https://pic1.imgdb.cn/item/6364c8c216f2c2beb16eb996.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+</ul>
+<h1 id="用户签到"><a href="#用户签到" class="headerlink" title="用户签到"></a>用户签到</h1><h2 id="BitMap功能延迟"><a href="#BitMap功能延迟" class="headerlink" title="BitMap功能延迟"></a>BitMap功能延迟</h2><ul>
+<li>我们针对签到功能完全可以通过MySQL来完成，例如下面这张表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">Field</th>
+<th align="center">Type</th>
+<th align="center">Collation</th>
+<th align="center">Null</th>
+<th align="center">Key</th>
+<th align="center">Default</th>
+<th align="center">Extra</th>
+<th align="center">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">id</td>
+<td align="center">bigint unsigned</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center">PRI</td>
+<td align="center">(NULL)</td>
+<td align="center">auto_increment</td>
+<td align="center">主键</td>
+</tr>
+<tr>
+<td align="center">user_id</td>
+<td align="center">bigint unsigned</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">用户id</td>
+</tr>
+<tr>
+<td align="center">year</td>
+<td align="center">year</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">签到的年</td>
+</tr>
+<tr>
+<td align="center">month</td>
+<td align="center">tinyint</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">签到的月</td>
+</tr>
+<tr>
+<td align="center">date</td>
+<td align="center">date</td>
+<td align="center">(NULL)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">签到的日期</td>
+</tr>
+<tr>
+<td align="center">is_backup</td>
+<td align="center">tinyint unsigned</td>
+<td align="center">(NULL)</td>
+<td align="center">YES</td>
+<td align="center"></td>
+<td align="center">(NULL)</td>
+<td align="center"></td>
+<td align="center">是否补签</td>
+</tr>
+</tbody></table>
+<ul>
+<li>用户签到一次，就是一条记录，假如有1000W用户，平均没人每年签到10次，那这张表一年的数据量就有1亿条</li>
+<li>那有没有方法能简化一点呢？我们可以使用二进制位来记录每个月的签到情况，签到记录为1，未签到记录为0</li>
+<li>把每一个bit位对应当月的每一天，形成映射关系，用0和1标识业务状态，这种思路就成为位图（BitMap）。这样我们就能用极小的空间，来实现大量数据的表示</li>
+<li>Redis中是利用String类型数据结构实现BitMap，因此最大上限是512M，转换为bit则是2^32个bit位</li>
+<li>BitMap的操作命令有<ul>
+<li>SETBIT：向指定位置（offset）存入一个0或1</li>
+<li>GETBIT：获取指定位置（offset）的bit值</li>
+<li>BITCOUNT：统计BitMap中值为1的bit位的数量</li>
+<li>BITFIELD：操作（查询、修改、自增）BitMap中bit数组中的指定位置（offset）的值</li>
+<li>BITFIELD_RO：获取BitMap中bit数组，并以十进制形式返回</li>
+<li>BITOP：将多个BitMap的结果做位运算（与、或、异或）</li>
+<li>BITPOS：查找bit数组中指定范围内第一个0或1出现的位置</li>
+</ul>
+</li>
+</ul>
+<h2 id="实现签到功能"><a href="#实现签到功能" class="headerlink" title="实现签到功能"></a>实现签到功能</h2><ul>
+<li>需求：实现签到接口，将当前用户当天签到信息保存到Redis中</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">请求方式</td>
+<td align="center">Post</td>
+</tr>
+<tr>
+<td align="center">请求路径</td>
+<td align="center">&#x2F;user&#x2F;sign</td>
+</tr>
+<tr>
+<td align="center">请求参数</td>
+<td align="center">无</td>
+</tr>
+<tr>
+<td align="center">返回值</td>
+<td align="center">无</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>思路：我们可以把年和月作为BitMap的key，然后保存到一个BitMap中，每次签到就把对应位上的0变成1，只要是1就说明这一天已经签到了，反之则没有签到</p>
+</li>
+<li><p>由于BitMap底层是基于String数据结构，因此其操作也都封装在字符串相关操作中了</p>
+</li>
+<li><p>在UserController中编写对应的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@PostMapping(&quot;/sign&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">sign</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-keyword">return</span> userService.sign();<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">sign</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//1. 获取当前用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">//2. 获取日期</span><br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalDateTime.now();<br>    <span class="hljs-comment">//3. 拼接key</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">keySuffix</span> <span class="hljs-operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;:yyyyMM&quot;</span>));<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> USER_SIGN_KEY + userId + keySuffix;<br>    <span class="hljs-comment">//4. 获取今天是当月第几天(1~31)</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">dayOfMonth</span> <span class="hljs-operator">=</span> now.getDayOfMonth();<br>    <span class="hljs-comment">//5. 写入Redis  BITSET key offset 1</span><br>    stringRedisTemplate.opsForValue().setBit(key, dayOfMonth - <span class="hljs-number">1</span>, <span class="hljs-literal">true</span>);<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用PostMan发送请求测试，注意请求头中需携带登录用户的token，否则无效（又浪费我五分钟找这个问题）</p>
+</li>
+<li><p>发送成功之后，在Redis图形化界面中是可以看到的</p>
+</li>
+</ul>
+<h2 id="签到统计"><a href="#签到统计" class="headerlink" title="签到统计"></a>签到统计</h2><ul>
+<li><p>如何获取本月到今天为止的所有签到数据？</p>
+<ul>
+<li>BITFIELD key GET u[dayOfMonth] 0</li>
+</ul>
+</li>
+<li><p>如何从后往前遍历每个bit位，获取连续签到天数</p>
+<ul>
+<li><p>连续签到天数，就是从末尾往前数，看有多少个1</p>
+</li>
+<li><p>简单的位运算算法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>) &#123;<br>    <span class="hljs-keyword">if</span>((num &amp; <span class="hljs-number">1</span>) == <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">else</span><br>        count++;<br>    num &gt;&gt;&gt;= <span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-keyword">return</span> count;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>需求：实现下面接口，统计当前用户截止当前时间在本月的连续签到天数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">请求方式</td>
+<td align="center">GET</td>
+</tr>
+<tr>
+<td align="center">请求路径</td>
+<td align="center">&#x2F;user&#x2F;sign&#x2F;count</td>
+</tr>
+<tr>
+<td align="center">请求参数</td>
+<td align="center">无</td>
+</tr>
+<tr>
+<td align="center">返回值</td>
+<td align="center">连续签到天数</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>在UserController中创建对应的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@GetMapping(&quot;/sign/count&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">signCount</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-keyword">return</span> userService.signCount();<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>在UserServiceImpl中实现方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">signCount</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//1. 获取当前用户</span><br>    <span class="hljs-type">Long</span> <span class="hljs-variable">userId</span> <span class="hljs-operator">=</span> UserHolder.getUser().getId();<br>    <span class="hljs-comment">//2. 获取日期</span><br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalDateTime.now();<br>    <span class="hljs-comment">//3. 拼接key</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">keySuffix</span> <span class="hljs-operator">=</span> now.format(DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;:yyyyMM&quot;</span>));<br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> USER_SIGN_KEY + userId + keySuffix;<br>    <span class="hljs-comment">//4. 获取今天是当月第几天(1~31)</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">dayOfMonth</span> <span class="hljs-operator">=</span> now.getDayOfMonth();<br>    <span class="hljs-comment">//5. 获取截止至今日的签到记录  BITFIELD key GET uDay 0</span><br>    List&lt;Long&gt; result = stringRedisTemplate.opsForValue().bitField(key, BitFieldSubCommands.create()<br>            .get(BitFieldSubCommands.BitFieldType.unsigned(dayOfMonth)).valueAt(<span class="hljs-number">0</span>));<br>    <span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span> || result.isEmpty()) &#123;<br>        <span class="hljs-keyword">return</span> Result.ok(<span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-comment">//6. 循环遍历</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">num</span> <span class="hljs-operator">=</span> result.get(<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">if</span> ((num &amp; <span class="hljs-number">1</span>) == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125; <span class="hljs-keyword">else</span><br>            count++;<br>        <span class="hljs-comment">//数字右移，抛弃最后一位</span><br>        num &gt;&gt;&gt;= <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok(count);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用PostMan发送请求，可以手动修改redis中的签到数据多次测试，发请求的时候还是要注意携带登录用户的token</p>
+</li>
+</ul>
+<h1 id="UV统计"><a href="#UV统计" class="headerlink" title="UV统计"></a>UV统计</h1><h2 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h2><ul>
+<li><p>UV：全称Unique Visitor，也叫独立访客量，是指通过互联网访问、浏览这个网页的自然人。1天内同一个用户多次访问该网站，只记录1次。</p>
+</li>
+<li><p>PV：全称Page View，也叫页面访问量或点击量，用户每访问网站的一个页面，记录1次PV，用户多次打开页面，则记录多次PV。往往用来衡量网站的流量。</p>
+</li>
+<li><p>本博客的首页侧边栏就有本站访客量和本站总访问量，对应的就是UV和PV</p>
+</li>
+<li><p>通常来说PV会比UV大很多，所以衡量同一个网站的访问量，我们需要综合考虑很多因素。</p>
+</li>
+<li><p>UV统计在服务端做会很麻烦，因为要判断该用户是否已经统计过了，需要将统计过的信息保存，但是如果每个访问的用户都保存到Redis中，那么数据库会非常恐怖，那么该如何处理呢？</p>
+</li>
+<li><p>HyperLogLog(HLL)是从Loglog算法派生的概率算法，用户确定非常大的集合基数，而不需要存储其所有值，算法相关原理可以参考下面这篇文章：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903785744056333#heading-0">https://juejin.cn/post/6844903785744056333#heading-0</a></p>
+</li>
+<li><p>Redis中的HLL是基于string结构实现的，单个HLL的内存<code>永远小于16kb</code>，<code>内存占用低</code>的令人发指！作为代价，其测量结果是概率性的，<code>有小于0.81％的误差</code>。不过对于UV统计来说，这完全可以忽略。</p>
+</li>
+<li><p>常用的三个方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs BASH">PFADD key element [element...]<br>summary: Adds the specified elements to the specified HyperLogLog<br><br>PFCOUNT key [key ...]<br>Return the approximated cardinality of the <span class="hljs-built_in">set</span>(s) observed by the HyperLogLog at key(s).<br><br>PFMERGE destkey sourcekey [sourcekey ...]<br>lnternal commands <span class="hljs-keyword">for</span> debugging HyperLogLog values<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="测试百万数据的统计"><a href="#测试百万数据的统计" class="headerlink" title="测试百万数据的统计"></a>测试百万数据的统计</h2><ul>
+<li><p>使用单元测试，向HyperLogLog中添加100万条数据，看看内存占用是否真的那么低，以及统计误差如何</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testHyperLogLog</span><span class="hljs-params">()</span> &#123;<br>    String[] users = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[<span class="hljs-number">1000</span>];<br>    <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000000</span>; i++) &#123;<br>        j = i % <span class="hljs-number">1000</span>;<br>        users[j] = <span class="hljs-string">&quot;user_&quot;</span> + i;<br>        <span class="hljs-keyword">if</span> (j == <span class="hljs-number">999</span>) &#123;<br>            stringRedisTemplate.opsForHyperLogLog().add(<span class="hljs-string">&quot;HLL&quot;</span>, users);<br>        &#125;<br>    &#125;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForHyperLogLog().size(<span class="hljs-string">&quot;HLL&quot;</span>);<br>    System.out.println(<span class="hljs-string">&quot;count = &quot;</span> + count);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>插入100W条数据，得到的count为997593，误差率为0.002407%</p>
+</li>
+<li><p>去Redis图形化界面中查看占用情况为：12.3K字节</p>
+</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Redis/" class="category-chain-item">Redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE/">#项目</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis学习笔记--好友关注+附近商户和+用户签到+UV统计</div>
+      <div>https://yztldxdz.top/2023/03/15/Redis学习笔记--好友关注+附近商户和+用户签到+UV统计/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月15日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/10/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E8%BE%BE%E4%BA%BA%E6%8E%A2%E5%BA%97/" title="Redis学习笔记--消息队列和达人探店">
+                        <span class="hidden-mobile">Redis学习笔记--消息队列和达人探店</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

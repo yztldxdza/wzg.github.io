@@ -247,6 +247,311 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/12/04/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-AQS/" target="_self">
+          JUC并发编程-AQS
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/12/04/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-AQS/" target="_self">
+        <div>
+          
+          ①. AQS是什么？ ①. 是用来构建锁或者其它同步器组件的重量级基础框架及整个JUC体系的基石,通过内置的CLH(FIFO)队列的变种来完成资源获取线程的排队工作,将每条将要去抢占资源的线程封装成一个Node节点来实现锁的分配,有一个int类变量表示持有锁的状态(private volatile int state),通过CAS完成对status值的修改(0表示没有,1表示阻塞)CLH:Crai
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-04 15:40" pubdate>
+              2022-12-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/12/03/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80+%E5%AF%B9%E8%B1%A1%E5%A4%B4+Synchronized+%E9%94%81%E5%8D%87%E7%BA%A7/" target="_self">
+          JUC并发编程-对象内存布局+对象头+Synchronized+锁升级
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/12/03/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80+%E5%AF%B9%E8%B1%A1%E5%A4%B4+Synchronized+%E9%94%81%E5%8D%87%E7%BA%A7/" target="_self">
+        <div>
+          
+          Java对象内存布局和对象头 Object object &#x3D; new Object() 谈谈你对这句话的理解？一般而言JDK8按照默认情况下，new一个对象占多少内存空间  位置所在在JVM堆里的新生区的伊甸园区（这些都是之前的基础知识了） 构成布局可以联想一下我们的HTML报文  对象在堆内存中布局权威定义—周志明老师JVM第3版在HotSpot虚拟机里，对象在堆内存中的存储布局可以划
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-03 15:40" pubdate>
+              2022-12-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/12/02/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95%E2%80%94%E5%9B%BE%E8%AE%BA%E7%AF%87/" target="_self">
+          进阶算法—图论篇
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/12/02/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95%E2%80%94%E5%9B%BE%E8%AE%BA%E7%AF%87/" target="_self">
+        <div>
+          
+          图相关的算法BFS12345678910111213141516171819202122public class BFS &amp;#123;    public static void bfs(Node node)&amp;#123;        if (node&#x3D;&#x3D;null)&amp;#123;            return;        &amp;#125;        Queue&lt;Node&gt; qu
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-02 19:18" pubdate>
+              2022-12-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95/" class="category-chain-item">进阶算法</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/12/02/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-ThreadLocal/" target="_self">
+          JUC并发编程-ThreadLocal
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/12/02/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-ThreadLocal/" target="_self">
+        <div>
+          
+          ThreadLocal简介大厂面试题 ThreadLocal中ThreadLocalMap的数据结构和关系？ ThreadLocal的key是弱引用，这是为什么？ ThreadLocal内存泄漏问题你知道吗？ ThreadLocal中最后为什么要加remove方法？  是什么ThreadLocal提供线程局部变量。这些变量与正常的变量不同，因为每一个线程在访问ThreadLocal实例的时候（通过
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-02 19:18" pubdate>
+              2022-12-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/12/01/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95%E2%80%94%E5%8D%95%E8%B0%83%E6%A0%88%E7%AF%87/" target="_self">
+          进阶算法—单调栈篇
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/2022/12/01/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95%E2%80%94%E5%8D%95%E8%B0%83%E6%A0%88%E7%AF%87/" target="_self">
+        <div>
+          
+          什么时候用单调栈？通常是一维数组，要寻找任一个元素的右边或者左边第一个比自己大或者小的元素的位置，此时我们就要想到可以用单调栈了。 那么单调栈的原理是什么？单调栈的本质是空间换时间，因为在遍历的过程中需要用一个栈来记录右边第一个比当前元素高的元素，优点是只需要遍历一次。 在使用单调栈的时候首先要明确如下几点：1.单调栈里存放的元素是什么？ 单调栈里只需要存放元素的下标i就可以了，如果需要使用对应的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-01 15:31" pubdate>
+              2022-12-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%9B%E9%98%B6%E7%AE%97%E6%B3%95/" class="category-chain-item">进阶算法</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/11/30/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-CAS%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%B1%BB/" target="_self">
           JUC并发编程-CAS和原子操作类
         </a>
@@ -539,311 +844,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/25/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E8%B4%AA%E5%BF%83%E7%AF%87/" target="_self">
-          基础算法—贪心篇
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/11/25/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E8%B4%AA%E5%BF%83%E7%AF%87/" target="_self">
-        <div>
-          
-          什么是贪心贪心的本质是选择每一阶段的局部最优，从而达到全局最优。 这么说有点抽象，来举一个例子： 例如，有一堆钞票，你可以拿走十张，如果想达到最大的金额，你要怎么拿？ 指定每次拿最大的，最终结果就是拿走最大数额的钱。 每次拿最大的就是局部最优，最后拿走最大数额的钱就是推出全局最优。 贪心的套路（什么时候用贪心）说实话贪心算法并没有固定的套路。 所以唯一的难点就是如何通过局部最优，推出整体最优。 贪
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-25 15:04" pubdate>
-              2022-11-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/" class="category-chain-item">基础算法</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/24/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E5%9B%9E%E6%BA%AF%E7%AF%87/" target="_self">
-          基础算法—回溯篇
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/11/24/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E2%80%94%E5%9B%9E%E6%BA%AF%E7%AF%87/" target="_self">
-        <div>
-          
-          什么是回溯法回溯法也可以叫做回溯搜索法，它是一种搜索的方式。 回溯是递归的副产品，只要有递归就会有回溯。 回溯法的效率回溯的本质是穷举，穷举所有可能，然后选出我们想要的答案，如果想让回溯法高效一些，可以加一些剪枝的操作，但也改不了回溯法就是穷举的本质。 回溯法解决的问题一般可以解决如下几种问题：  组合问题：N个数里面按一定规则找出k个数的集合 切割问题：一个字符串按一定规则有几种切割方式 子集问
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-24 15:03" pubdate>
-              2022-11-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/" class="category-chain-item">基础算法</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/">#基础算法</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/23/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B9%8BMM%E5%92%8Cvolatile/" target="_self">
-          JUC并发编程-Java内存模型之MM和volatile
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/11/23/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B9%8BMM%E5%92%8Cvolatile/" target="_self">
-        <div>
-          
-          先从大厂面试题开始 你知道什么是Java内存模型JMM吗？ JMM与volatile它们两个之间的关系？（下一章详细讲解） JMM有哪些特性or它的三大特性是什么？ 为什么要有JMM，它为什么出现？作用和功能是什么？ happens-before先行发生原则你有了解过吗？  计算机硬件存储体系计算机存储结构，从本地磁盘到主存到CPU缓存，也就是从硬盘到内存，到CPU。一般对应的程序的操作就是从数据
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-23 15:03" pubdate>
-              2022-11-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/22/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-LockSupport%E4%B8%8E%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%96%AD/" target="_self">
-          JUC并发编程-LockSupport与线程中断
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/11/22/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-LockSupport%E4%B8%8E%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%96%AD/" target="_self">
-        <div>
-          
-          什么是中断机制? 首先  一个线程不应该由其他线程来强制中断或停止，而是应该由线程自己自行停止。所以，Thread.stop, Thread.suspend, Thread.resume 都已经被废弃了。  其次  在Java中没有办法立即停止一条线程，然而停止线程却显得尤为重要，如取消一个耗时操作。 因此，Java提供了一种用于停止线程的协商机制——中断。 中断只是一种协作协商机制，Java没有
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-22 16:57" pubdate>
-              2022-11-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/21/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-Java%E9%94%81/" target="_self">
-          JUC并发编程-Java锁
-        </a>
-      </h1>
-
-      <a class="index-excerpt" href="/2022/11/21/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-Java%E9%94%81/" target="_self">
-        <div>
-          
-          乐观锁和悲观锁悲观锁 悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。 悲观锁的实现方式 synchronized关键字 Lock的实现类都是悲观锁   适合写操作多的场景，先加锁可以保证写操作时数据正确。显示的锁定之后再操作同步资源。  12345678910111213141516&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;悲观锁的调用方式p
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-21 16:57" pubdate>
-              2022-11-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/JUC%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="category-chain-item">JUC并发编程</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/">#八股文</a>
             
           </div>
         

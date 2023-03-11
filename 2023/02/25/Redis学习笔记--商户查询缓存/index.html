@@ -1,0 +1,1221 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+  <script type="text/javascript">
+    var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+    //离开当前页面时标签显示内容
+    document.title = '─=≡Σ(((つ•̀ω•́)つ';
+    clearTimeout(titleTime);
+     }
+    else {
+    //返回当前页面时标签显示内容
+    document.title = '♪(^∇^*)欢迎回来！' + OriginTitile;
+    //两秒后变回正常标题
+    titleTime = setTimeout(function () {
+    document.title = OriginTitile;
+     }, 2000);
+     }
+     });
+    </script>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dambisa Moyo">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是缓存 什么是缓存？  缓存就像自行车、越野车的避震器   举个例子  越野车、山地自行车都有避震器，防止车体加速之后因惯性，在U型地形上飞跃硬着陆导致损坏，像个弹簧意义   同样，在实际开发中，系统也需要避震器，防止过高的数据量猛冲系统，导致其操作线程无法及时处理信息而瘫痪  在实际开发中，对企业来讲，产品口碑、用户评价都是致命的，所以企业非常重视缓存技术缓存(Cache)就是数据交换的缓冲">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习笔记--商户查询缓存">
+<meta property="og:url" content="https://yztldxdz.top/2023/02/25/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E5%95%86%E6%88%B7%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="王振国的个人博客">
+<meta property="og:description" content="什么是缓存 什么是缓存？  缓存就像自行车、越野车的避震器   举个例子  越野车、山地自行车都有避震器，防止车体加速之后因惯性，在U型地形上飞跃硬着陆导致损坏，像个弹簧意义   同样，在实际开发中，系统也需要避震器，防止过高的数据量猛冲系统，导致其操作线程无法及时处理信息而瘫痪  在实际开发中，对企业来讲，产品口碑、用户评价都是致命的，所以企业非常重视缓存技术缓存(Cache)就是数据交换的缓冲">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354a19216f2c2beb1b095dd.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354a1aa16f2c2beb1b0aa83.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354be3e16f2c2beb1d11bd0.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354be5316f2c2beb1d130c0.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354f77716f2c2beb1225032.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354f76816f2c2beb1223b47.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354f97716f2c2beb124e950.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6354fb8116f2c2beb127ac8b.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6356424916f2c2beb1a493ea.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6355073c16f2c2beb1375808.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/6356558116f2c2beb1d8a832.jpg">
+<meta property="article:published_time" content="2023-02-25T07:16:14.000Z">
+<meta property="article:modified_time" content="2023-03-02T08:46:12.557Z">
+<meta property="article:author" content="Dambisa Moyo">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/6354a19216f2c2beb1b095dd.jpg">
+  
+  
+  
+  <title>Redis学习笔记--商户查询缓存 - 王振国的个人博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_3372279_s524a0psh2e.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yztldxdz.top","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":"ture","follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Ok9vDBKPbak8NWkzjbUP3EuK-gzGzoHsz","app_key":"MPkVD9nCbhjlCNSkxYMQU7D2","server_url":"https://ok9vdbkp.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lycoris</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis学习笔记--商户查询缓存"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Dambisa Moyo
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-25 15:16" pubdate>
+          2023年2月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          28k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          238 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis学习笔记--商户查询缓存</h1>
+            
+            <div class="markdown-body">
+              
+              <h2 id="什么是缓存"><a href="#什么是缓存" class="headerlink" title="什么是缓存"></a>什么是缓存</h2><ul>
+<li><p>什么是缓存？</p>
+<ul>
+<li>缓存就像自行车、越野车的避震器</li>
+</ul>
+</li>
+<li><p>举个例子</p>
+<ul>
+<li>越野车、山地自行车都有<code>避震器</code>，防止车体加速之后因惯性，在<code>U</code>型地形上飞跃硬着陆导致<code>损坏</code>，像个弹簧意义</li>
+</ul>
+</li>
+<li><p>同样，在实际开发中，系统也需要<code>避震器</code>，防止过高的数据量猛冲系统，导致其操作线程无法及时处理信息而瘫痪</p>
+</li>
+<li><p>在实际开发中，对企业来讲，产品口碑、用户评价都是致命的，所以企业非常重视缓存技术缓存(Cache)就是数据交换的缓冲区，俗称的缓存就是缓冲区内的数据，一般从数据库中获取，存储于本地，例如</p>
+<ul>
+<li>本地用高并发</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs JAVA">Static <span class="hljs-keyword">final</span> ConcurrentHashMap&lt;K,V&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;();<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>用于Redis等缓存</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Cache&lt;K,V&gt; USER_CACHE = CacheBuilder.newBuilder().build();<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>本地缓存</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Static <span class="hljs-keyword">final</span> Map&lt;K,V&gt; map =  <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>由于其被<code>static</code>修饰，所以随着类的加载而加载到内存之中，作为本地缓存，由于其又被<code>final</code>修饰，所以其引用之间的关系是固定的，不能改变，因此不用担心复制导致缓存失败</p>
+</li>
+</ul>
+<h3 id="为什么要使用缓存"><a href="#为什么要使用缓存" class="headerlink" title="为什么要使用缓存"></a>为什么要使用缓存</h3><ul>
+<li><p>言简意赅：速度快，好用</p>
+</li>
+<li><p>缓存数据存储于代码中，而代码运行在内存中，内存的读写性能远高于磁盘，缓存可以大大降低用户访问并发量带来的服务器读写压力</p>
+</li>
+<li><p>实际开发中，企业的数据量，少则几十万，多则几千万，这么大的数据量，如果没有缓存来作为<code>避震器</code>系统是几乎撑不住的，所以企业会大量运用缓存技术</p>
+</li>
+<li><p>但是缓存也会增加代码复杂度和运营成本</p>
+</li>
+<li><p>缓存的作用</p>
+<ol>
+<li>降低后端负载</li>
+<li>提高读写效率，降低响应时间</li>
+</ol>
+</li>
+<li><p>缓存的成本</p>
+<ol>
+<li>数据一致性成本</li>
+<li>代码维护成本</li>
+<li>运维成本（一般采用服务器集群，需要多加机器，机器就是钱）</li>
+</ol>
+</li>
+</ul>
+<h3 id="如何使用缓存"><a href="#如何使用缓存" class="headerlink" title="如何使用缓存"></a>如何使用缓存</h3><ul>
+<li>实际开发中，会构筑多级缓存来时系统运行速度进一步提升，例如：本地缓存与Redis中的缓存并发使用</li>
+<li><code>浏览器缓存：</code>主要是存在于浏览器端的缓存</li>
+<li><code>应用层缓存：</code>可以分为toncat本地缓存，例如之前提到的map或者是使用Redis作为缓存</li>
+<li><code>数据库缓存：</code>在数据库中有一片空间是buffer pool，增改查数据都会先加载到mysql的缓存中</li>
+<li><code>CPU缓存：</code>当代计算机最大的问题就是CPU性能提升了，但是内存读写速度没有跟上，所以为了适应当下的情况，增加了CPU的L1，L2，L3级的缓存</li>
+</ul>
+<h2 id="添加商户缓存"><a href="#添加商户缓存" class="headerlink" title="添加商户缓存"></a>添加商户缓存</h2><ul>
+<li><p>我们先启动前端和后端的项目，登陆之后随便访问一个商户，查看浏览器发送的请求</p>
+<blockquote>
+<p>请求网址: <a target="_blank" rel="noopener" href="http://localhost:8080/api/shop/10">http://localhost:8080/api/shop/10</a><br>请求方法: GET</p>
+</blockquote>
+</li>
+<li><p>不出意外是<code>ShopController</code>里的业务逻辑，而且restFul风格的</p>
+</li>
+<li><p>在我们查询商户信息时，我们是直接操作从数据库中去进行查询的，大致逻辑是这样，直接查询数据库肯定慢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 根据id查询商铺信息</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span> id 商铺id</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span> 商铺详情数据</span><br><span class="hljs-comment">    */</span><br><span class="hljs-meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryShopById</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long id)</span> &#123;<br>    <span class="hljs-keyword">return</span> Result.ok(shopService.getById(id));<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>所以我们可以在客户端与数据库之间加上一个Redis缓存，先从Redis中查询，如果没有查到，再去MySQL中查询，同时查询完毕之后，将查询到的数据也存入Redis，这样当下一个用户来进行查询的时候，就可以直接从Redis中获取到数据</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354a19216f2c2beb1b095dd.jpg"><img src="https://pic1.imgdb.cn/item/6354a19216f2c2beb1b095dd.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<h3 id="缓存模型和思路"><a href="#缓存模型和思路" class="headerlink" title="缓存模型和思路"></a>缓存模型和思路</h3><ul>
+<li>标准的操作方式就是查询数据库之前先查询缓存，如果缓存数据存在，则直接从缓存中返回，如果缓存数据不存在，再查询数据库，然后将数据存入Redis。<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354a1aa16f2c2beb1b0aa83.jpg"><img src="https://pic1.imgdb.cn/item/6354a1aa16f2c2beb1b0aa83.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><ul>
+<li>代码思路：如果Redis缓存里有数据，那么直接返回，如果缓存中没有，则去查询数据库，然后存入Redis</li>
+</ul>
+<p>Controller层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryShopById</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;id&quot;)</span> Long id)</span> &#123;<br>    <span class="hljs-keyword">return</span> shopService.queryById(id);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Service层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IShopService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">IService</span>&lt;Shop&gt; &#123;<br>    Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>ServiceImpl层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> Result.ok(shop);<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到返回一个错误信息或者返回空都可以，根据自己的需求来</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>重启服务器，访问商户信息，观察控制台日志输出，后续刷新页面，不会出现SQL语句查询商户信息，去Redis图形化界面中查看，可以看到缓存的商户信息数据</p>
+</li>
+<li><p>完成了商户数据缓存之后，我们尝试做一下商户类型数据缓存</p>
+<ul>
+<li>Controller层</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@GetMapping(&quot;list&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryTypeList</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> typeService.queryList();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Service层</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">IShopTypeService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">IService</span>&lt;ShopType&gt; &#123;<br>    Result <span class="hljs-title function_">queryList</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>ServiceImpl层</p>
+</li>
+<li><p>整体代码都是类似的，前面只需要将单个店铺信息从JSON和Bean之间相互转换</p>
+</li>
+<li><p>这里只不过是将查询到的多个店铺类型信息从JSON和Bean之间相互转换，只是多了一个foreach循环</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryList</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定前缀 + 店铺id</span><br>    List&lt;String&gt; shopTypes =<br>            stringRedisTemplate.opsForList().range(CACHE_SHOP_TYPE_KEY, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为ShopType类型直接返回</span><br>    <span class="hljs-keyword">if</span> (!shopTypes.isEmpty()) &#123;<br>        List&lt;ShopType&gt; tmp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (String types : shopTypes) &#123;<br>            <span class="hljs-type">ShopType</span> <span class="hljs-variable">shopType</span> <span class="hljs-operator">=</span> JSONUtil.toBean(types, ShopType.class);<br>            tmp.add(shopType);<br>        &#125;<br>        <span class="hljs-keyword">return</span> Result.ok(tmp);<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    List&lt;ShopType&gt; tmp = query().orderByAsc(<span class="hljs-string">&quot;sort&quot;</span>).list();<br>    <span class="hljs-keyword">if</span> (tmp == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺类型不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//查到了转为json字符串，存入redis</span><br>    <span class="hljs-keyword">for</span> (ShopType shopType : tmp) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shopType);<br>        shopTypes.add(jsonStr);<br>    &#125;<br>    stringRedisTemplate.opsForList().leftPushAll(CACHE_SHOP_TYPE_KEY,shopTypes);<br>    <span class="hljs-comment">//最终把查询到的商户分类信息返回给前端</span><br>    <span class="hljs-keyword">return</span> Result.ok(tmp);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>业务逻辑依旧是写在Service中</p>
+</li>
+</ul>
+<h2 id="缓存更新策略"><a href="#缓存更新策略" class="headerlink" title="缓存更新策略"></a>缓存更新策略</h2><ul>
+<li>缓存更新是Redis为了节约内存而设计出来的一个东西，主要是因为内存数据宝贵，当我们想Redis插入太多数据，此时就可能会导致缓存中数据过多，所以Redis会对部分数据进行更新，或者把它成为淘汰更合适</li>
+<li><code>内存淘汰</code>：Redis自动进行，当Redis内存大道我们设定的<code>max-memery</code>时，会自动触发淘汰机制，淘汰掉一些不重要的数据（可以自己设置策略方式）</li>
+<li><code>超时剔除</code>：当我们给Redis设置了过期时间TTL之后，Redis会将超时的数据进行删除，方便我们继续使用缓存</li>
+<li><code>主动更新</code>：我们可以手动调用方法把缓存删除掉，通常用于解决缓存和数据库不一致问题</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">内存淘汰</th>
+<th align="center">超时剔除</th>
+<th align="center">主动更新</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">说明</td>
+<td align="center">不用自己维护， 利用Redis的内存淘汰机制， 当内存不足时自动淘汰部分数据。 下次查询时更新缓存。</td>
+<td align="center">给缓存数据添加TTL时间， 到期后自动删除缓存。 下次查询时更新缓存。</td>
+<td align="center">编写业务逻辑， 在修改数据库的同时， 更新缓存。</td>
+</tr>
+<tr>
+<td align="center">一致性</td>
+<td align="center">差</td>
+<td align="center">一般</td>
+<td align="center">好</td>
+</tr>
+<tr>
+<td align="center">维护成本</td>
+<td align="center">无</td>
+<td align="center">低</td>
+<td align="center">高</td>
+</tr>
+</tbody></table>
+<ul>
+<li>业务场景<ul>
+<li>低一致性需求：使用内存淘汰机制，例如店铺类型的查询缓存（因为这个很长一段时间都不需要更新）</li>
+<li>高一致性需求：主动更新，并以超时剔除作为兜底方案，例如店铺详情查询的缓存</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据库和缓存不一致解决方案"><a href="#数据库和缓存不一致解决方案" class="headerlink" title="数据库和缓存不一致解决方案"></a>数据库和缓存不一致解决方案</h3><ul>
+<li>由于我们的缓存数据源来自数据库，而数据库的数据是会发生变化的，因此，如果当数据库中数据发生变化，而缓存却没有同步，此时就会有一致性问题存在，其后果是<ul>
+<li>用户使用缓存中的过时数据，就会产生类似多线程数据安全问题，从而影响业务，产品口碑等</li>
+</ul>
+</li>
+<li>那么如何解决这个问题呢？有如下三种方式<ol>
+<li>Cache Aside Pattern 人工编码方式：缓存调用者在更新完数据库之后再去更新缓存，也称之为双写方案</li>
+<li>Read&#x2F;Write Through Pattern：缓存与数据库整合为一个服务，由服务来维护一致性。调用者调用该服务，无需关心缓存一致性问题。但是维护这样一个服务很复杂，市面上也不容易找到这样的一个现成的服务，开发成本高</li>
+<li>Write Behind Caching Pattern：调用者只操作缓存，其他线程去异步处理数据库，最终实现一致性。但是维护这样的一个异步的任务很复杂，需要实时监控缓存中的数据更新，其他线程去异步更新数据库也可能不太及时，而且缓存服务器如果宕机，那么缓存的数据也就丢失了</li>
+</ol>
+</li>
+</ul>
+<h3 id="数据库和缓存不一致采用什么方案"><a href="#数据库和缓存不一致采用什么方案" class="headerlink" title="数据库和缓存不一致采用什么方案"></a>数据库和缓存不一致采用什么方案</h3><ul>
+<li>综上所述，在企业的实际应用中，还是方案一最可靠，但是方案一的调用者该如何处理呢？</li>
+<li>如果采用方案一，假设我们每次操作完数据库之后，都去更新一下缓存，但是如果中间并没有人查询数据，那么这个更新动作只有最后一次是有效的，中间的更新动作意义不大，所以我们可以把缓存直接删除，等到有人再次查询时，再将缓存中的数据加载出来</li>
+<li>对比删除缓存与更新缓存<ul>
+<li><code>更新缓存</code>：每次更新数据库都需要更新缓存，无效写操作较多</li>
+<li><code>删除缓存</code>：更新数据库时让缓存失效，再次查询时更新缓存</li>
+</ul>
+</li>
+<li>如何保证缓存与数据库的操作同时成功&#x2F;同时失败<ul>
+<li><code>单体系统：</code>将缓存与数据库操作放在同一个事务</li>
+<li><code>分布式系统：</code>利用TCC等分布式事务方案</li>
+</ul>
+</li>
+<li>先操作缓存还是先操作数据库？我们来仔细分析一下这两种方式的线程安全问题</li>
+<li>先删除缓存，在操作数据库<br>删除缓存的操作很快，但是更新数据库的操作相对较慢，如果此时有一个线程2刚好进来查询缓存，由于我们刚刚才删除缓存，所以线程2需要查询数据库，并写入缓存，但是我们更新数据库的操作还未完成，所以线程2查询到的数据是脏数据，出现线程安全问题<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354be3e16f2c2beb1d11bd0.jpg"><img src="https://pic1.imgdb.cn/item/6354be3e16f2c2beb1d11bd0.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+<li>先操作数据库，再删除缓存<br>线程1在查询缓存的时候，缓存TTL刚好失效，需要查询数据库并写入缓存，这个操作耗时相对较短（相比较于上图来说），但是就在这么短的时间内，线程2进来了，更新数据库，删除缓存，但是线程1虽然查询完了数据（更新前的旧数据），但是还没来得及写入缓存，所以线程2的更新数据库与删除缓存，并没有影响到线程1的查询旧数据，写入缓存，造成线程安全问题<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354be5316f2c2beb1d130c0.jpg"><img src="https://pic1.imgdb.cn/item/6354be5316f2c2beb1d130c0.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+<li>虽然这二者都存在线程安全问题，但是相对来说，后者出现线程安全问题的概率相对较低，所以我们最终采用后者<code>先操作数据库，再删除缓存</code>的方案</li>
+</ul>
+<h2 id="实现商铺缓存与数据库双写一致"><a href="#实现商铺缓存与数据库双写一致" class="headerlink" title="实现商铺缓存与数据库双写一致"></a>实现商铺缓存与数据库双写一致</h2><ul>
+<li><p>核心思路如下</p>
+<ul>
+<li>修改ShopController中的业务逻辑，满足以下要求</li>
+</ul>
+<ol>
+<li>根据id查询店铺时，如果缓存未命中，则查询数据库，并将数据库结果写入缓存，并设置TTL</li>
+<li>根据id修改店铺时，先修改数据库，再删除缓存</li>
+</ol>
+</li>
+<li><p>修改ShopController的queryById方法，写入缓存时设置一下TTL</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> Result.ok(shop);<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到返回一个错误信息或者返回空都可以，根据自己的需求来</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr,CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>修改update方法</p>
+</li>
+</ul>
+<p>修改之前</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 更新商铺信息</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span> shop 商铺数据</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span> 无</span><br><span class="hljs-comment">    */</span><br><span class="hljs-meta">@PutMapping</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">updateShop</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Shop shop)</span> &#123;<br>    <span class="hljs-comment">// 写入数据库</span><br>    shopService.updateById(shop);<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>修改之后</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 更新商铺信息</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span> shop 商铺数据</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span> 无</span><br><span class="hljs-comment">    */</span><br><span class="hljs-meta">@PutMapping</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">updateShop</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Shop shop)</span> &#123;<br>    <span class="hljs-keyword">return</span> shopService.update(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Service层</p>
+<p>新增一个方法，Impl里去实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs JAVA">Result <span class="hljs-title function_">update</span><span class="hljs-params">(Shop shop)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>ServiceImpl层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">update</span><span class="hljs-params">(Shop shop)</span> &#123;<br>    <span class="hljs-comment">//首先先判一下空</span><br>    <span class="hljs-keyword">if</span> (shop.getId() == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺id不能为空！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//先修改数据库</span><br>    updateById(shop);<br>    <span class="hljs-comment">//再删除缓存</span><br>    stringRedisTemplate.delete(CACHE_SHOP_KEY + shop.getId());<br>    <span class="hljs-keyword">return</span> Result.ok();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>修改完毕之后我们重启服务器进行测试，首先随便挑一个顺眼的数据，我这里就是拿餐厅数据做测试，，我们先访问该餐厅，将该餐厅的数据缓存到Redis中，之后使用POSTMAN发送PUT请求，请求路径<a target="_blank" rel="noopener" href="http://localhost:8080/api/shop/%EF%BC%8C%E6%90%BA%E5%B8%A6JSON%E6%95%B0%E6%8D%AE%E5%A6%82%E4%B8%8B">http://localhost:8080/api/shop/，携带JSON数据如下</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs JSON"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;area&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;大关&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;openHours&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;10:00-22:00&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;sold&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4215</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;address&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;金华路锦昌文华苑29号&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;comments&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3035</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;avgPrice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;score&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">37</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;476茶餐厅&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;typeId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>之后再Redis图形化页面刷新数据，发现该餐厅的数据确实不在Redis中了，之后我们刷新网页，餐厅名会被改为<code>476茶餐厅</code>，然后我们再去Redis中刷新，发现新数据已经被缓存了</p>
+</li>
+<li><p>那么现在功能就实现完毕了，只有当我们刷新页面的时候，才会重新查询数据库，并将数据缓存到Redis，中途无论修改多少次，只要不刷新页面访问，Redis中都不会更新数据</p>
+</li>
+</ul>
+<h2 id="缓存穿透问题的解决思路"><a href="#缓存穿透问题的解决思路" class="headerlink" title="缓存穿透问题的解决思路"></a>缓存穿透问题的解决思路</h2><ul>
+<li><code>缓存穿透</code>：缓存穿透是指客户端请求的数据在缓存中和数据库中都不存在，这样缓存永远都不会生效（只有数据库查到了，才会让redis缓存，但现在的问题是查不到），会频繁的去访问数据库。</li>
+<li>常见的结局方案有两种<ol>
+<li>缓存空对象<ul>
+<li>优点：实现简单，维护方便</li>
+<li>缺点：额外的内存消耗，可能造成短期的不一致</li>
+</ul>
+</li>
+<li>布隆过滤<ul>
+<li>优点：内存占用啥哦，没有多余的key</li>
+<li>缺点：实现复杂，可能存在误判</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><code>缓存空对象</code>思路分析：当我们客户端访问不存在的数据时，会先请求redis，但是此时redis中也没有数据，就会直接访问数据库，但是数据库里也没有数据，那么这个数据就穿透了缓存，直击数据库。但是数据库能承载的并发不如redis这么高，所以如果大量的请求同时都来访问这个不存在的数据，那么这些请求就会访问到数据库，简单的解决方案就是哪怕这个数据在数据库里不存在，我们也把这个这个数据存在redis中去（这就是为啥说会有<code>额外的内存消耗</code>），这样下次用户过来访问这个不存在的数据时，redis缓存中也能找到这个数据，不用去查数据库。可能造成的<code>短期不一致</code>是指在空对象的存活期间，我们更新了数据库，把这个空对象变成了正常的可以访问的数据，但由于空对象的TTL还没过，所以当用户来查询的时候，查询到的还是空对象，等TTL过了之后，才能访问到正确的数据，不过这种情况很少见罢了</li>
+<li><code>布隆过滤</code>思路分析：布隆过滤器其实采用的是哈希思想来解决这个问题，通过一个庞大的二进制数组，根据哈希思想去判断当前这个要查询的数据是否存在，如果布隆过滤器判断存在，则放行，这个请求会去访问redis，哪怕此时redis中的数据过期了，但是数据库里一定会存在这个数据，从数据库中查询到数据之后，再将其放到redis中。如果布隆过滤器判断这个数据不存在，则直接返回。这种思想的优点在于节约内存空间，但存在误判，误判的原因在于：布隆过滤器使用的是哈希思想，只要是哈希思想，都可能存在哈希冲突</li>
+</ul>
+<h2 id="编码解决商品查询的缓存穿透问题"><a href="#编码解决商品查询的缓存穿透问题" class="headerlink" title="编码解决商品查询的缓存穿透问题"></a>编码解决商品查询的缓存穿透问题</h2><ul>
+<li><p>核心思路如下</p>
+</li>
+<li><p>在原来的逻辑中，我们如果发现这个数据在MySQL中不存在，就直接返回一个错误信息了，但是这样存在缓存穿透问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> Result.ok(shop);<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到返回一个错误信息或者返回空都可以，根据自己的需求来</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>)&#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr,CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>现在的逻辑是：如果这个数据不存在，将这个数据写入到Redis中，并且将value设置为空字符串，然后设置一个较短的TTL，返回错误信息。当再次发起查询时，先去Redis中判断value是否为空字符串，如果是空字符串，则说明是刚刚我们存的不存在的数据，直接返回错误信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> Result.ok(shop);<br>    &#125;<br>    <span class="hljs-comment">//如果查询到的是空字符串，则说明是我们缓存的空数据</span><br>    <span class="hljs-keyword">if</span> (shopjson != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到，则将空字符串写入Redis</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">//这里的常量值是2分钟</span><br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>小结：</p>
+<ul>
+<li>缓存穿透产生的原因是什么？<ul>
+<li>用户请求的数据在缓存中和在数据库中都不存在，不断发起这样的请求，会给数据库带来巨大压力</li>
+</ul>
+</li>
+<li>缓存产投的解决方案有哪些？<ul>
+<li>缓存null值</li>
+<li>布隆过滤</li>
+<li>增强id复杂度，避免被猜测id规律（可以采用雪花算法）</li>
+<li>做好数据的基础格式校验</li>
+<li>加强用户权限校验</li>
+<li>做好热点参数的限流</li>
+</ul>
+</li>
+</ul>
+<h2 id="缓存雪崩问题及解决思路"><a href="#缓存雪崩问题及解决思路" class="headerlink" title="缓存雪崩问题及解决思路"></a>缓存雪崩问题及解决思路</h2><ul>
+<li>缓存雪崩是指在同一时间段，大量缓存的key同时失效，或者Redis服务宕机，导致大量请求到达数据库，带来巨大压力</li>
+<li>解决方案<ul>
+<li>给不同的Key的TTL添加随机值，让其在不同时间段分批失效</li>
+<li>利用Redis集群提高服务的可用性（使用一个或者多个哨兵(<code>Sentinel</code>)实例组成的系统，对redis节点进行监控，在主节点出现故障的情况下，能将从节点中的一个升级为主节点，进行故障转义，保证系统的可用性。 ）</li>
+<li>给缓存业务添加降级限流策略</li>
+<li>给业务添加多级缓存（浏览器访问静态资源时，优先读取浏览器本地缓存；访问非静态资源（ajax查询数据）时，访问服务端；请求到达Nginx后，优先读取Nginx本地缓存；如果Nginx本地缓存未命中，则去直接查询Redis（不经过Tomcat）；如果Redis查询未命中，则查询Tomcat；请求进入Tomcat后，优先查询JVM进程缓存；如果JVM进程缓存未命中，则查询数据库）</li>
+</ul>
+</li>
+</ul>
+<h2 id="缓存击穿问题及解决思路"><a href="#缓存击穿问题及解决思路" class="headerlink" title="缓存击穿问题及解决思路"></a>缓存击穿问题及解决思路</h2><ul>
+<li>缓存击穿也叫热点Key问题，就是一个被<code>高并发访问</code>并且<code>缓存重建业务较复杂</code>的key突然失效了，那么无数请求访问就会在瞬间给数据库带来巨大的冲击</li>
+<li>举个不太恰当的例子：一件秒杀中的商品的key突然失效了，大家都在疯狂抢购，那么这个瞬间就会有无数的请求访问去直接抵达数据库，从而造成缓存击穿</li>
+<li>常见的解决方案有两种<ol>
+<li>互斥锁</li>
+<li>逻辑过期</li>
+</ol>
+</li>
+<li><code>逻辑分析</code>：假设线程1在查询缓存之后未命中，本来应该去查询数据库，重建缓存数据，完成这些之后，其他线程也就能从缓存中加载这些数据了。但是在线程1还未执行完毕时，又进来了线程2、3、4同时来访问当前方法，那么这些线程都不能从缓存中查询到数据，那么他们就会在同一时刻访问数据库，执行SQL语句查询，对数据库访问压力过大<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354f77716f2c2beb1225032.jpg"><img src="https://pic1.imgdb.cn/item/6354f77716f2c2beb1225032.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+<li><code>解决方案一</code>：互斥锁</li>
+<li>利用锁的互斥性，假设线程过来，只能一个人一个人的访问数据库，从而避免对数据库频繁访问产生过大压力，但这也会影响查询的性能，将查询的性能从并行变成了串行，我们可以采用tryLock方法+double check来解决这个问题</li>
+<li>线程1在操作的时候，拿着锁把房门锁上了，那么线程2、3、4就不能都进来操作数据库，只有1操作完了，把房门打开了，此时缓存数据也重建好了，线程2、3、4直接从redis中就可以查询到数据。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354f76816f2c2beb1223b47.jpg"><img src="https://pic1.imgdb.cn/item/6354f76816f2c2beb1223b47.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<ul>
+<li><code>解决方案二</code>：逻辑过期方案</li>
+<li>方案分析：我们之所以会出现缓存击穿问题，主要原因是在于我们对key设置了TTL，如果我们不设置TTL，那么就不会有缓存击穿问题，但是不设置TTL，数据又会一直占用我们的内存，所以我们可以采用逻辑过期方案</li>
+<li>我们之前是TTL设置在redis的value中，注意：这个过期时间并不会直接作用于Redis，而是我们后续通过逻辑去处理。假设线程1去查询缓存，然后从value中判断当前数据已经过期了，此时线程1去获得互斥锁，那么其他线程会进行阻塞，获得了锁的进程他会开启一个新线程去进行之前的重建缓存数据的逻辑，直到新开的线程完成者逻辑之后，才会释放锁，而线程1直接进行返回，假设现在线程3过来访问，由于线程2拿着锁，所以线程3无法获得锁，线程3也直接返回数据（但只能返回旧数据，牺牲了数据一致性，换取性能上的提高），只有等待线程2重建缓存数据之后，其他线程才能返回正确的数据</li>
+<li>这种方案巧妙在于，异步构建缓存数据，缺点是在重建完缓存数据之前，返回的都是脏数据<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354f97716f2c2beb124e950.jpg"><img src="https://pic1.imgdb.cn/item/6354f97716f2c2beb124e950.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+<h2 id="对比互斥锁与逻辑删除"><a href="#对比互斥锁与逻辑删除" class="headerlink" title="对比互斥锁与逻辑删除"></a>对比互斥锁与逻辑删除</h2><ul>
+<li><code>互斥锁方案</code>：由于保证了互斥性，所以数据一致，且实现简单，只是加了一把锁而已，也没有其他的事情需要操心，所以没有额外的内存消耗，缺点在于有锁的情况，就可能死锁，所以只能串行执行，性能会受到影响</li>
+<li><code>逻辑过期方案</code>：线程读取过程中不需要等待，性能好，有一个额外的线程持有锁去进行重构缓存数据，但是在重构数据完成之前，其他线程只能返回脏数据，且实现起来比较麻烦</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">解决方案</th>
+<th align="center">优点</th>
+<th align="center">缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">互斥锁</td>
+<td align="center">没有额外的内存消耗 保证一致性 实现简单</td>
+<td align="center">线程需要等待，性能受影响 可能有死锁风险</td>
+</tr>
+<tr>
+<td align="center">逻辑过期</td>
+<td align="center">线程无需等待，性能较好</td>
+<td align="center">不保证一致性 有额外内存消耗 实现复杂</td>
+</tr>
+</tbody></table>
+<h2 id="利用互斥锁解决缓存击穿问题"><a href="#利用互斥锁解决缓存击穿问题" class="headerlink" title="利用互斥锁解决缓存击穿问题"></a>利用互斥锁解决缓存击穿问题</h2><ul>
+<li><code>核心思路</code>：相较于原来从缓存中查询不到数据后直接查询数据库而言，现在的方案是，进行查询之后，如果没有从缓存中查询到数据，则进行互斥锁的获取，获取互斥锁之后，判断是否获取到了锁，如果没获取到，则休眠一段时间，过一会儿再去尝试，知道获取到锁为止，才能进行查询</li>
+<li>如果获取到了锁的线程，则进行查询，将查询到的数据写入Redis，再释放锁，返回数据，利用互斥锁就能保证只有一个线程去执行数据库的逻辑，防止缓存击穿<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6354fb8116f2c2beb127ac8b.jpg"><img src="https://pic1.imgdb.cn/item/6354fb8116f2c2beb127ac8b.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+<li><code>操作锁的代码</code></li>
+<li>核心思路就是利用redis的setnx方法来表示获取锁，如果redis没有这个key，则插入成功，返回1，如果已经存在这个key，则插入失败，返回0。在StringRedisTemplate中返回true&#x2F;false，我们可以根据返回值来判断是否有线程成功获取到了锁</li>
+</ul>
+<p>tryLock</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryLock</span><span class="hljs-params">(String key)</span> &#123;<br>    <span class="hljs-type">Boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(key, <span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-number">10</span>, TimeUnit.SECONDS);<br>    <span class="hljs-comment">//避免返回值为null，我们这里使用了BooleanUtil工具类</span><br>    <span class="hljs-keyword">return</span> BooleanUtil.isTrue(flag);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>unLock</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">unlock</span><span class="hljs-params">(String key)</span> &#123;<br>    stringRedisTemplate.delete(key);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>然后这里先把我们之前写的缓存穿透代码修改一下，提取成一个独立的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Shop <span class="hljs-title function_">queryWithPassThrough</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> shop;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (shopjson != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> shop;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>之后编写我们的互斥锁代码，其实与缓存穿透代码类似，只需要在上面稍加修改即可</p>
+</li>
+</ul>
+<p>DIFF</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs DIFF">    @Override<br><span class="hljs-deletion">-   public Shop queryWithPassThrough(Long id) &#123;</span><br><span class="hljs-addition">+   public Shop queryWithMutex(Long id) &#123;</span><br>        //先从Redis中查，这里的常量值是固定的前缀 + 店铺id<br>        String shopJson = stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>        //如果不为空（查询到了），则转为Shop类型直接返回<br>        if (StrUtil.isNotBlank(shopJson)) &#123;<br>            Shop shop = JSONUtil.toBean(shopJson, Shop.class);<br>            return shop;<br>        &#125;<br>        if (shopjson != null) &#123;<br>            return null;<br>        &#125;<br>        //否则去数据库中查<br><span class="hljs-addition">+       //从这里，用try/catch/finally包裹</span><br><span class="hljs-addition">+       //获取互斥锁</span><br><span class="hljs-addition">+       boolean flag = tryLock(LOCK_SHOP_KEY + id);</span><br><span class="hljs-addition">+       //判断是否获取成功</span><br><span class="hljs-addition">+       if (!flag) &#123;</span><br><span class="hljs-addition">+           //失败，则休眠并重试</span><br><span class="hljs-addition">+           Thread.sleep(50);</span><br><span class="hljs-addition">+           return queryWithMutex(id);</span><br><span class="hljs-addition">+       &#125;</span><br>        Shop shop = getById(id);<br>        //查不到，则将空值写入Redis<br>        if (shop == null) &#123;<br>            stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, &quot;&quot;, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>            return null;<br>        &#125;<br>        //查到了则转为json字符串<br>        String jsonStr = JSONUtil.toJsonStr(shop);<br>        //并存入redis，设置TTL<br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br><span class="hljs-addition">+       //try/catch/finally包裹到这里，然后把释放锁的操作放到finally里</span><br><span class="hljs-addition">+       //释放互斥锁</span><br><span class="hljs-addition">+       unlock(LOCK_SHOP_KEY + id);</span><br>        //最终把查询到的商户信息返回给前端<br>        return shop;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在上面的基础上，使用try&#x2F;catch&#x2F;finally包裹，因为不管前面是否会有异常，最终都必须释放锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Shop <span class="hljs-title function_">queryWithMutex</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>        <span class="hljs-keyword">return</span> shop;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (shopJson != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//否则去数据库中查</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(LOCK_SHOP_KEY + id);<br>        <span class="hljs-keyword">if</span> (!flag) &#123;<br>            Thread.sleep(<span class="hljs-number">50</span>);<br>            <span class="hljs-keyword">return</span> queryWithMutex(id);<br>        &#125;<br>        <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>        shop = getById(id);<br>        <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>            stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-comment">//查到了则转为json字符串</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>        <span class="hljs-comment">//并存入redis，设置TTL</span><br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>        <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        unlock(LOCK_SHOP_KEY + id);<br>    &#125;<br>    <span class="hljs-keyword">return</span> shop;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>最终修改<code>queryById</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> queryWithMutex(id);<br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用Jmeter进行测试</p>
+<ul>
+<li><p>我们先来模拟一下缓存击穿的情景，缓存击穿是指在某时刻，一个热点数据的TTL到期了，此时用户不能从Redis中获取热点商品数据，然后就都得去数据库里查询，造成数据库压力过大。</p>
+</li>
+<li><p>那么我们首先将Redis中的热点商品数据删除，模拟TTL到期，然后用Jmeter进行压力测试，开100个线程来访问这个没有缓存的热点数据</p>
+<ul>
+<li><p>如果后台日志只输出了一条SQL语句，则说明我们的互斥锁是生效的，没有造成大量用户都去查询数据库，执行SQL语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs PLAINTEXT">: ==&gt;  Preparing: SELECT id,name,type_id,images,area,address,x,y,avg_price,sold,comments,score,open_hours,create_time,update_time FROM tb_shop WHERE id=?<br>: ==&gt; Parameters: 2(Long)<br>: &lt;==      Total: 1<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>如果日志输出了好多SQL语句，则说明我们的代码有问题</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6356424916f2c2beb1a493ea.jpg"><img src="https://pic1.imgdb.cn/item/6356424916f2c2beb1a493ea.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<h2 id="利用逻辑过期解决缓存击穿问题"><a href="#利用逻辑过期解决缓存击穿问题" class="headerlink" title="利用逻辑过期解决缓存击穿问题"></a>利用逻辑过期解决缓存击穿问题</h2><ul>
+<li><p>需求：根据id查询商铺的业务，基于逻辑过期方式来解决缓存击穿问题</p>
+</li>
+<li><p>思路分析：当用户开始查询redis时，判断是否命中</p>
+<ul>
+<li>如果没有命中则直接返回空数据，不查询数据库</li>
+<li>如果命中，则将value取出，判断value中的过期时间是否满足<ul>
+<li>如果没有过期，则直接返回redis中的数据</li>
+<li>如果过期，则在开启独立线程后，直接返回之前的数据，独立线程去重构数据，重构完成后再释放互斥锁<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6355073c16f2c2beb1375808.jpg"><img src="https://pic1.imgdb.cn/item/6355073c16f2c2beb1375808.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>封装数据：因为现在redis中存储的数据的value需要带上过期时间，此时要么你去修改原来的实体类，要么新建一个类包含原有的数据和过期时间</p>
+</li>
+<li><p><code>步骤一</code></p>
+</li>
+<li><p>这里我们选择新建一个实体类，包含原有数据(用万能的Object)和过期时间，这样对原有的代码没有侵入性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisData</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">private</span> LocalDateTime expireTime;<br>    <span class="hljs-keyword">private</span> T data;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>步骤二</code></p>
+</li>
+<li><p>在ShopServiceImpl中新增方法，进行单元测试，看看能否写入数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">saveShop2Redis</span><span class="hljs-params">(Long id, Long expirSeconds)</span> &#123;<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-type">RedisData</span> <span class="hljs-variable">redisData</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisData</span>();<br>    redisData.setData(shop);<br>    redisData.setExpireTime(LocalDateTime.now().plusSeconds(expirSeconds));<br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, JSONUtil.toJsonStr(redisData));<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>编写测试方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HmDianPingApplicationTests</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ShopServiceImpl shopService;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span>&#123;<br>        shopService.saveShop2Redis(<span class="hljs-number">1L</span>,<span class="hljs-number">1000L</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>运行测试方法，去Redis图形化页面看到存入的value，确实包含了data和expireTime1</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs JSON"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;area&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;大关&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;openHours&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;10:00-22:00&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;sold&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4215</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;images&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;https://qcloud.dpfile.com/pc/jiclIsCKmOI2arxKN1Uf0Hx3PucIJH8q0QSz-Z8llzcN56-_QiKuOvyio1OOxsRtFoXqu0G3iT2T27qat3WhLVEuLYk00OmSS1IdNpm8K8sG4JN9RIm2mTKcbLtc2o2vfCF2ubeXzk49OsGrXt_KYDCngOyCwZK-s3fqawWswzk.jpg,https://qcloud.dpfile.com/pc/IOf6VX3qaBgFXFVgp75w-KKJmWZjFc8GXDU8g9bQC6YGCpAmG00QbfT4vCCBj7njuzFvxlbkWx5uwqY2qcjixFEuLYk00OmSS1IdNpm8K8sG4JN9RIm2mTKcbLtc2o2vmIU_8ZGOT1OjpJmLxG6urQ.jpg&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;address&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;金华路锦昌文华苑29号&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;comments&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3035</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;avgPrice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">80</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;updateTime&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1666502007000</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;score&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">37</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;createTime&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1640167839000</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;476茶餐厅&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;x&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">120.149192</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;y&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">30.316078</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;typeId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;expireTime&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1666519036559</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>步骤三</code>：正式代码<br>正式代码我们就直接照着流程图写就好了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-comment">//这里需要声明一个线程池，因为下面我们需要新建一个现成来完成重构缓存</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">ExecutorService</span> <span class="hljs-variable">CACHE_REBUILD_EXECUTOR</span> <span class="hljs-operator">=</span> Executors.newFixedThreadPool(<span class="hljs-number">10</span>);<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Shop <span class="hljs-title function_">queryWithLogicalExpire</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//1. 从redis中查询商铺缓存</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//2. 如果未命中，则返回空</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isBlank(json)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//3. 命中，将json反序列化为对象</span><br>    <span class="hljs-type">RedisData</span> <span class="hljs-variable">redisData</span> <span class="hljs-operator">=</span> JSONUtil.toBean(json, RedisData.class);<br>    <span class="hljs-comment">//3.1 将data转为Shop对象</span><br>    <span class="hljs-type">JSONObject</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> (JSONObject) redisData.getData();<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> JSONUtil.toBean(shopJson, Shop.class);<br>    <span class="hljs-comment">//3.2 获取过期时间</span><br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">expireTime</span> <span class="hljs-operator">=</span> redisData.getExpireTime();<br>    <span class="hljs-comment">//4. 判断是否过期</span><br>    <span class="hljs-keyword">if</span> (LocalDateTime.now().isBefore(time)) &#123;<br>        <span class="hljs-comment">//5. 未过期，直接返回商铺信息</span><br>        <span class="hljs-keyword">return</span> shop;<br>    &#125;<br>    <span class="hljs-comment">//6. 过期，尝试获取互斥锁</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(LOCK_SHOP_KEY + id);<br>    <span class="hljs-comment">//7. 获取到了锁</span><br>    <span class="hljs-keyword">if</span> (flag) &#123;<br>        <span class="hljs-comment">//8. 开启独立线程</span><br>        CACHE_REBUILD_EXECUTOR.submit(() -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-built_in">this</span>.saveShop2Redis(id, LOCK_SHOP_TTL);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>            &#125; <span class="hljs-keyword">finally</span> &#123;<br>                unlock(LOCK_SHOP_KEY + id);<br>            &#125;<br>        &#125;);<br>        <span class="hljs-comment">//9. 直接返回商铺信息</span><br>        <span class="hljs-keyword">return</span> shop;<br>    &#125;<br>    <span class="hljs-comment">//10. 未获取到锁，直接返回商铺信息</span><br>    <span class="hljs-keyword">return</span> shop;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用Jmeter进行测试</p>
+<ul>
+<li><p>先来复现一遍场景，当某个用户去Redis中访问缓存的数据时，发现该数据已经过期了，于是新开一个线程去重构缓存数据，但在重构完成之前，用户得到的数据都是脏数据，重构完成之后，才是新数据</p>
+</li>
+<li><p>那我们先使用saveShop2Redis方法，向redis中添加一个逻辑过期数据，设置过期时间为2秒，这样很快就过期了，</p>
+<ul>
+<li>saveShop2Redis</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">saveShop2Redis</span><span class="hljs-params">(Long id, Long expirSeconds)</span> &#123;<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-type">RedisData</span> <span class="hljs-variable">redisData</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisData</span>();<br>    redisData.setData(shop);<br>    redisData.setExpireTime(LocalDateTime.now().plusSeconds(expirSeconds));<br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, JSONUtil.toJsonStr(redisData));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Test</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span>&#123;<br>    shopService.saveShop2Redis(<span class="hljs-number">2L</span>,<span class="hljs-number">2L</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>之后去数据库把这个数据修改一下，这样逻辑过期前和逻辑过期后的数据就不一致，当用户来访问数据的时候，需要花时间来进行重构缓存数据，但是在重构完成之前，都只能获得脏数据（也就是我们修改前的数据），只有当重构完毕之后，才能获得新数据（我们修改后的数据）</p>
+</li>
+<li><p>测试结果如下，同样是开了100个线程去访问逻辑过期数据，前面的用户只能看到脏数据，后面的用户看到的才是新数据<br><a target="_blank" rel="noopener" href="https://pic1.imgdb.cn/item/6356558116f2c2beb1d8a832.jpg"><img src="https://pic1.imgdb.cn/item/6356558116f2c2beb1d8a832.jpg" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="封装Redis工具类"><a href="#封装Redis工具类" class="headerlink" title="封装Redis工具类"></a>封装Redis工具类</h2><ul>
+<li><p>基于StringRedisTemplate封装一个缓存工具类，需满足下列要求</p>
+<ul>
+<li><p>方法1：将任意Java对象序列化为JSON，并存储到String类型的Key中，并可以设置TTL过期时间</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">set</span><span class="hljs-params">(String key, Object value, Long time, TimeUnit timeUnit)</span> &#123;<br>    stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(value), time, timeUnit);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方法2：将任意Java对象序列化为JSON，并存储在String类型的Key中，并可以设置逻辑过期时间，用于处理缓存击穿问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setWithLogicExpire</span><span class="hljs-params">(String key, Object value, Long time, TimeUnit timeUnit)</span> &#123;<br>    <span class="hljs-comment">//由于需要设置逻辑过期时间，所以我们需要用到RedisData</span><br>    RedisData&lt;Object&gt; redisData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisData</span>&lt;&gt;();<br>    <span class="hljs-comment">//redisData的data就是传进来的value对象</span><br>    redisData.setData(value);<br>    <span class="hljs-comment">//逻辑过期时间就是当前时间加上传进来的参数时间，用TimeUnit可以将时间转为秒，随后与当前时间相加</span><br>    redisData.setExpireTime(LocalDateTime.now().plusSeconds(timeUnit.toSeconds(time)));<br>    <span class="hljs-comment">//由于是逻辑过期，所以这里不需要设置过期时间，只存一下key和value就好了，同时注意value是ridisData类型</span><br>    stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(redisData));<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方法3：根据指定的Key查询缓存，并反序列化为指定类型，利用缓存空值的方式解决缓存穿透问题</p>
+</li>
+</ul>
+<p>原方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Shop <span class="hljs-title function_">queryWithPassThrough</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-keyword">return</span> JSONUtil.toBean(shopJson, Shop.class);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (shopjson != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> shop;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>改为通用方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Shop <span class="hljs-title function_">queryWithPassThrough</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">shopJson</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(CACHE_SHOP_KEY + id);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(shopJson)) &#123;<br>        <span class="hljs-keyword">return</span> JSONUtil.toBean(shopJson, Shop.class);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (shopjson != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//否则去数据库中查</span><br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> getById(id);<br>    <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//查到了则转为json字符串</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(shop);<br>    <span class="hljs-comment">//并存入redis，设置TTL</span><br>    stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY + id, jsonStr, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>    <span class="hljs-keyword">return</span> shop;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">queryById</span><span class="hljs-params">(Long id)</span> &#123;<br>    <span class="hljs-type">Shop</span> <span class="hljs-variable">shop</span> <span class="hljs-operator">=</span> cacheClient.<br>            queryWithPassThrough(CACHE_SHOP_KEY, id, Shop.class, <span class="hljs-built_in">this</span>::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);<br>    <span class="hljs-keyword">if</span> (shop == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> Result.fail(<span class="hljs-string">&quot;店铺不存在！！&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> Result.ok(shop);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><ul>
+<li><p>方法4：根据指定的Key查询缓存，并反序列化为指定类型，需要利用逻辑过期解决缓存击穿问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> &lt;R, ID&gt; R <span class="hljs-title function_">queryWithLogicalExpire</span><span class="hljs-params">(String keyPrefix, ID id, Class&lt;R&gt; type, Function&lt;ID, R&gt; dbFallback, Long time, TimeUnit timeUnit)</span> &#123;<br>    <span class="hljs-comment">//1. 从redis中查询商铺缓存</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> keyPrefix + id;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(key);<br>    <span class="hljs-comment">//2. 如果未命中，则返回空</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isBlank(json)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//3. 命中，将json反序列化为对象</span><br>    <span class="hljs-type">RedisData</span> <span class="hljs-variable">redisData</span> <span class="hljs-operator">=</span> JSONUtil.toBean(json, RedisData.class);<br>    <span class="hljs-type">R</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> JSONUtil.toBean((JSONObject) redisData.getData(), type);<br>    <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">expireTime</span> <span class="hljs-operator">=</span> redisData.getExpireTime();<br>    <span class="hljs-comment">//4. 判断是否过期</span><br>    <span class="hljs-keyword">if</span> (expireTime.isAfter(LocalDateTime.now())) &#123;<br>        <span class="hljs-comment">//5. 未过期，直接返回商铺信息</span><br>        <span class="hljs-keyword">return</span> r;<br>    &#125;<br>    <span class="hljs-comment">//6. 过期，尝试获取互斥锁</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">lockKey</span> <span class="hljs-operator">=</span> LOCK_SHOP_KEY + id;<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(lockKey);<br>    <span class="hljs-comment">//7. 获取到了锁</span><br>    <span class="hljs-keyword">if</span> (flag) &#123;<br>        <span class="hljs-comment">//8. 开启独立线程</span><br>        CACHE_REBUILD_EXECUTOR.submit(() -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">R</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> dbFallback.apply(id);<br>                <span class="hljs-built_in">this</span>.setWithLogicExpire(key, tmp, time, timeUnit);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>            &#125; <span class="hljs-keyword">finally</span> &#123;<br>                unlock(lockKey);<br>            &#125;<br>        &#125;);<br>        <span class="hljs-comment">//9. 直接返回商铺信息</span><br>        <span class="hljs-keyword">return</span> r;<br>    &#125;<br>    <span class="hljs-comment">//10. 未获取到锁，直接返回商铺信息</span><br>    <span class="hljs-keyword">return</span> r;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>方法5：根据指定的Key查询缓存，并反序列化为指定类型，需要利用互斥锁解决缓存击穿问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> &lt;R, ID&gt; R <span class="hljs-title function_">queryWithMutex</span><span class="hljs-params">(String keyPrefix, ID id, Class&lt;R&gt; type, Function&lt;ID, R&gt; dbFallback, Long time, TimeUnit timeUnit)</span> &#123;<br>    <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> keyPrefix + id;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(key);<br>    <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>    <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(json)) &#123;<br>        <span class="hljs-keyword">return</span> JSONUtil.toBean(json, type);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (json != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-type">R</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">lockKey</span> <span class="hljs-operator">=</span> LOCK_SHOP_KEY + id;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//否则去数据库中查</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(lockKey);<br>        <span class="hljs-keyword">if</span> (!flag) &#123;<br>            Thread.sleep(<span class="hljs-number">50</span>);<br>            <span class="hljs-keyword">return</span> queryWithMutex(keyPrefix, id, type, dbFallback, time, timeUnit);<br>        &#125;<br>        r = dbFallback.apply(id);<br>        <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>        <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">null</span>) &#123;<br>            stringRedisTemplate.opsForValue().set(key, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-comment">//并存入redis，设置TTL</span><br>        <span class="hljs-built_in">this</span>.set(key, r, time, timeUnit);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        unlock(lockKey);<br>    &#125;<br>    <span class="hljs-keyword">return</span> r;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>完整代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Slf4j</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CacheClient</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> StringRedisTemplate stringRedisTemplate;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">ExecutorService</span> <span class="hljs-variable">CACHE_REBUILD_EXECUTOR</span> <span class="hljs-operator">=</span> Executors.newFixedThreadPool(<span class="hljs-number">10</span>);<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">CacheClient</span><span class="hljs-params">(StringRedisTemplate stringRedisTemplate)</span> &#123;<br>        <span class="hljs-built_in">this</span>.stringRedisTemplate = stringRedisTemplate;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">set</span><span class="hljs-params">(String key, Object value, Long time, TimeUnit timeUnit)</span> &#123;<br>        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(value), time, timeUnit);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setWithLogicExpire</span><span class="hljs-params">(String key, Object value, Long time, TimeUnit timeUnit)</span> &#123;<br>        RedisData&lt;Object&gt; redisData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisData</span>&lt;&gt;();<br>        redisData.setData(value);<br>        redisData.setExpireTime(LocalDateTime.now().plusSeconds(timeUnit.toSeconds(time)));<br>        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(redisData));<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> &lt;R, ID&gt; R <span class="hljs-title function_">queryWithPassThrough</span><span class="hljs-params">(String keyPrefix, ID id, Class&lt;R&gt; type, Function&lt;ID, R&gt; dbFallback, Long time, TimeUnit timeUnit)</span> &#123;<br>        <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> keyPrefix + id;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(key);<br>        <span class="hljs-comment">//如果不为空（查询到了），则转为R类型直接返回</span><br>        <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(json)) &#123;<br>            <span class="hljs-keyword">return</span> JSONUtil.toBean(json, type);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (json != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-comment">//否则去数据库中查，查询逻辑用我们参数中注入的函数</span><br>        <span class="hljs-type">R</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> dbFallback.apply(id);<br>        <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>        <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">null</span>) &#123;<br>            stringRedisTemplate.opsForValue().set(key, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-comment">//查到了则转为json字符串</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">jsonStr</span> <span class="hljs-operator">=</span> JSONUtil.toJsonStr(r);<br>        <span class="hljs-comment">//并存入redis，设置TTL</span><br>        <span class="hljs-built_in">this</span>.set(key, jsonStr, time, timeUnit);<br>        <span class="hljs-comment">//最终把查询到的商户信息返回给前端</span><br>        <span class="hljs-keyword">return</span> r;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> &lt;R, ID&gt; R <span class="hljs-title function_">queryWithLogicalExpire</span><span class="hljs-params">(String keyPrefix, ID id, Class&lt;R&gt; type, Function&lt;ID, R&gt; dbFallback, Long time, TimeUnit timeUnit)</span> &#123;<br>        <span class="hljs-comment">//1. 从redis中查询商铺缓存</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> keyPrefix + id;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(key);<br>        <span class="hljs-comment">//2. 如果未命中，则返回空</span><br>        <span class="hljs-keyword">if</span> (StrUtil.isBlank(json)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-comment">//3. 命中，将json反序列化为对象</span><br>        <span class="hljs-type">RedisData</span> <span class="hljs-variable">redisData</span> <span class="hljs-operator">=</span> JSONUtil.toBean(json, RedisData.class);<br>        <span class="hljs-type">R</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> JSONUtil.toBean((JSONObject) redisData.getData(), type);<br>        <span class="hljs-type">LocalDateTime</span> <span class="hljs-variable">expireTime</span> <span class="hljs-operator">=</span> redisData.getExpireTime();<br>        <span class="hljs-comment">//4. 判断是否过期</span><br>        <span class="hljs-keyword">if</span> (expireTime.isAfter(LocalDateTime.now())) &#123;<br>            <span class="hljs-comment">//5. 未过期，直接返回商铺信息</span><br>            <span class="hljs-keyword">return</span> r;<br>        &#125;<br>        <span class="hljs-comment">//6. 过期，尝试获取互斥锁</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">lockKey</span> <span class="hljs-operator">=</span> LOCK_SHOP_KEY + id;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(lockKey);<br>        <span class="hljs-comment">//7. 获取到了锁</span><br>        <span class="hljs-keyword">if</span> (flag) &#123;<br>            <span class="hljs-comment">//8. 开启独立线程</span><br>            CACHE_REBUILD_EXECUTOR.submit(() -&gt; &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-type">R</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> dbFallback.apply(id);<br>                    <span class="hljs-built_in">this</span>.setWithLogicExpire(key, tmp, time, timeUnit);<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>                &#125; <span class="hljs-keyword">finally</span> &#123;<br>                    unlock(lockKey);<br>                &#125;<br>            &#125;);<br>            <span class="hljs-comment">//9. 直接返回商铺信息</span><br>            <span class="hljs-keyword">return</span> r;<br>        &#125;<br>        <span class="hljs-comment">//10. 未获取到锁，直接返回商铺信息</span><br>        <span class="hljs-keyword">return</span> r;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> &lt;R, ID&gt; R <span class="hljs-title function_">queryWithMutex</span><span class="hljs-params">(String keyPrefix, ID id, Class&lt;R&gt; type, Function&lt;ID, R&gt; dbFallback, Long time, TimeUnit timeUnit)</span> &#123;<br>        <span class="hljs-comment">//先从Redis中查，这里的常量值是固定的前缀 + 店铺id</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> keyPrefix + id;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().get(key);<br>        <span class="hljs-comment">//如果不为空（查询到了），则转为Shop类型直接返回</span><br>        <span class="hljs-keyword">if</span> (StrUtil.isNotBlank(json)) &#123;<br>            <span class="hljs-keyword">return</span> JSONUtil.toBean(json, type);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (json != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-type">R</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">lockKey</span> <span class="hljs-operator">=</span> LOCK_SHOP_KEY + id;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//否则去数据库中查</span><br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> tryLock(lockKey);<br>            <span class="hljs-keyword">if</span> (!flag) &#123;<br>                Thread.sleep(<span class="hljs-number">50</span>);<br>                <span class="hljs-keyword">return</span> queryWithMutex(keyPrefix, id, type, dbFallback, time, timeUnit);<br>            &#125;<br>            r = dbFallback.apply(id);<br>            <span class="hljs-comment">//查不到，则将空值写入Redis</span><br>            <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">null</span>) &#123;<br>                stringRedisTemplate.opsForValue().set(key, <span class="hljs-string">&quot;&quot;</span>, CACHE_NULL_TTL, TimeUnit.MINUTES);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>            &#125;<br>            <span class="hljs-comment">//并存入redis，设置TTL</span><br>            <span class="hljs-built_in">this</span>.set(key, r, time, timeUnit);<br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            unlock(lockKey);<br>        &#125;<br>        <span class="hljs-keyword">return</span> r;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryLock</span><span class="hljs-params">(String key)</span> &#123;<br>        <span class="hljs-type">Boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> stringRedisTemplate.opsForValue().setIfAbsent(key, <span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-number">10</span>, TimeUnit.SECONDS);<br>        <span class="hljs-keyword">return</span> BooleanUtil.isTrue(flag);<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">unlock</span><span class="hljs-params">(String key)</span> &#123;<br>        stringRedisTemplate.delete(key);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Redis/" class="category-chain-item">Redis</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE/">#项目</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis学习笔记--商户查询缓存</div>
+      <div>https://yztldxdz.top/2023/02/25/Redis学习笔记--商户查询缓存/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月25日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/01/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="Redis学习笔记--优惠券秒杀和分布式锁">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Redis学习笔记--优惠券秒杀和分布式锁</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/21/Redis%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0--%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95/" title="Redis学习笔记--短信登录">
+                        <span class="hidden-mobile">Redis学习笔记--短信登录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      鲁ICP备2022032478号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>鲁ICP备2022032478号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+  
+<script src="/js/diy/love.js"></script>
+<script src="/js/diy/xiantiao.js"></script>
+<script src="/js/diy/yinghua.js"></script>
+<script src="/js/diy/code-folding-linenumber.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"superSample":2,"width":150,"height":263,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":1,"opacityOnHover":0.5},"log":false});</script></body>
+</html>

@@ -44,13 +44,13 @@
 <meta property="og:description" content="类加载子系统作用 负责从文件系统或者网络中加载Class文件，Class文件开头有特定标识，魔术，咖啡杯壁 Classloader只负责class文件的加载，至于是否可运行，则由执行引擎决定 加载的类信息存放于称为方法区的内存空间，除了类信息，方法区还会存放运行时常量池信息，还可能包括字符串字面量和数字常量 常量池运行时加载到内存中，即运行时常量池     类的加载过程 加载 加载刚好是加载过程的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://cdn.processon.com/5ed59ae8e401fd1919f9b2bb?e=1591060728&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:1zyQitPhEYAKA4GsWEwwZwgLWMk=">
-<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgruakrj30nf07in0k.jpg">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgruakrj30nf07in0k.jpg">
 <meta property="og:image" content="http://cdn.processon.com/5ed6e443f346fb6b02f6b148?e=1591145043&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:4_gU1ZBzIh2mYgtHE6VpBECYtUw=">
 <meta property="og:image" content="http://cdn.processon.com/5ed6f04c5653bb1954973143?e=1591148125&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:qsJEjxVxKgvyv5T5XVKV8aC0kHs=">
-<meta property="og:image" content="http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgh7ghij30fm0caado.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgh7ghij30fm0caado.jpg">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2022-11-04T06:10:52.000Z">
-<meta property="article:modified_time" content="2022-12-21T10:58:45.916Z">
+<meta property="article:modified_time" content="2023-03-11T02:17:46.643Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -254,7 +254,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          4.3k 字
+          4.8k 字
         
       </span>
     
@@ -266,7 +266,7 @@
         
         
           <!-- compatible with older versions-->
-          37 分钟
+          40 分钟
         
       </span>
     
@@ -317,7 +317,7 @@
 </li>
 </ul>
 <p><img src="http://cdn.processon.com/5ed59ae8e401fd1919f9b2bb?e=1591060728&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:1zyQitPhEYAKA4GsWEwwZwgLWMk=" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgruakrj30nf07in0k.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><p><img src="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgruakrj30nf07in0k.jpg" srcset="/img/loading.gif" lazyload></p>
 <h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><ul>
 <li>加载刚好是加载过程的一个阶段，二者意思不能混淆</li>
 <li>通过一个类的全限定名获取定义此类的二进制字节流<ul>
@@ -351,11 +351,14 @@
 <li>事实上，解析操作往往会伴随着JVM在执行完初始化之后再执行。</li>
 <li>符号引用就是一组符号来描述所引用的目标。符号引用的字面量形式明确定义在《java虚拟机规范》的Class文件格式中。直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</li>
 <li>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型等。对应常量池中的CONSTANT_Class_info，CONSTANT_Fieldref_info、CONSTANT_Methodref_info等。</li>
+<li>为什么要进行这个转换？</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/K_kzj_K/article/details/104163812">符号引用要转换成直接引用才有效，这也说明直接引用的效率要比符号引用高。那为什么要用符号引用呢？这是因为类加载之前，javac会将源代码编译成.class文件，这个时候javac是不知道被编译的类中所引用的其他类的具体信息的</a><a target="_blank" rel="noopener" href="https://blog.csdn.net/K_kzj_K/article/details/104163812">1</a>。</li>
 </ul>
 </li>
 </ul>
 <h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a><strong>初始化</strong></h4><ul>
 <li><strong>初始化阶段就是执行类构造器方法<clinit>()的过程。</strong></li>
+<li>如果该类的直接父类还没有被初始化，则先初始化其直接父类；如果类中有初始化语句，则系统依次执行这些初始化语句。</li>
 <li>此方法不需定义，是javac编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。</li>
 <li>构造器方法中指令按语句在源文件中出现的顺序执行。</li>
 <li><clinit>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>()）</li>
@@ -429,13 +432,15 @@
 <li>如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器；</li>
 <li>如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式。</li>
 </ol>
-<p><img src="http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgh7ghij30fm0caado.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkgh7ghij30fm0caado.jpg" srcset="/img/loading.gif" lazyload></p>
 <h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
 <li>避免类的重复加载</li>
 <li>保护程序安全，防止核心API被篡改</li>
 </ul>
+<p>举个例子，假设你在自己的程序中定义了一个和JDK核心类库中同名的类，比如java.lang.String。当你的程序运行时，如果没有双亲委派机制，那么你定义的这个类就会覆盖JDK核心类库中的String类。这样就会导致一些安全问题。</p>
+<p>但是由于有了双亲委派机制，当你的程序运行时，类加载器会先把加载请求委派给父类加载器。最终请求会被委派到启动类加载器。启动类加载器会先去JDK核心类库中查找是否有这个类。由于JDK核心类库中已经有了一个String类，所以启动类加载器就会直接返回这个String类。这样就保证了JDK核心类库中的String不会被覆盖。</p>
 <h3 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h3><p>沙箱机制就是将Java代码限定在虚拟机JVM特定的运行范围中，并且严格限制代码对本地资源的访问，通过这样的措施来保证对代码的有效隔离，防止对本地系统造成破坏。</p>
-<p><img src="https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20201211122234699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDk3NjgzNQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>通俗来说就是虚拟机把代码加载到拥有不同权限的域里，然后代码就拥有了该域的所有权限。这样就能控制不同代码拥有不同调用操作系统和本地资源的权限</p>
 <p>例如：</p>
 <p>自定义String类，但是在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的文件（rt.jar包中java\lang\String.class），报错信息说没有main方法，就是因为加载的是rt.jar包中的string类。这样可以保证对java核心源代码的保护，这就是沙箱安全机制。</p>
