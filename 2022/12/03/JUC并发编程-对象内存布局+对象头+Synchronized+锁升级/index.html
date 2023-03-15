@@ -43,82 +43,82 @@
 <meta property="og:site_name" content="王振国的个人博客">
 <meta property="og:description" content="Java对象内存布局和对象头 Object object &#x3D; new Object() 谈谈你对这句话的理解？一般而言JDK8按照默认情况下，new一个对象占多少内存空间  位置所在在JVM堆里的新生区的伊甸园区（这些都是之前的基础知识了） 构成布局可以联想一下我们的HTML报文  对象在堆内存中布局权威定义—周志明老师JVM第3版在HotSpot虚拟机里，对象在堆内存中的存储布局可以划">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/45616a69fe914fd1bcbcc2851f99b96e.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/e671f63f33fa4f2a819e476760923933.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a545ca804b27471abda1f3754f39a4c4.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/dcf8d1a245584450b9f794c27989733b.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/ae14e1d0b8084b488fa94e6bf100892b.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/77ee6262c59948c884b060fe2b21c15e.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2620f3a4dd4f4ad997b26ac1cf69cda9.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/45616a69fe914fd1bcbcc2851f99b96e.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e671f63f33fa4f2a819e476760923933.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a545ca804b27471abda1f3754f39a4c4.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/dcf8d1a245584450b9f794c27989733b.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ae14e1d0b8084b488fa94e6bf100892b.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/77ee6262c59948c884b060fe2b21c15e.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2620f3a4dd4f4ad997b26ac1cf69cda9.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/7f99ee2a97ef467bb3c50ecbc2e4bb2f.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/76d636f2fea440f884bee3efbb5ece73.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/53df3f60fea84bb38e621b8ae53d3df3.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/15db6807c67141fd96c8e4c7ec37f877.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/f3ab347de6754c06a3f9b04b0b498099.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a2bac7af31214dcfa1ae7765ba21ba10.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/9ecd513abf624152959f547796f5daac.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/8d382140f36147fa844ea2be86e7acde.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/26f34a826390476181a7ee1b23cecfe8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/bded27c13ec842e6a3eef4632ed56dba.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/6f32712da339423bb33c6903043b7912.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a14a89fb850a48f2827593910a5af3e2.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/b14fe85dee3542fd809d39c9119068f1.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/c368292536aa46e3a51de4c6db6c88b2.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/4690e91ab23643f198b4a1dab7d6d032.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/d9530c0b596540678d6cc97710129ebc.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/401ded1f99fd4e07bec8b8acfacabadd.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/fb4f7da2392a4c4cb6bd235cbd363eee.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/e9542129d6e840e989d7a9dfbc488371.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a06a04184bba439ebdab392288c75051.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/3dd2e69b76d44992a69af41e533e1892.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/ace499e78fb24a13a9547e44529d509b.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2c0d6de7937c4fc1b48019f5639a77a5.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/3cda3093bd464bd2aab95eb765cc23ac.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/c2db742ec4d147f680fcc14d246a12e6.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2d5b99b129c842ac8c25a3a90ebacc8a.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/ee00dd5cf746442e96ff7a1577d5de2a.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/6eccd9a620f34370b2f4ca1a3840d4e0.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/e0ddd9d4cd724182b62ee66450c0eca8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/23f67d623e124ae99b08dc6a7ef9ff24.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2e6f493eaba04be3ba4d194bacba3224.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/5f456ce423e14bd4a0cfa83a6e223133.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/e793b86d132544a79e9f5079bc384c4e.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/c9a0bfebceba4a2a9b0ba3b987155f0f.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/fe8e727e6dee47f6beb60c28d3106cfe.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/5137e71643794d519bf889a8ea47f99c.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/fee2a2a1c2a44d4783cc38352f8d3e7e.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/9aefeb4614e7432d8d35984497e70702.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/7586e480966c4265add78ac347e19a12.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2326cc673efb4bf99f890cff224763ab.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/df67dda673c94056a69e40acd864a21a.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/b1db9b39ebd54afe9433436c4cc19d72.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/36a288923c7a4016ab489c72f2afd6e8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/1f2c384c1b4e459cad7bb5160d43cd9f.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/5a0f8f7fee5c4b80b1a0ab1146350825.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/c078b75e982d424081bb72c5001d04d9.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/31b417d60922451ca5a5a471e3badeb8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/48c603c3b8154a08945e30a2ce2d094e.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/cc6e7ab5801e490ca7908056ed8fc907.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/6a1c95588e55448b9f2e3fd4bd63151f.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/768b0bb1585a413e949da162ba4e69dd.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/019bb3b645bb406a89f7469cab952f07.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/896a934c809740a68c5e18ec7374f100.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/dd2950cee7514ab1b79927cd8ae8cbd7.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/b1f38e7d992149f7b4a99142a172c426.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/274f22fcea7845af9371be3cfb7b2d1a.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/9386f22fc236434a8dd6da6a72f0f20d.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/f700a3c95b7f466fb0a1c5a8b642e7f8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/033991889cf943b181c8314663a14545.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/14230e2472c948318addb902e909a4c8.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/f097ef47c0e14ae09b4639ed6fb6679b.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/4d5b2210ae7345f5a1059ecb7d3a6601.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/76d636f2fea440f884bee3efbb5ece73.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/53df3f60fea84bb38e621b8ae53d3df3.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/15db6807c67141fd96c8e4c7ec37f877.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f3ab347de6754c06a3f9b04b0b498099.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a2bac7af31214dcfa1ae7765ba21ba10.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9ecd513abf624152959f547796f5daac.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/8d382140f36147fa844ea2be86e7acde.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/26f34a826390476181a7ee1b23cecfe8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/bded27c13ec842e6a3eef4632ed56dba.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6f32712da339423bb33c6903043b7912.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a14a89fb850a48f2827593910a5af3e2.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b14fe85dee3542fd809d39c9119068f1.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c368292536aa46e3a51de4c6db6c88b2.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/4690e91ab23643f198b4a1dab7d6d032.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/d9530c0b596540678d6cc97710129ebc.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/401ded1f99fd4e07bec8b8acfacabadd.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fb4f7da2392a4c4cb6bd235cbd363eee.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e9542129d6e840e989d7a9dfbc488371.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a06a04184bba439ebdab392288c75051.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/3dd2e69b76d44992a69af41e533e1892.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ace499e78fb24a13a9547e44529d509b.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2c0d6de7937c4fc1b48019f5639a77a5.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/3cda3093bd464bd2aab95eb765cc23ac.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c2db742ec4d147f680fcc14d246a12e6.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2d5b99b129c842ac8c25a3a90ebacc8a.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ee00dd5cf746442e96ff7a1577d5de2a.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6eccd9a620f34370b2f4ca1a3840d4e0.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e0ddd9d4cd724182b62ee66450c0eca8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/23f67d623e124ae99b08dc6a7ef9ff24.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2e6f493eaba04be3ba4d194bacba3224.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5f456ce423e14bd4a0cfa83a6e223133.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e793b86d132544a79e9f5079bc384c4e.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c9a0bfebceba4a2a9b0ba3b987155f0f.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fe8e727e6dee47f6beb60c28d3106cfe.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5137e71643794d519bf889a8ea47f99c.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fee2a2a1c2a44d4783cc38352f8d3e7e.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9aefeb4614e7432d8d35984497e70702.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/7586e480966c4265add78ac347e19a12.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2326cc673efb4bf99f890cff224763ab.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/df67dda673c94056a69e40acd864a21a.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b1db9b39ebd54afe9433436c4cc19d72.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/36a288923c7a4016ab489c72f2afd6e8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/1f2c384c1b4e459cad7bb5160d43cd9f.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5a0f8f7fee5c4b80b1a0ab1146350825.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c078b75e982d424081bb72c5001d04d9.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/31b417d60922451ca5a5a471e3badeb8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/48c603c3b8154a08945e30a2ce2d094e.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/cc6e7ab5801e490ca7908056ed8fc907.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6a1c95588e55448b9f2e3fd4bd63151f.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/768b0bb1585a413e949da162ba4e69dd.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/019bb3b645bb406a89f7469cab952f07.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/896a934c809740a68c5e18ec7374f100.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/dd2950cee7514ab1b79927cd8ae8cbd7.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b1f38e7d992149f7b4a99142a172c426.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/274f22fcea7845af9371be3cfb7b2d1a.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9386f22fc236434a8dd6da6a72f0f20d.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f700a3c95b7f466fb0a1c5a8b642e7f8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/033991889cf943b181c8314663a14545.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/14230e2472c948318addb902e909a4c8.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f097ef47c0e14ae09b4639ed6fb6679b.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/4d5b2210ae7345f5a1059ecb7d3a6601.png">
 <meta property="article:published_time" content="2022-12-03T07:40:47.000Z">
-<meta property="article:modified_time" content="2022-12-04T10:55:24.578Z">
+<meta property="article:modified_time" content="2023-03-15T00:44:45.194Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png">
   
   
   
@@ -372,19 +372,19 @@
             
             <div class="markdown-body">
               
-              <h1 id="Java对象内存布局和对象头"><a href="#Java对象内存布局和对象头" class="headerlink" title="Java对象内存布局和对象头"></a>Java对象内存布局和对象头</h1><p><img src="https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+              <h1 id="Java对象内存布局和对象头"><a href="#Java对象内存布局和对象头" class="headerlink" title="Java对象内存布局和对象头"></a>Java对象内存布局和对象头</h1><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6dec6853a18f461190651864183c58f2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h1 id="Object-object-x3D-new-Object"><a href="#Object-object-x3D-new-Object" class="headerlink" title="Object object &#x3D; new Object()"></a>Object object &#x3D; new Object()</h1><blockquote>
 <p>谈谈你对这句话的理解？一般而言JDK8按照默认情况下，new一个对象占多少内存空间</p>
 </blockquote>
 <h2 id="位置所在"><a href="#位置所在" class="headerlink" title="位置所在"></a>位置所在</h2><p>在JVM堆里的新生区的伊甸园区（这些都是之前的基础知识了）</p>
 <h2 id="构成布局"><a href="#构成布局" class="headerlink" title="构成布局"></a>构成布局</h2><p>可以联想一下我们的HTML报文</p>
-<p><img src="https://img-blog.csdnimg.cn/45616a69fe914fd1bcbcc2851f99b96e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/45616a69fe914fd1bcbcc2851f99b96e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h1 id="对象在堆内存中布局"><a href="#对象在堆内存中布局" class="headerlink" title="对象在堆内存中布局"></a>对象在堆内存中布局</h1><h2 id="权威定义—周志明老师JVM第3版"><a href="#权威定义—周志明老师JVM第3版" class="headerlink" title="权威定义—周志明老师JVM第3版"></a>权威定义—周志明老师JVM第3版</h2><p>在HotSpot虚拟机里，对象在堆内存中的存储布局可以划分为三个部分：</p>
 <p><strong>对象头</strong></p>
 <p><strong>实例数据</strong></p>
-<p><strong>对齐填充</strong><br><img src="https://img-blog.csdnimg.cn/e671f63f33fa4f2a819e476760923933.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><strong>对齐填充</strong><br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e671f63f33fa4f2a819e476760923933.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="对象在堆内存中的存储布局"><a href="#对象在堆内存中的存储布局" class="headerlink" title="对象在堆内存中的存储布局"></a>对象在堆内存中的存储布局</h2><p>下面分别是 <strong>java对象</strong> 和<strong>数组</strong>（数组对象会多一个length），原理其实类似</p>
-<p><img src="https://img-blog.csdnimg.cn/a545ca804b27471abda1f3754f39a4c4.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a545ca804b27471abda1f3754f39a4c4.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="1-对象头"><a href="#1-对象头" class="headerlink" title="1.对象头"></a>1.对象头</h3><ul>
 <li><strong>对象头</strong>分为<strong>对象标记（markOpp）</strong>和 <strong>类元信息 (klassOop)</strong></li>
 <li><strong>类元信息</strong>存储的是指向该对象类元数据（klass）的首地址。</li>
@@ -400,12 +400,12 @@
 <ul>
 <li>刚刚几个问题都保存在<strong>对象标记</strong>里</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/dcf8d1a245584450b9f794c27989733b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h4 id="对象标记Mark-Word"><a href="#对象标记Mark-Word" class="headerlink" title="-对象标记Mark Word"></a>-对象标记Mark Word</h4><p><img src="https://img-blog.csdnimg.cn/ae14e1d0b8084b488fa94e6bf100892b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/dcf8d1a245584450b9f794c27989733b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="对象标记Mark-Word"><a href="#对象标记Mark-Word" class="headerlink" title="-对象标记Mark Word"></a>-对象标记Mark Word</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ae14e1d0b8084b488fa94e6bf100892b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>在64位系统中，MarkWord占了8个字节，类型指针占了8个字节，一共是16个字节</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/77ee6262c59948c884b060fe2b21c15e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/77ee6262c59948c884b060fe2b21c15e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>默认存储对象的HashCode、分代年龄和锁标志位等信息。这些信息都是与对象自身定这无关的数据，所以MarkWord被设计成一个非固定的数据结构以便在极小的空间内存存储尽量多的数据。它会根据对象的状态复用自己的存储空间，也就是说在运行期间MarkWord上存储的数据会随着锁标志位的变化而变化。</p>
 <h4 id="类元信息（又叫类型指针）Class-Pointer"><a href="#类元信息（又叫类型指针）Class-Pointer" class="headerlink" title="-类元信息（又叫类型指针）Class Pointer"></a>-类元信息（又叫类型指针）Class Pointer</h4><blockquote>
 <p>所谓的类元信息（类型指针）其实就可以说是<strong>模板</strong></p>
@@ -413,7 +413,7 @@
 <ul>
 <li>尚硅谷宋红康老师的图</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/2620f3a4dd4f4ad997b26ac1cf69cda9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/7f99ee2a97ef467bb3c50ecbc2e4bb2f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2620f3a4dd4f4ad997b26ac1cf69cda9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/7f99ee2a97ef467bb3c50ecbc2e4bb2f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的示例。</li>
 </ul>
@@ -422,40 +422,40 @@
 <li>在64位系统中，MarkWord占了8个字节，类型指针占了8个字节，一共是16个字节</li>
 </ul>
 <h3 id="2-实例数据"><a href="#2-实例数据" class="headerlink" title="2.实例数据"></a>2.实例数据</h3><p><strong>实例数据</strong>：存放类的属性（Field）信息，包括父类的属性信息</p>
-<p><img src="https://img-blog.csdnimg.cn/76d636f2fea440f884bee3efbb5ece73.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/76d636f2fea440f884bee3efbb5ece73.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="3-对齐填充"><a href="#3-对齐填充" class="headerlink" title="3.对齐填充"></a>3.对齐填充</h3><p>用来保证8字节的倍数</p>
 <p><strong>对齐填充</strong>：虚拟机要求对象起始地址必须是8字节的整数倍。填充数据不是必须存在的，仅仅是为了字节对齐这部分内存按8字节补充对齐。</p>
 <p>有个案例，对象头16+实例数据5+对齐填充3&#x3D;24字节</p>
-<p><img src="https://img-blog.csdnimg.cn/53df3f60fea84bb38e621b8ae53d3df3.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/53df3f60fea84bb38e621b8ae53d3df3.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="官网理论"><a href="#官网理论" class="headerlink" title="官网理论"></a>官网理论</h2><ul>
 <li>Hotspor术语表官网</li>
 </ul>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>openjdk.java.net<span class="hljs-regexp">/groups/</span>hotspot<span class="hljs-regexp">/docs/</span>HotSpotGlossary.html<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://img-blog.csdnimg.cn/15db6807c67141fd96c8e4c7ec37f877.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/15db6807c67141fd96c8e4c7ec37f877.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>底层源码理论证明</li>
 </ul>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>hg.openjdk.java.netjidlk8u<span class="hljs-regexp">/jdk8u/</span>hotspot<span class="hljs-regexp">/file/</span><span class="hljs-number">89</span>fb452b3688<span class="hljs-regexp">/src/</span>share<span class="hljs-regexp">/vm/</span>oops/oop.hpp<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://img-blog.csdnimg.cn/f3ab347de6754c06a3f9b04b0b498099.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f3ab347de6754c06a3f9b04b0b498099.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p><em>mark字段是mark word，</em> metadata是类指针klass pointer，<br>对象头（object header）即是由这两个字段组成，这些术语可以参考Hotspot术语表，</p>
-<p><img src="https://img-blog.csdnimg.cn/a2bac7af31214dcfa1ae7765ba21ba10.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h1 id="再说对象头的MarkWord"><a href="#再说对象头的MarkWord" class="headerlink" title="再说对象头的MarkWord"></a>再说对象头的MarkWord</h1><h2 id="32位（看一下即可，不用学了，以64位为准）"><a href="#32位（看一下即可，不用学了，以64位为准）" class="headerlink" title="32位（看一下即可，不用学了，以64位为准）"></a>32位（看一下即可，不用学了，以64位为准）</h2><p><img src="https://img-blog.csdnimg.cn/9ecd513abf624152959f547796f5daac.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h2 id="64位重要"><a href="#64位重要" class="headerlink" title="64位重要"></a>64位重要</h2><p><img src="https://img-blog.csdnimg.cn/8d382140f36147fa844ea2be86e7acde.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/26f34a826390476181a7ee1b23cecfe8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a2bac7af31214dcfa1ae7765ba21ba10.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h1 id="再说对象头的MarkWord"><a href="#再说对象头的MarkWord" class="headerlink" title="再说对象头的MarkWord"></a>再说对象头的MarkWord</h1><h2 id="32位（看一下即可，不用学了，以64位为准）"><a href="#32位（看一下即可，不用学了，以64位为准）" class="headerlink" title="32位（看一下即可，不用学了，以64位为准）"></a>32位（看一下即可，不用学了，以64位为准）</h2><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9ecd513abf624152959f547796f5daac.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="64位重要"><a href="#64位重要" class="headerlink" title="64位重要"></a>64位重要</h2><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/8d382140f36147fa844ea2be86e7acde.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/26f34a826390476181a7ee1b23cecfe8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>看看C中的源码</li>
 <li>oop.hpp</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/bded27c13ec842e6a3eef4632ed56dba.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/bded27c13ec842e6a3eef4632ed56dba.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>markOop.hpp</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/6f32712da339423bb33c6903043b7912.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6f32712da339423bb33c6903043b7912.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>hash：保存对象的哈希码<br>age： 保存对象的分代年龄<br>biased_lock： 偏向锁标识位<br>lock： 锁状态标识位<br>JavaThread* ：保存持有偏向锁的线程ID<br>epoch： 保存偏向时间戳</p>
 <h2 id="markword-64位-分布图"><a href="#markword-64位-分布图" class="headerlink" title="markword(64位)分布图"></a>markword(64位)分布图</h2><p>对象布局、GC回收和后面的锁升级就是对象标记MarkWord里面标志位的变化</p>
-<p><img src="https://img-blog.csdnimg.cn/a14a89fb850a48f2827593910a5af3e2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a14a89fb850a48f2827593910a5af3e2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h1 id="聊聊Object-obj-x3D-new-Object-【用代码演示】"><a href="#聊聊Object-obj-x3D-new-Object-【用代码演示】" class="headerlink" title="聊聊Object obj &#x3D; new Object()【用代码演示】"></a>聊聊Object obj &#x3D; new Object()【用代码演示】</h1><h2 id="JOL证明"><a href="#JOL证明" class="headerlink" title="JOL证明"></a>JOL证明</h2><p>JOL工具（Java Object Layout工具）-可以帮助分析对象在Java虚拟机中的大小和布局</p>
 <p><code>http://openjdk.java.net/projects/code-tools/joll</code>(网站已经失效了)</p>
 <p>但我们可以直接用<strong>依赖</strong>来实现这个功能</p>
@@ -463,43 +463,43 @@
 
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="演示一-用自带的类"><a href="#演示一-用自带的类" class="headerlink" title="演示一 | 用自带的类"></a>演示一 | 用自带的类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//第一个演示，16bytes演示</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo01</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Object</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();<span class="hljs-comment">//----------新建一个Object对象就是  16bytes</span><br>        System.out.println(ClassLayout.parseInstance(o).toPrintable());<br><span class="hljs-comment">//java.lang.Object object internals:</span><br><span class="hljs-comment">// OFFSET  SIZE   TYPE DESCRIPTION                               VALUE</span><br><span class="hljs-comment">//      0     4        (object header)                           01 00 00 00 (00000001 00000000 00000000 00000000) (1)</span><br><span class="hljs-comment">//      4     4        (object header)                           00 00 00 00 (00000000 00000000 00000000 00000000) (0)</span><br><span class="hljs-comment">//      8     4        (object header)                           e5 01 00 f8 (11100101 00000001 00000000 11111000) (-134217243)</span><br><span class="hljs-comment">//     12     4        (loss due to the next object alignment)</span><br><span class="hljs-comment">//Instance size: 16 bytes</span><br><span class="hljs-comment">//Space losses: 0 bytes internal + 4 bytes external = 4 bytes total</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://img-blog.csdnimg.cn/b14fe85dee3542fd809d39c9119068f1.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b14fe85dee3542fd809d39c9119068f1.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <blockquote>
 <p>这里丢下一个疑问，为什么类型指针是4字节？之前不都是说是8字节的吗？（因为压缩指针默认开启了，后面有讲）</p>
 </blockquote>
 <h3 id="演示二-用自己的类"><a href="#演示二-用自己的类" class="headerlink" title="演示二 | 用自己的类"></a>演示二 | 用自己的类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//只有对象头，没有实例数据,依然是16byte</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo01</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Customer</span> <span class="hljs-variable">c1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Customer</span>();<br>        System.out.println(ClassLayout.parseInstance(c1).toPrintable());<br><span class="hljs-comment">//com.zhang.java.Customer object internals:</span><br><span class="hljs-comment">// OFFSET  SIZE   TYPE DESCRIPTION                               VALUE</span><br><span class="hljs-comment">//      0     4        (object header)                           01 00 00 00 (00000001 00000000 00000000 00000000) (1)</span><br><span class="hljs-comment">//      4     4        (object header)                           00 00 00 00 (00000000 00000000 00000000 00000000) (0)</span><br><span class="hljs-comment">//      8     4        (object header)                           43 c1 00 f8 (01000011 11000001 00000000 11111000) (-134168253)</span><br><span class="hljs-comment">//     12     4        (loss due to the next object alignment)</span><br><span class="hljs-comment">//Instance size: 16 bytes</span><br><span class="hljs-comment">//Space losses: 0 bytes internal + 4 bytes external = 4 bytes total</span><br>    &#125;<br><br><br>&#125;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Customer</span>&#123;<br><br>&#125;<br><br><span class="hljs-comment">//有了对象头，且有实例数据(int+boolean)，它进行了对齐填充，到了24byte</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo01</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Customer</span> <span class="hljs-variable">c1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Customer</span>();<br>        System.out.println(ClassLayout.parseInstance(c1).toPrintable());<br><span class="hljs-comment">//com.zhang.java.Customer object internals:</span><br><span class="hljs-comment">// OFFSET  SIZE      TYPE DESCRIPTION                               VALUE</span><br><span class="hljs-comment">//      0     4           (object header)                           01 00 00 00 (00000001 00000000 00000000 00000000) (1)</span><br><span class="hljs-comment">//      4     4           (object header)                           00 00 00 00 (00000000 00000000 00000000 00000000) (0)</span><br><span class="hljs-comment">//      8     4           (object header)                           43 c1 00 f8 (01000011 11000001 00000000 11111000) (-134168253)</span><br><span class="hljs-comment">//     12     4       int Customer.id                               0</span><br><span class="hljs-comment">//     16     1   boolean Customer.flag                             false</span><br><span class="hljs-comment">//     17     7           (loss due to the next object alignment)</span><br><span class="hljs-comment">//Instance size: 24 bytes</span><br><span class="hljs-comment">//Space losses: 0 bytes internal + 7 bytes external = 7 bytes total</span><br>    &#125;<br><br><br>&#125;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Customer</span>&#123;<br>    <span class="hljs-type">int</span> id;<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2 id="GC年龄采用4位bit存储，最大位15，例如MaxTenuringThreshold参数默认值就是15"><a href="#GC年龄采用4位bit存储，最大位15，例如MaxTenuringThreshold参数默认值就是15" class="headerlink" title="GC年龄采用4位bit存储，最大位15，例如MaxTenuringThreshold参数默认值就是15"></a>GC年龄采用4位bit存储，最大位15，例如MaxTenuringThreshold参数默认值就是15</h2><ul>
-<li>对象分代年龄最大就是15<br><img src="https://img-blog.csdnimg.cn/c368292536aa46e3a51de4c6db6c88b2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>对象分代年龄最大就是15<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c368292536aa46e3a51de4c6db6c88b2.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
 </ul>
 <h3 id="如果想证明一下"><a href="#如果想证明一下" class="headerlink" title="如果想证明一下"></a>如果想证明一下</h3><ul>
 <li>我们假如想直接把分代最大年龄修改为16会直接报错。</li>
 </ul>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">-XX:<span class="hljs-attribute">MaxTenurningThreshold</span>=16<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://img-blog.csdnimg.cn/4690e91ab23643f198b4a1dab7d6d032.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/4690e91ab23643f198b4a1dab7d6d032.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="尾巴参数说明（压缩指针相关）"><a href="#尾巴参数说明（压缩指针相关）" class="headerlink" title="尾巴参数说明（压缩指针相关）"></a>尾巴参数说明（压缩指针相关）</h2><p><strong>压缩指针相关的命令</strong>（压缩指针是否开启对我们new一个对象是不是16字节的影响）</p>
 <h3 id="查看当前JVM运行参数的指令"><a href="#查看当前JVM运行参数的指令" class="headerlink" title="查看当前JVM运行参数的指令"></a>查看当前JVM运行参数的指令</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby">java -<span class="hljs-variable constant_">XX</span><span class="hljs-symbol">:+PrintCommandLineFlags</span> -version<br></code></pre></td></tr></table></figure>
 
 <h3 id="压缩指针默认是开启的"><a href="#压缩指针默认是开启的" class="headerlink" title="压缩指针默认是开启的"></a>压缩指针默认是开启的</h3><p>(这也就解释了为什么前面的类型指针是4个字节，节约了内存空间）</p>
-<p><img src="https://img-blog.csdnimg.cn/d9530c0b596540678d6cc97710129ebc.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/d9530c0b596540678d6cc97710129ebc.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="假如不压缩的情况？我们手动关闭压缩指针看看？"><a href="#假如不压缩的情况？我们手动关闭压缩指针看看？" class="headerlink" title="假如不压缩的情况？我们手动关闭压缩指针看看？"></a>假如不压缩的情况？我们手动关闭压缩指针看看？</h3><p>＋是开启，-就是关闭，所以指令是<code>-XX:-UseCompressedClassPointers</code></p>
-<p><img src="https://img-blog.csdnimg.cn/401ded1f99fd4e07bec8b8acfacabadd.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/fb4f7da2392a4c4cb6bd235cbd363eee.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/401ded1f99fd4e07bec8b8acfacabadd.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fb4f7da2392a4c4cb6bd235cbd363eee.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <blockquote>
 <p>也要注意，不管是否开启压缩指针，创建一个对象就是16字节的。（开启压缩指针后缺失的会由对齐填充补充）</p>
 </blockquote>
 <h1 id="换成其他对象试试"><a href="#换成其他对象试试" class="headerlink" title="换成其他对象试试"></a>换成其他对象试试</h1><ul>
-<li>同样的道理<br><img src="https://img-blog.csdnimg.cn/e9542129d6e840e989d7a9dfbc488371.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>同样的道理<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e9542129d6e840e989d7a9dfbc488371.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
 </ul>
 <h1 id="Synchronized与锁升级"><a href="#Synchronized与锁升级" class="headerlink" title="Synchronized与锁升级"></a>Synchronized与锁升级</h1><h1 id="先从阿里几其他大厂面试题说起"><a href="#先从阿里几其他大厂面试题说起" class="headerlink" title="先从阿里几其他大厂面试题说起"></a>先从阿里几其他大厂面试题说起</h1><ul>
 <li>谈谈你对Synchronized的理解</li>
 <li>请你聊聊Synchronized的锁升级</li>
 <li>同学的反馈</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/a06a04184bba439ebdab392288c75051.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a06a04184bba439ebdab392288c75051.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
 <li><p>阿里巴巴规范：加锁的代码块工作量尽可能小，不要一竹竿打死</p>
-<p><img src="https://img-blog.csdnimg.cn/3dd2e69b76d44992a69af41e533e1892.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/3dd2e69b76d44992a69af41e533e1892.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 </li>
 <li><p>synchronized锁优化的背景</p>
 <p>用锁能够实现数据的安全性，但是会带来性能下降。</p>
@@ -510,44 +510,44 @@
 <p>无锁-偏向锁-轻量级锁-重量级锁</p>
 </li>
 </ul>
-<h2 id="synchronized锁：由对象头重的Mark-Word根据锁标志位的不同而被复用及锁升级策略"><a href="#synchronized锁：由对象头重的Mark-Word根据锁标志位的不同而被复用及锁升级策略" class="headerlink" title="synchronized锁：由对象头重的Mark Word根据锁标志位的不同而被复用及锁升级策略"></a>synchronized锁：由对象头重的Mark Word根据锁标志位的不同而被复用及锁升级策略</h2><p><img src="https://img-blog.csdnimg.cn/ace499e78fb24a13a9547e44529d509b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h1 id="Synchronized的性能变化"><a href="#Synchronized的性能变化" class="headerlink" title="Synchronized的性能变化"></a>Synchronized的性能变化</h1><h2 id="java5以前，只有Synchronized，这个是操作系统级别的重量级操作"><a href="#java5以前，只有Synchronized，这个是操作系统级别的重量级操作" class="headerlink" title="java5以前，只有Synchronized，这个是操作系统级别的重量级操作"></a>java5以前，只有Synchronized，这个是操作系统级别的重量级操作</h2><h3 id="重量级锁，假如锁的竞争比较激烈的话，性能下降"><a href="#重量级锁，假如锁的竞争比较激烈的话，性能下降" class="headerlink" title="重量级锁，假如锁的竞争比较激烈的话，性能下降"></a>重量级锁，假如锁的竞争比较激烈的话，性能下降</h3><h3 id="Java5之前，用户态和内核态之间的切换"><a href="#Java5之前，用户态和内核态之间的切换" class="headerlink" title="Java5之前，用户态和内核态之间的切换"></a>Java5之前，用户态和内核态之间的切换</h3><p><img src="https://img-blog.csdnimg.cn/2c0d6de7937c4fc1b48019f5639a77a5.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="synchronized锁：由对象头重的Mark-Word根据锁标志位的不同而被复用及锁升级策略"><a href="#synchronized锁：由对象头重的Mark-Word根据锁标志位的不同而被复用及锁升级策略" class="headerlink" title="synchronized锁：由对象头重的Mark Word根据锁标志位的不同而被复用及锁升级策略"></a>synchronized锁：由对象头重的Mark Word根据锁标志位的不同而被复用及锁升级策略</h2><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ace499e78fb24a13a9547e44529d509b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h1 id="Synchronized的性能变化"><a href="#Synchronized的性能变化" class="headerlink" title="Synchronized的性能变化"></a>Synchronized的性能变化</h1><h2 id="java5以前，只有Synchronized，这个是操作系统级别的重量级操作"><a href="#java5以前，只有Synchronized，这个是操作系统级别的重量级操作" class="headerlink" title="java5以前，只有Synchronized，这个是操作系统级别的重量级操作"></a>java5以前，只有Synchronized，这个是操作系统级别的重量级操作</h2><h3 id="重量级锁，假如锁的竞争比较激烈的话，性能下降"><a href="#重量级锁，假如锁的竞争比较激烈的话，性能下降" class="headerlink" title="重量级锁，假如锁的竞争比较激烈的话，性能下降"></a>重量级锁，假如锁的竞争比较激烈的话，性能下降</h3><h3 id="Java5之前，用户态和内核态之间的切换"><a href="#Java5之前，用户态和内核态之间的切换" class="headerlink" title="Java5之前，用户态和内核态之间的切换"></a>Java5之前，用户态和内核态之间的切换</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2c0d6de7937c4fc1b48019f5639a77a5.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>(我们写一个new Thread().start()的话是调用了底层的native方法的）</p>
 <ul>
 <li>java的线程是映射到操作系统原生线程之上的，如果要阻塞或唤醒一个线程就需要<strong>操作系统介入</strong>，需要在户态与核心态之间切换，这种切换会消耗大量的系统资源，因为用户态与内核态都有各自专用的内存空间，专用的寄存器等，用户态切换至内核态需要传递给许多变量、参数给内核，内核也需要保护好用户态在切换时的一些寄存器值、变量等，以便内核态调用结束后切换回用户态继续工作。</li>
 <li>在Java早期版本中，<strong>synchronized属于重量级锁，效率低下，因为监视器锁（monitor）是依赖于底层的操作系统的</strong>***<em><strong>来实现的</strong>，挂起线程和恢复线程都需要转入内核态去完成，阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态切换需要耗费处理器时间，如果同步代码块中内容过于简单，这种切换的时间可能比用户代码执行的时间还长”，时间成本相对较高，这也是为什么早期的synchronized效率低的原因Java 6之后，为了减少获得锁和释放锁所带来的性能消耗，</em>*引入了轻量级锁和偏向锁</li>
 </ul>
 <p>（一句话就是尽量减少用户态和内核态的切换）</p>
-<h2 id="为什么每一个对象都可以成为一个锁-复习之前的知识"><a href="#为什么每一个对象都可以成为一个锁-复习之前的知识" class="headerlink" title="为什么每一个对象都可以成为一个锁-复习之前的知识"></a>为什么每一个对象都可以成为一个锁-复习之前的知识</h2><h3 id="markOop-hpp"><a href="#markOop-hpp" class="headerlink" title="markOop.hpp"></a>markOop.hpp</h3><p><img src="https://img-blog.csdnimg.cn/3cda3093bd464bd2aab95eb765cc23ac.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h3 id="Monitor-监视器锁"><a href="#Monitor-监视器锁" class="headerlink" title="Monitor(监视器锁)"></a>Monitor(监视器锁)</h3><p><img src="https://img-blog.csdnimg.cn/c2db742ec4d147f680fcc14d246a12e6.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="为什么每一个对象都可以成为一个锁-复习之前的知识"><a href="#为什么每一个对象都可以成为一个锁-复习之前的知识" class="headerlink" title="为什么每一个对象都可以成为一个锁-复习之前的知识"></a>为什么每一个对象都可以成为一个锁-复习之前的知识</h2><h3 id="markOop-hpp"><a href="#markOop-hpp" class="headerlink" title="markOop.hpp"></a>markOop.hpp</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/3cda3093bd464bd2aab95eb765cc23ac.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="Monitor-监视器锁"><a href="#Monitor-监视器锁" class="headerlink" title="Monitor(监视器锁)"></a>Monitor(监视器锁)</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c2db742ec4d147f680fcc14d246a12e6.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>（我<strong>自己总结</strong>下，我们说在java中每个对象都可以成为一把锁，因为在JVM中每个对象都一个monitor(监视器锁)。对应到C底层叫做Object Monitor，并用c定义了很多信息。再往下到操作系统中是基于Mutex Lock互斥锁实现，涉及到了用户态和内核态的切换，所以非常耗费资源</p>
 <h3 id="结合之前的synchronized和对象头说明"><a href="#结合之前的synchronized和对象头说明" class="headerlink" title="结合之前的synchronized和对象头说明"></a>结合之前的synchronized和对象头说明</h3><ul>
-<li>主要就是MarkWord中是什么代码表示了他是什么<strong>锁状态</strong><br><img src="https://img-blog.csdnimg.cn/2d5b99b129c842ac8c25a3a90ebacc8a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>主要就是MarkWord中是什么代码表示了他是什么<strong>锁状态</strong><br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2d5b99b129c842ac8c25a3a90ebacc8a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
 </ul>
 <h2 id="java6开始，优化Synchronized"><a href="#java6开始，优化Synchronized" class="headerlink" title="java6开始，优化Synchronized"></a>java6开始，优化Synchronized</h2><ul>
 <li>Java6之后，为了减少获得锁和释放锁所带来的性能消耗，引入了轻量级锁和偏向锁</li>
 <li>需要有个逐步升级的过程，别一开始就捅到重量级锁</li>
 </ul>
 <h1 id="Synchronized锁种类及升级步骤"><a href="#Synchronized锁种类及升级步骤" class="headerlink" title="Synchronized锁种类及升级步骤"></a>Synchronized锁种类及升级步骤</h1><h2 id="多线程访问情况，3种"><a href="#多线程访问情况，3种" class="headerlink" title="多线程访问情况，3种"></a>多线程访问情况，3种</h2><h3 id="只有一个线程来访问，有且唯一Only-One"><a href="#只有一个线程来访问，有且唯一Only-One" class="headerlink" title="只有一个线程来访问，有且唯一Only One"></a>只有一个线程来访问，有且唯一Only One</h3><h3 id="有多个线程（2个线程A、B来交替访问）"><a href="#有多个线程（2个线程A、B来交替访问）" class="headerlink" title="有多个线程（2个线程A、B来交替访问）"></a>有多个线程（2个线程A、B来交替访问）</h3><h3 id="竞争激烈，更多个线程来访问"><a href="#竞争激烈，更多个线程来访问" class="headerlink" title="竞争激烈，更多个线程来访问"></a>竞争激烈，更多个线程来访问</h3><h2 id="升级流程"><a href="#升级流程" class="headerlink" title="升级流程"></a>升级流程</h2><h3 id="synchronized用的锁是存在Java对象头里的Mark-Word中，锁升级功能主要依赖MarkWord中锁标志位和释放偏向锁标志位"><a href="#synchronized用的锁是存在Java对象头里的Mark-Word中，锁升级功能主要依赖MarkWord中锁标志位和释放偏向锁标志位" class="headerlink" title="synchronized用的锁是存在Java对象头里的Mark Word中，锁升级功能主要依赖MarkWord中锁标志位和释放偏向锁标志位"></a>synchronized用的锁是存在Java对象头里的Mark Word中，锁升级功能主要依赖MarkWord中锁标志位和释放偏向锁标志位</h3><h3 id="64位标记图再看看"><a href="#64位标记图再看看" class="headerlink" title="64位标记图再看看"></a>64位标记图再看看</h3><ul>
-<li>重点关注【偏向锁位】和【锁标志位】<br><img src="https://img-blog.csdnimg.cn/ee00dd5cf746442e96ff7a1577d5de2a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>重点关注【偏向锁位】和【锁标志位】<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ee00dd5cf746442e96ff7a1577d5de2a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
 </ul>
 <h3 id="锁指向，请牢记"><a href="#锁指向，请牢记" class="headerlink" title="锁指向，请牢记"></a>锁指向，请牢记</h3><ul>
 <li>偏向锁：MarkWord存储的是<strong>偏向的线程ID</strong>；</li>
 <li>轻量锁：MarkWord存储的是<strong>指向线程栈中Lock Record的指针</strong>；</li>
 <li>重量锁：MarkWord存储的是<strong>指向堆中的monitor对象的指针</strong>；</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/6eccd9a620f34370b2f4ca1a3840d4e0.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6eccd9a620f34370b2f4ca1a3840d4e0.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h2><h3 id="复习C源码的MarkWord标记"><a href="#复习C源码的MarkWord标记" class="headerlink" title="复习C源码的MarkWord标记"></a>复习C源码的MarkWord标记</h3><ul>
 <li>和上面是对应的</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/e0ddd9d4cd724182b62ee66450c0eca8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h3 id="Code演示"><a href="#Code演示" class="headerlink" title="Code演示"></a>Code演示</h3><p><img src="https://img-blog.csdnimg.cn/23f67d623e124ae99b08dc6a7ef9ff24.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e0ddd9d4cd724182b62ee66450c0eca8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="Code演示"><a href="#Code演示" class="headerlink" title="Code演示"></a>Code演示</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/23f67d623e124ae99b08dc6a7ef9ff24.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>注1：整体从右下角往左上角看，但是每8位都是从左往右看</li>
 <li>注2：这个HashCode调用了才有，不然就是0000…</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/2e6f493eaba04be3ba4d194bacba3224.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h3 id="程序不会有锁的竞争"><a href="#程序不会有锁的竞争" class="headerlink" title="程序不会有锁的竞争"></a>程序不会有锁的竞争</h3><p><img src="https://img-blog.csdnimg.cn/5f456ce423e14bd4a0cfa83a6e223133.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2e6f493eaba04be3ba4d194bacba3224.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="程序不会有锁的竞争"><a href="#程序不会有锁的竞争" class="headerlink" title="程序不会有锁的竞争"></a>程序不会有锁的竞争</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5f456ce423e14bd4a0cfa83a6e223133.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="偏锁"><a href="#偏锁" class="headerlink" title="偏锁"></a>偏锁</h2><h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p><strong>偏向锁****：单线程竞争</strong></p>
 <p>当线程A第一次竞争到锁时，通过修改Mark Word中的偏向ID、偏向模式。如果不存在其他线程竞争，那么持有偏向锁的线程将永远不需要进行同步。</p>
 <h3 id="主要作用"><a href="#主要作用" class="headerlink" title="主要作用"></a>主要作用</h3><ul>
@@ -558,13 +558,13 @@
 <li>举个例子，同一个老顾客来访，直接老规矩行方便</li>
 <li>看看多线程卖票，同一个线程获得体会一下（表面上又三个线程在竞争，但实际上呈现aaaa bbbb cccccc 这样的特性，大部分情况下都是一个线程获得票）</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/e793b86d132544a79e9f5079bc384c4e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e793b86d132544a79e9f5079bc384c4e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="小结论"><a href="#小结论" class="headerlink" title="小结论"></a>小结论</h4><p>Hotspot 的作者经过研究发现，大多数情况下：</p>
 <p>多线程的情况下，锁不仅不存在多线程竞争，还存在锁由<strong>同一个线程多次获得的情况，</strong></p>
 <p><strong>偏向锁</strong>就是在这种情况下出现的，它的出现是为了解决<strong>只有在一个线程执行同步时提高性能</strong>。</p>
 <p><strong>备注：</strong></p>
 <p>偏向锁会偏向于第一个访问锁的线程，如果在接下来的运行过程中，该锁没有被其他的线程访问，则持有偏向锁的线程将永远不需要触发同步。也即偏向锁在资源没有竞争情况下消除了同步语句，懒的连CAS操作都不做了，直接提高程序性能</p>
-<h3 id="64位标记图"><a href="#64位标记图" class="headerlink" title="64位标记图"></a>64位标记图</h3><p><img src="https://img-blog.csdnimg.cn/c9a0bfebceba4a2a9b0ba3b987155f0f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="64位标记图"><a href="#64位标记图" class="headerlink" title="64位标记图"></a>64位标记图</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c9a0bfebceba4a2a9b0ba3b987155f0f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="偏向锁的持有"><a href="#偏向锁的持有" class="headerlink" title="偏向锁的持有"></a>偏向锁的持有</h3><h4 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h4><p><strong>理论落地：</strong></p>
 <p>在实际应用运行过程中发现，“锁总是同一个线程持有，很少发生竞争”，也就是说<strong>锁总是被第一个占用他的线程拥有，这个线程就是锁的偏向线程</strong>。</p>
 <p>那么只需要在锁第一次被拥有的时候，记录下偏向线程ID。这样偏向线程就一直持有着锁(后续这个线程进入和退出这段加了同步锁的代码块时，<strong>不需要再次加锁和释放锁</strong>。而是直接会去检查锁的MarkWord里面是不是放的自己的线程ID)。</p>
@@ -574,31 +574,31 @@
 <p><strong>竞争失败</strong>，这时候可能需要升级变为轻量级锁，才能保证线程间公平竞争锁。</p>
 <p><strong>注意，偏向锁只有遇到其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁，线程是不会主动释放偏向锁的。技术实现：</strong></p>
 <p>一个synchronized方法被一个线程抢到了锁时，那这个方法所在的对象就会在其所在的Mark Word中将偏向锁修改状态位，同时还会占用前54位来存储县城指针作为标识。若该线程再次访问同一个synchronized方法时，该线程只需要去对象头的Mark Word中去判断一下是否有偏向锁指向本身的ID，无需再进入Monitor去竞争对象了</p>
-<p><img src="https://img-blog.csdnimg.cn/fe8e727e6dee47f6beb60c28d3106cfe.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h4 id="细化Account对象举例说明"><a href="#细化Account对象举例说明" class="headerlink" title="细化Account对象举例说明"></a>细化Account对象举例说明</h4><p><strong>结论</strong>：JVM不用和操作系统协商设置Mutex（争取内核），它只需要记录下县城ID就标识自己获得了当前锁，不用操作系统接入。<br><img src="https://img-blog.csdnimg.cn/5137e71643794d519bf889a8ea47f99c.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fe8e727e6dee47f6beb60c28d3106cfe.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="细化Account对象举例说明"><a href="#细化Account对象举例说明" class="headerlink" title="细化Account对象举例说明"></a>细化Account对象举例说明</h4><p><strong>结论</strong>：JVM不用和操作系统协商设置Mutex（争取内核），它只需要记录下县城ID就标识自己获得了当前锁，不用操作系统接入。<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5137e71643794d519bf889a8ea47f99c.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="偏向锁JVM命令"><a href="#偏向锁JVM命令" class="headerlink" title="偏向锁JVM命令"></a>偏向锁JVM命令</h3><h4 id="java-XX-PrintFlagsInitial-grep-BiasedLock"><a href="#java-XX-PrintFlagsInitial-grep-BiasedLock" class="headerlink" title="java -XX:+PrintFlagsInitial |grep BiasedLock"></a>java -XX:+PrintFlagsInitial |grep BiasedLock</h4><ul>
 <li>偏向锁存在且默认开启（图片里最后一行的false），并且有4s延迟（图片里的4000）</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/fee2a2a1c2a44d4783cc38352f8d3e7e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/fee2a2a1c2a44d4783cc38352f8d3e7e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="重要参数说明"><a href="#重要参数说明" class="headerlink" title="重要参数说明"></a>重要参数说明</h4><ul>
 <li>关于如何开启偏向锁（延迟设置为0即可）和关闭偏向锁</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">实际上偏向锁在JDK1<span class="hljs-number">.6</span>之后是款认开启的，但是启动时间有延迟，<br>所以需要添加参数-XX:BiasedLockingStartupDelay=<span class="hljs-number">0</span>，让其在程序启动时立刻启动。<br><br>开启偏向锁：<br>-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=<span class="hljs-number">0</span><br><br>关闭偏向锁：关闭之后程序默认会直接进入 -----------------------&gt;&gt;&gt;&gt;&gt;&gt;&gt; 轻量级锁状态<br>-XX:-UseBiasedLocking<br></code></pre></td></tr></table></figure>
 
 <h3 id="Code演示-通过将延迟改为0来开启偏向锁"><a href="#Code演示-通过将延迟改为0来开启偏向锁" class="headerlink" title="Code演示-通过将延迟改为0来开启偏向锁"></a>Code演示-通过将延迟改为0来开启偏向锁</h3><h4 id="一切默认"><a href="#一切默认" class="headerlink" title="一切默认"></a>一切默认</h4><ul>
-<li>演示无效果，偏向锁本应该是101，000是轻量级锁（无效是因为有4s延迟，程序直接变成了轻量级锁）<br><img src="https://img-blog.csdnimg.cn/9aefeb4614e7432d8d35984497e70702.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>演示无效果，偏向锁本应该是101，000是轻量级锁（无效是因为有4s延迟，程序直接变成了轻量级锁）<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9aefeb4614e7432d8d35984497e70702.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
 </ul>
-<h4 id="因为参数系统默认开启"><a href="#因为参数系统默认开启" class="headerlink" title="因为参数系统默认开启"></a>因为参数系统默认开启</h4><p><img src="https://img-blog.csdnimg.cn/7586e480966c4265add78ac347e19a12.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h4 id="关闭延迟参数，启用该功能"><a href="#关闭延迟参数，启用该功能" class="headerlink" title="关闭延迟参数，启用该功能"></a>关闭延迟参数，启用该功能</h4><p><img src="https://img-blog.csdnimg.cn/2326cc673efb4bf99f890cff224763ab.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/df67dda673c94056a69e40acd864a21a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h3 id="Code演示2-主动迎合这4秒的延迟"><a href="#Code演示2-主动迎合这4秒的延迟" class="headerlink" title="Code演示2-主动迎合这4秒的延迟"></a>Code演示2-主动迎合这4秒的延迟</h3><h4 id="主动迎合4秒的延迟"><a href="#主动迎合4秒的延迟" class="headerlink" title="主动迎合4秒的延迟"></a>主动迎合4秒的延迟</h4><p><img src="https://img-blog.csdnimg.cn/b1db9b39ebd54afe9433436c4cc19d72.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="因为参数系统默认开启"><a href="#因为参数系统默认开启" class="headerlink" title="因为参数系统默认开启"></a>因为参数系统默认开启</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/7586e480966c4265add78ac347e19a12.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="关闭延迟参数，启用该功能"><a href="#关闭延迟参数，启用该功能" class="headerlink" title="关闭延迟参数，启用该功能"></a>关闭延迟参数，启用该功能</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2326cc673efb4bf99f890cff224763ab.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/df67dda673c94056a69e40acd864a21a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="Code演示2-主动迎合这4秒的延迟"><a href="#Code演示2-主动迎合这4秒的延迟" class="headerlink" title="Code演示2-主动迎合这4秒的延迟"></a>Code演示2-主动迎合这4秒的延迟</h3><h4 id="主动迎合4秒的延迟"><a href="#主动迎合4秒的延迟" class="headerlink" title="主动迎合4秒的延迟"></a>主动迎合4秒的延迟</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b1db9b39ebd54afe9433436c4cc19d72.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="第一种情况-没用synchronized"><a href="#第一种情况-没用synchronized" class="headerlink" title="第一种情况-没用synchronized"></a>第一种情况-没用synchronized</h4><ul>
 <li>确实开启了偏向锁101，但是o对象未采用synchronized加锁，所以线程id是空的</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/36a288923c7a4016ab489c72f2afd6e8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/36a288923c7a4016ab489c72f2afd6e8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="第二种情况-用synchronized"><a href="#第二种情况-用synchronized" class="headerlink" title="第二种情况- 用synchronized"></a>第二种情况- 用synchronized</h4><ul>
 <li>使用synchronized锁住o之后，发现这五十四位指向了当前线程指针</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/1f2c384c1b4e459cad7bb5160d43cd9f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/1f2c384c1b4e459cad7bb5160d43cd9f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="好日子终会到头"><a href="#好日子终会到头" class="headerlink" title="好日子终会到头"></a>好日子终会到头</h3><ul>
 <li>开始有第二个线程来竞争了</li>
 </ul>
@@ -610,40 +610,40 @@
 <p>撇销需要等待<strong>全局安全点</strong>(该时间点上没有字节码正在执行)，同时检查持有偏向锁的线程是否还在执行：</p>
 <p><strong>①</strong> 第一个线程<code>正在执行synchronized方法(处于同步块)</code>，它还没有执行完，其它线程来抢夺，该偏向锁会被取消掉并出现<strong>锁升级</strong>。此时轻量级锁由<strong>原持有偏向锁的线程持有</strong>，继续执行其同步代码，而正在竞争的线程会进入自旋等待获得该轻量级锁。</p>
 <p><strong>②</strong>第一个线程<code>执行完成synchronized方法(退出同步块)</code>，则将对象头<strong>设置成无锁状态并撤销偏向锁</strong>，<strong>重新偏向</strong>。</p>
-<p><img src="https://img-blog.csdnimg.cn/5a0f8f7fee5c4b80b1a0ab1146350825.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/5a0f8f7fee5c4b80b1a0ab1146350825.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="总体步骤流程图示"><a href="#总体步骤流程图示" class="headerlink" title="总体步骤流程图示"></a>总体步骤流程图示</h3><ul>
 <li>单看这张图其实挺懵的，但是看了上面老师的讲解之后豁然开朗</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/c078b75e982d424081bb72c5001d04d9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c078b75e982d424081bb72c5001d04d9.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="java15逐步废弃偏向锁"><a href="#java15逐步废弃偏向锁" class="headerlink" title="java15逐步废弃偏向锁"></a>java15逐步废弃偏向锁</h3><h2 id="轻锁"><a href="#轻锁" class="headerlink" title="轻锁"></a>轻锁</h2><p><strong>轻量级锁</strong>：多线程竞争，但是<strong>任意时刻最多只有一个线程竞争</strong>，即不存在锁竞争太过激烈的情况，也就没有线程阻寨</p>
 <h3 id="主要作用-1"><a href="#主要作用-1" class="headerlink" title="主要作用"></a>主要作用</h3><ul>
 <li>有线程来参与锁的竞争，但是获取锁的冲突时间极短</li>
 <li>本质就是自选锁CAS</li>
 </ul>
-<h3 id="64位标记图再看"><a href="#64位标记图再看" class="headerlink" title="64位标记图再看"></a>64位标记图再看</h3><p><img src="https://img-blog.csdnimg.cn/31b417d60922451ca5a5a471e3badeb8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="64位标记图再看"><a href="#64位标记图再看" class="headerlink" title="64位标记图再看"></a>64位标记图再看</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/31b417d60922451ca5a5a471e3badeb8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="轻量级锁的获取"><a href="#轻量级锁的获取" class="headerlink" title="轻量级锁的获取"></a>轻量级锁的获取</h3><p>轻量级锁是为了在线程<strong>近乎交替</strong>执行同步块时提高性能。</p>
 <p>主要目的：在没有多线程竞争的前提下，通过CAS减少重量级锁使用操作系统互斥量产生的性能消耗．说白了先自旋，不行才升级阻寨。</p>
 <p>升级时机：当关闭偏向锁功能或多线程竞争偏向锁会导致偏向锁升级为轻量级锁</p>
 <p>假如线程A己经拿到锁，这时线程B又来抢该对象的锁，由于该对象的锁己经被线程A拿到，当前该锁己是偏向锁了。</p>
 <p>而线程B在争抢时发现对象头Mark Ward中的线程ID不是线程B自己的线程1D(而是线程A)，那线程B就会进行<code>CAS</code>操作希望能获得锁。<strong>此吋线程B操作中有两种情况：</strong></p>
 <p><strong>如果锁获取成功</strong>，直接替换Mark Word中的线程1D为B自己的1D(A—B)．重新偏向于其他线程(即将偏向锁交给其他线程，相当于当前线程”被”释放了锁)，该锁会保持偏向锁状态，A线程Over，B线程上位：</p>
-<p><img src="https://img-blog.csdnimg.cn/48c603c3b8154a08945e30a2ce2d094e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/48c603c3b8154a08945e30a2ce2d094e.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p><strong>如果锁获取失败</strong>，则偏向锁升级为轻量级锁(设置偏向锁标识为0并设置锁标志位为00)，此时轻量级锁由原持有偏向锁的线程持有，继续执行其同步代码，而正在竞争的线程B会进入自旋等待获得该轻量级锁。</p>
-<p><img src="https://img-blog.csdnimg.cn/cc6e7ab5801e490ca7908056ed8fc907.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/cc6e7ab5801e490ca7908056ed8fc907.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h4><p><strong>轻量级锁的加锁</strong></p>
 <p>JVM会为每个线程在当前线程的栈帧中<strong>创建用于存储锁记录的空间</strong>，官方成为<code>Displaced Mark Word</code>。若一个线程获得锁时发现是轻量级锁，会把锁的MarkWord复制到自己的Displaced Mark Word里面。然后线程尝试用CAS将锁的MarkWord替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示Mark Word已经被替换成了其他线程的锁记录，说明在与其它线程竞争锁，当前线程就尝试使用自旋来获取锁。</p>
 <p>自旋CAS：不断尝试去获取锁，能不升级就不往上捅，尽量不要阻寨</p>
 <p><strong>轻量级锁的释放</strong></p>
 <p>在释放锁时，当前线程会使用CAS操作将Displaced Mark Word的内容复制回锁的Mark Word里面。如果没有发生竞争，那么这个复制的操作会成功。如果有其他线程因为自旋多次导致轻量级锁升级成了重量级锁，那么CAS操作会失败，此时会释放锁并唤醒被阻寨的线程。</p>
-<h3 id="Code演示-1"><a href="#Code演示-1" class="headerlink" title="Code演示"></a>Code演示</h3><h4 id="如果关闭偏向锁，就可以直接进入轻量级锁"><a href="#如果关闭偏向锁，就可以直接进入轻量级锁" class="headerlink" title="如果关闭偏向锁，就可以直接进入轻量级锁"></a>如果关闭偏向锁，就可以直接进入轻量级锁</h4><h4 id="XX-UseBiasedLocking"><a href="#XX-UseBiasedLocking" class="headerlink" title="-XX:-UseBiasedLocking"></a>-XX:-UseBiasedLocking</h4><p><img src="https://img-blog.csdnimg.cn/6a1c95588e55448b9f2e3fd4bd63151f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="Code演示-1"><a href="#Code演示-1" class="headerlink" title="Code演示"></a>Code演示</h3><h4 id="如果关闭偏向锁，就可以直接进入轻量级锁"><a href="#如果关闭偏向锁，就可以直接进入轻量级锁" class="headerlink" title="如果关闭偏向锁，就可以直接进入轻量级锁"></a>如果关闭偏向锁，就可以直接进入轻量级锁</h4><h4 id="XX-UseBiasedLocking"><a href="#XX-UseBiasedLocking" class="headerlink" title="-XX:-UseBiasedLocking"></a>-XX:-UseBiasedLocking</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6a1c95588e55448b9f2e3fd4bd63151f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="步骤流程图示"><a href="#步骤流程图示" class="headerlink" title="步骤流程图示"></a>步骤流程图示</h3><ul>
 <li>轻量级锁状态下，CAS自旋达到一定次数也会<strong>升级为重量级锁</strong></li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/768b0bb1585a413e949da162ba4e69dd.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/768b0bb1585a413e949da162ba4e69dd.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="自旋达到一定次数和程度"><a href="#自旋达到一定次数和程度" class="headerlink" title="自旋达到一定次数和程度"></a>自旋达到一定次数和程度</h3><h4 id="java6之前"><a href="#java6之前" class="headerlink" title="java6之前"></a>java6之前</h4><ul>
 <li>了解即可</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/019bb3b645bb406a89f7469cab952f07.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/019bb3b645bb406a89f7469cab952f07.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="java6之后"><a href="#java6之后" class="headerlink" title="java6之后"></a>java6之后</h4><p>【<strong>自适应自选锁</strong>】的大致原理</p>
 <p>线程如果自旋成功了，那下次自旋的最大次数会增加，因为JVM认为既然上次成功了，那么这一次也很大概率会成功。</p>
 <p>反之</p>
@@ -655,13 +655,13 @@
 <li>争夺轻量级锁失败时，自旋尝试抢占锁</li>
 <li>轻量级锁每次退出同步块都需要释放锁，而偏向锁是在竞争发生时才释放锁</li>
 </ul>
-<h2 id="重锁"><a href="#重锁" class="headerlink" title="重锁"></a>重锁</h2><h3 id="有大量的线程参与锁的竞争，冲突性很高"><a href="#有大量的线程参与锁的竞争，冲突性很高" class="headerlink" title="有大量的线程参与锁的竞争，冲突性很高"></a>有大量的线程参与锁的竞争，冲突性很高</h3><p><img src="https://img-blog.csdnimg.cn/896a934c809740a68c5e18ec7374f100.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="重锁"><a href="#重锁" class="headerlink" title="重锁"></a>重锁</h2><h3 id="有大量的线程参与锁的竞争，冲突性很高"><a href="#有大量的线程参与锁的竞争，冲突性很高" class="headerlink" title="有大量的线程参与锁的竞争，冲突性很高"></a>有大量的线程参与锁的竞争，冲突性很高</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/896a934c809740a68c5e18ec7374f100.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h3 id="锁标志位"><a href="#锁标志位" class="headerlink" title="锁标志位"></a>锁标志位</h3><h4 id="重量级锁原理"><a href="#重量级锁原理" class="headerlink" title="重量级锁原理"></a>重量级锁原理</h4><p>Java中synchronized的重量级锁，是基于进入和退出Monitor对象实现的。在编译时会将同步块的开始位置插入<code>monitor enter</code>指令，在结束位置插入<code>monitor exit</code>指令。</p>
 <p>当线程执行到monitor enter指令时，会尝试获取对象所对应的Monitor所有权，如果获取到了，即获取到了锁，会在Monitor的owner中存放当前线程的id，这样它将处于锁定状态，除非退出同步块，否则其他线程无法获取到这个Monitor。</p>
-<h3 id="Code演示-2"><a href="#Code演示-2" class="headerlink" title="Code演示"></a>Code演示</h3><p><img src="https://img-blog.csdnimg.cn/dd2950cee7514ab1b79927cd8ae8cbd7.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h2 id="小总结-面试中的高频考点"><a href="#小总结-面试中的高频考点" class="headerlink" title="小总结-面试中的高频考点"></a>小总结-面试中的高频考点</h2><h3 id="锁升级发生后，hashcode去哪啦"><a href="#锁升级发生后，hashcode去哪啦" class="headerlink" title="锁升级发生后，hashcode去哪啦"></a>锁升级发生后，hashcode去哪啦</h3><p><img src="https://img-blog.csdnimg.cn/b1f38e7d992149f7b4a99142a172c426.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="Code演示-2"><a href="#Code演示-2" class="headerlink" title="Code演示"></a>Code演示</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/dd2950cee7514ab1b79927cd8ae8cbd7.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h2 id="小总结-面试中的高频考点"><a href="#小总结-面试中的高频考点" class="headerlink" title="小总结-面试中的高频考点"></a>小总结-面试中的高频考点</h2><h3 id="锁升级发生后，hashcode去哪啦"><a href="#锁升级发生后，hashcode去哪啦" class="headerlink" title="锁升级发生后，hashcode去哪啦"></a>锁升级发生后，hashcode去哪啦</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/b1f38e7d992149f7b4a99142a172c426.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h4><p>锁升级为轻量级或重量级锁后，Mark Word中保存的分别是线程栈帧里的锁记录指针和重量级锁指针，己经没有位置再保存哈希码，GC年龄了，那么这些信息被移动到哪里去了呢？</p>
-<p><img src="https://img-blog.csdnimg.cn/274f22fcea7845af9371be3cfb7b2d1a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/274f22fcea7845af9371be3cfb7b2d1a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <ul>
 <li>用更加通俗的话解释（四种锁的不同情况）</li>
 </ul>
@@ -672,13 +672,13 @@
 <h4 id="code01"><a href="#code01" class="headerlink" title="code01"></a>code01</h4><ul>
 <li>当一个对象已经计算过identity hash code，它就无法进入偏向锁状态，跳过偏向锁，直接升级轻量级锁</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/9386f22fc236434a8dd6da6a72f0f20d.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/9386f22fc236434a8dd6da6a72f0f20d.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="code02"><a href="#code02" class="headerlink" title="code02"></a>code02</h4><ul>
 <li>在偏向锁的状态中遇到一致性哈希计算请求，立马<strong>撤销</strong>偏向模式，<strong>膨胀为重量级锁</strong></li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/f700a3c95b7f466fb0a1c5a8b642e7f8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<h3 id="各种锁优缺点、synchronized锁升级和实现原理"><a href="#各种锁优缺点、synchronized锁升级和实现原理" class="headerlink" title="各种锁优缺点、synchronized锁升级和实现原理"></a>各种锁优缺点、synchronized锁升级和实现原理</h3><p><img src="https://img-blog.csdnimg.cn/033991889cf943b181c8314663a14545.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/14230e2472c948318addb902e909a4c8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f700a3c95b7f466fb0a1c5a8b642e7f8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h3 id="各种锁优缺点、synchronized锁升级和实现原理"><a href="#各种锁优缺点、synchronized锁升级和实现原理" class="headerlink" title="各种锁优缺点、synchronized锁升级和实现原理"></a>各种锁优缺点、synchronized锁升级和实现原理</h3><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/033991889cf943b181c8314663a14545.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/14230e2472c948318addb902e909a4c8.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>synchronized锁升级过程总结：<strong>一句话，就是先自旋，不行再阻塞</strong>。<br>实际上是把之前的悲观锁（重量级锁）变成在一定条件下使用偏向锁以及使用轻量级（自旋锁CAS）的形式</p>
 <p>synchronized在修饰方法和代码块在字节码上实现方式有很大差异，但是内部实现还是基于对象头的MarkWord来实现的。<br>JDK1.6之前synchronized使用的是重量级锁，<strong>JDK1.6之后进行了优化，拥有了无锁-&gt;偏向锁-&gt;轻量级锁-&gt;重量级锁的升级过程</strong>，而不<br>是无论什么情况都使用重量级锁。</p>
 <p><strong>偏向锁</strong>：适用于单线程适用的情况，在不存在锁竞争的时候进入同步方法&#x2F;代码块则使用偏向锁。</p>
@@ -688,10 +688,10 @@
 <h2 id="锁消除"><a href="#锁消除" class="headerlink" title="锁消除"></a>锁消除</h2><p>从JIT角度看相当于无视它，synchronized(o)不存在了，</p>
 <p>这个锁对象并没有被共用扩散到其它线程使用，</p>
 <p>极端的说就是根本没有加这个锁对象的底层机器码，消除了锁的使用</p>
-<p><img src="https://img-blog.csdnimg.cn/f097ef47c0e14ae09b4639ed6fb6679b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f097ef47c0e14ae09b4639ed6fb6679b.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h2 id="锁粗化"><a href="#锁粗化" class="headerlink" title="锁粗化"></a>锁粗化</h2><p>假如方法中首位相接，前后相邻的都是同一个锁对象，那JIT编译器就会把这几个synchronized块合并成一个大块，</p>
 <p>加粗加大范围，一次申请使用即可，避免次次都申请和释放锁，提升了性能</p>
-<p><img src="https://img-blog.csdnimg.cn/4d5b2210ae7345f5a1059ecb7d3a6601.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/4d5b2210ae7345f5a1059ecb7d3a6601.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h1 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h1><p>没有锁：自由自在</p>
 <p>偏向锁：唯我独尊</p>
 <p>轻量锁：楚汉争霸</p>

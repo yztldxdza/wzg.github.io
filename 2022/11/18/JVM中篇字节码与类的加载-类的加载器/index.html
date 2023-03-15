@@ -67,7 +67,7 @@
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8jnmaz4ohj30gs0a4tda.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8jnmfj0cbj30du02ujs4.jpg">
 <meta property="article:published_time" content="2022-11-18T12:04:24.000Z">
-<meta property="article:modified_time" content="2023-03-10T08:39:37.487Z">
+<meta property="article:modified_time" content="2023-03-15T00:36:59.147Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -271,7 +271,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          19k 字
+          22k 字
         
       </span>
     
@@ -283,7 +283,7 @@
         
         
           <!-- compatible with older versions-->
-          161 分钟
+          180 分钟
         
       </span>
     
@@ -339,46 +339,12 @@
 <ul>
 <li><p>都有哪些类加载器，这些类加载器都加载哪些文件？</p>
 </li>
-<li><p>手写一个类加载器Demo</p>
+<li><p><strong>手写一个类加载器Demo</strong></p>
 </li>
-<li><p>Class的forName（“java.lang.String”）和Class的getClassLoader（）的Loadclass（“java.lang.String”）有什么区别？</p>
-</li>
+<li><p>&#96;&#96;&#96;Java<br>&#x2F;&#x2F;自定义类加载器<br>public class MyClassLoader extends ClassLoader {<br>&#x2F;&#x2F;指定类文件路径<br>private String path;<br><br>public MyClassLoader(String path) {<br>    this.path &#x3D; path;<br>}<br><br>@Override<br>protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {<br>    &#x2F;&#x2F;根据类名拼接文件名<br>    String fileName &#x3D; path + name + “.class”;<br>    try {<br>        &#x2F;&#x2F;读取字节流<br>        FileInputStream fis &#x3D; new FileInputStream(fileName);<br>        ByteArrayOutputStream bos &#x3D; new ByteArrayOutputStream();<br>        int len &#x3D; 0;<br>        byte[] buffer &#x3D; new byte[1024];<br>        while ((len &#x3D; fis.read(buffer)) !&#x3D; -1) {<br>            bos.write(buffer, 0, len);<br>        }<br>        fis.close();<br>        bos.close();<br>        &#x2F;&#x2F;获取字节数组<br>        byte[] data &#x3D; bos.toByteArray();<br>        &#x2F;&#x2F;将字节数组转换为Class对象并返回<br>        return defineClass(name, data, 0, data.length);<br>    } catch (IOException e) {<br>        e.printStackTrace();<br>    }<br>    return null;<br>}<br>}</p>
+<p>&#x2F;&#x2F;测试类<br>public class Test {<br>public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {<br>    &#x2F;&#x2F;创建自定义类加载器对象，并指定类文件路径<br>    MyClassLoader myClassLoader &#x3D; new MyClassLoader(“D:&#x2F;“);<br>    &#x2F;&#x2F;使用自定义类加载器加载HelloWorld类<br>    Class&lt;?&gt; clazz &#x3D; myClassLoader.loadClass(“HelloWorld”);<br>    &#x2F;&#x2F;打印加载的类对象和它的类加载器<br>    System.out.println(clazz);<br>    System.out.println(clazz.getClassLoader());<br>    &#x2F;&#x2F;创建HelloWorld类的实例，并调用sayHello方法<br>    Object obj &#x3D; clazz.newInstance();<br>    Method method &#x3D; clazz.getMethod(“sayHello”);<br>    method.invoke(obj);<br>}<br>}</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>- **Class的forName（“java.lang.String”）和Class的getClassLoader（）的Loadclass（“java.lang.String”）有什么区别？**<br><br>- <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Class</span>.</span></span><span class="hljs-keyword">for</span><span class="hljs-constructor">Name(“<span class="hljs-params">java</span>.<span class="hljs-params">lang</span>.String”)</span>会执行以下三个步骤：<br><br>  - 调用当前类加载器（如果没有指定类加载器的话）的loadClass方法，加载指定的类，并返回Class对象。<br>  - 如果指定的类有静态代码块或者静态变量，那么会执行它们。<br>  - 返回Class对象。<br><br>  <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">String</span>.</span></span><span class="hljs-keyword">class</span>.get<span class="hljs-constructor">ClassLoader()</span>.load<span class="hljs-constructor">Class(“<span class="hljs-params">java</span>.<span class="hljs-params">lang</span>.String”)</span>只会执行第一个步骤，也就是只会加载指定的类，并返回Class对象，不会执行静态代码块或者静态变量。<br><br>  所以，如果你只想加载一个类，而不想执行它的静态代码块或者静态变量，你可以使用loadClass方法。如果你想同时加载和初始化一个类，你可以使用forName方法。<br><br><br>**腾讯：**<br><br>- 什么是双亲委派模型？<br><br>- 类加载器有哪些？<br><br><br>**小米：**<br><br>- 双亲委派模型介绍一下<br><br><br>**滴滴：**<br><br>- 简单说说你了解的类加载器一面：讲一下双亲委派模型，以及其优点<br><br><br>**字节跳动：**<br><br>- 什么是类加载器，类加载器有哪些？<br><br><br>**京东：**<br><br>- 类加载器的双亲委派模型是什么？<br><br>- **双亲委派机制可以打破吗？为什么**<br><br>- 双亲委派机制可以打破，有两种方法：<br>  - <span class="hljs-literal">[重写C<span class="hljs-identifier">lassLoader</span>的<span class="hljs-identifier">loadClass</span>方法，不遵循双亲委派机制的逻辑，而是直接使用自定义的类加载器来加载指定的类。]</span>(https:<span class="hljs-comment">//blog.csdn.net/weixin_43884884/article/details/107719529)[1](https://blog.csdn.net/weixin_43884884/article/details/107719529)</span><br>  - <span class="hljs-literal">[使用线程上下文类加载器（T<span class="hljs-identifier">hread</span> C<span class="hljs-identifier">ontext</span> C<span class="hljs-identifier">lassLoader</span>），它是一种特殊的类加载器，可以让子线程使用父线程指定的类加载器来加载指定的类。这样就可以实现跨越不同层次的类加载器之间的通信。]</span>(https:<span class="hljs-comment">//zhuanlan.zhihu.com/p/185612299)[3](https://zhuanlan.zhihu.com/p/185612299)</span><br><br><br>### **分类**<br><br>显式加载 vs 隐式加载<br><br><span class="hljs-keyword">class</span>文件的显式加载与隐式加载的方式是指JVM加载<span class="hljs-keyword">class</span>文件到内存的方式。<br><br>- 显式加载指的是在代码中通过调用ClassLoader加载<span class="hljs-keyword">class</span>对象，如直接使用<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Class</span>.</span></span><span class="hljs-keyword">for</span><span class="hljs-constructor">Name(<span class="hljs-params">name</span>)</span>或this.get<span class="hljs-constructor">Class()</span>.get<span class="hljs-constructor">ClassLoader()</span>.load<span class="hljs-constructor">Class()</span>加载<span class="hljs-keyword">class</span>对象。<br>- 隐式加载则是不直接在代码中调用ClassLoader的方法加载<span class="hljs-keyword">class</span>对象，而是通过虚拟机自动加载到内存中，如在加载某个类的<span class="hljs-keyword">class</span>文件时，该类的<span class="hljs-keyword">class</span>文件中引用了另外一个类的对象，此时额外引用的类将通过JVM自动加载到内存中。<br><br>在日常开发以上两种方式一般会混合使用。<br><br>```Java<br><span class="hljs-comment">//隐式加载</span><br>User user=<span class="hljs-keyword">new</span> <span class="hljs-constructor">User()</span>;<br><span class="hljs-comment">//显式加载，并初始化</span><br>Class clazz=<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Class</span>.</span></span><span class="hljs-keyword">for</span><span class="hljs-constructor">Name(<span class="hljs-string">&quot;com.test.java.User&quot;</span>)</span>;<br><span class="hljs-comment">//显式加载，但不初始化</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ClassLoader</span>.</span></span>get<span class="hljs-constructor">SystemClassLoader()</span>.load<span class="hljs-constructor">Class(<span class="hljs-string">&quot;com.test.java.Parent&quot;</span>)</span>;<br></code></pre></td></tr></table></figure></li>
 </ul>
-<p><strong>腾讯：</strong></p>
-<ul>
-<li><p>什么是双亲委派模型？</p>
-</li>
-<li><p>类加载器有哪些？</p>
-</li>
-</ul>
-<p><strong>小米：</strong></p>
-<ul>
-<li>双亲委派模型介绍一下</li>
-</ul>
-<p><strong>滴滴：</strong></p>
-<ul>
-<li>简单说说你了解的类加载器一面：讲一下双亲委派模型，以及其优点</li>
-</ul>
-<p><strong>字节跳动：</strong></p>
-<ul>
-<li>什么是类加载器，类加载器有哪些？</li>
-</ul>
-<p><strong>京东：</strong></p>
-<ul>
-<li><p>类加载器的双亲委派模型是什么？</p>
-</li>
-<li><p>双亲委派机制可以打破吗？为什么</p>
-</li>
-</ul>
-<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a><strong>分类</strong></h3><p>显式加载 vs 隐式加载</p>
-<p>class文件的显式加载与隐式加载的方式是指JVM加载class文件到内存的方式。</p>
-<ul>
-<li>显式加载指的是在代码中通过调用ClassLoader加载class对象，如直接使用Class.forName(name)或this.getClass().getClassLoader().loadClass()加载class对象。</li>
-<li>隐式加载则是不直接在代码中调用ClassLoader的方法加载class对象，而是通过虚拟机自动加载到内存中，如在加载某个类的class文件时，该类的class文件中引用了另外一个类的对象，此时额外引用的类将通过JVM自动加载到内存中。</li>
-</ul>
-<p>在日常开发以上两种方式一般会混合使用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">//隐式加载</span><br>User user=<span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();<br><span class="hljs-comment">//显式加载，并初始化</span><br>Class clazz=Class.forName(<span class="hljs-string">&quot;com.test.java.User&quot;</span>);<br><span class="hljs-comment">//显式加载，但不初始化</span><br>ClassLoader.getSystemClassLoader().loadClass(<span class="hljs-string">&quot;com.test.java.Parent&quot;</span>);<br></code></pre></td></tr></table></figure>
-
 <h3 id="必要性"><a href="#必要性" class="headerlink" title="必要性"></a><strong>必要性</strong></h3><p>一般情况下，Java开发人员并不需要在程序中显式地使用类加载器，但是了解类加载器的加载机制却显得至关重要。从以下几个方面说：</p>
 <ul>
 <li>避免在开发中遇到java.lang.ClassNotFoundException异常或java.lang.NoClassDefFoundError异常时，手足无措。只有了解类加载器的 加载机制才能够在出现异常的时候快速地根据错误异常日志定位问题和解决问题</li>

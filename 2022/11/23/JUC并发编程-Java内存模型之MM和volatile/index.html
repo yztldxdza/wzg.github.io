@@ -44,7 +44,7 @@
 <meta property="og:description" content="先从大厂面试题开始 你知道什么是Java内存模型JMM吗？ JMM与volatile它们两个之间的关系？（下一章详细讲解） JMM有哪些特性or它的三大特性是什么？ 为什么要有JMM，它为什么出现？作用和功能是什么？ happens-before先行发生原则你有了解过吗？  计算机硬件存储体系计算机存储结构，从本地磁盘到主存到CPU缓存，也就是从硬盘到内存，到CPU。一般对应的程序的操作就是从数据">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/0317cbdc08884403a6fb2a8468e10efd.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/de8f3e4272184ffbbbb9f5967e5713f0.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/de8f3e4272184ffbbbb9f5967e5713f0.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/687daf44b8054e3c9a2396428c04c31d.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20862eeb4f284d458b0269198b3a1c4a.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/34ab77e1287445168cab622465e90e82.png">
@@ -61,7 +61,7 @@
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/04ba7f8046174584b8ecdef50332484a.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/ea2bb9656a40487fbf0eef5b5eaf7e3e.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a0db1c02d52344dd816e1430d313b397.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a66d766153734198ba05f253072f793a.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a66d766153734198ba05f253072f793a.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6dee5b8051fd48a180594a1716506349.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e896644685c44dbe9bbfad1ebf5cafa7.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/e876e406ecc842ad82ae7e72935485fa.png">
@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/78ccd5bb4411447980ee699de7df2791.png">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2c535dd856a74133bedaeb76d7ef1d5f.png">
 <meta property="article:published_time" content="2022-11-23T07:03:37.000Z">
-<meta property="article:modified_time" content="2023-03-10T08:43:41.063Z">
+<meta property="article:modified_time" content="2023-03-14T01:30:51.173Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -346,7 +346,7 @@
 <h1 id="计算机硬件存储体系"><a href="#计算机硬件存储体系" class="headerlink" title="计算机硬件存储体系"></a>计算机硬件存储体系</h1><p>计算机存储结构，从本地磁盘到主存到CPU缓存，也就是从硬盘到内存，到CPU。<br>一般对应的程序的操作就是从数据库查数据到内存然后到CPU进行计算</p>
 <p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/0317cbdc08884403a6fb2a8468e10efd.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>因为有这么多级的缓存(cpu和物理主内存的速度不一致的)，<br>CPU的运<strong>行并不是直接操作内存而是先把内存里边的数据读到缓存</strong>，而内存的读和写操作的时候就会造成不一致的问题</p>
-<p><img src="https://img-blog.csdnimg.cn/de8f3e4272184ffbbbb9f5967e5713f0.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/de8f3e4272184ffbbbb9f5967e5713f0.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>Java虚拟机规范中试图定义一种<strong>Java内存模型</strong>（java Memory Model，简称JMM) 来<strong>屏蔽掉各种硬件和操作系统的内存访问差异</strong>，<br>以实现让Java程序在各种平台下都能达到一致的内存访问效果。推导出我们需要知道JMM</p>
 <h1 id="Java内存模型Java-Memory-Model"><a href="#Java内存模型Java-Memory-Model" class="headerlink" title="Java内存模型Java Memory Model"></a>Java内存模型Java Memory Model</h1><ul>
 <li>JMM</li>
@@ -639,7 +639,7 @@
 <p>synchronized加了之后保证了串行执行，每次只有一个线程进来。</p>
 <p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a0db1c02d52344dd816e1430d313b397.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>但volatile不能保证原子性，大家一起读，一起加一，就看谁提交的快了。提交快的直接让另一个失效。</p>
-<p><img src="https://img-blog.csdnimg.cn/a66d766153734198ba05f253072f793a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/a66d766153734198ba05f253072f793a.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <h4 id="从i-的字节码角度说明"><a href="#从i-的字节码角度说明" class="headerlink" title="从i++的字节码角度说明"></a>从i++的字节码角度说明</h4><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/6dee5b8051fd48a180594a1716506349.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
 <p>原子性指的是一个操作是不可中断的，即使是在多线程环境下，一个操作一旦开始就不会被其他线程影响。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">()</span><br>&#123;<br>  i++; <span class="hljs-comment">//不具备原子性，该操作是先读取值，然后写回一个新值，相当于原来的值加上1，分3步完成</span><br>&#125;<br></code></pre></td></tr></table></figure>
@@ -683,11 +683,13 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VolatileTest</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">volatile</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">flag</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">()</span>&#123;<br>        i = <span class="hljs-number">2</span>;<span class="hljs-comment">//假如不加volatile，这两句话的顺序就有可能颠倒，影像最终结果</span><br>        flag = <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">read</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">if</span>(flag)&#123;<br>            System.out.println(<span class="hljs-string">&quot;---i = &quot;</span> + i);<br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-number">12345678910111213</span><br></code></pre></td></tr></table></figure>
 
 <p>volatile写</p>
-<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c71ae432f0474dca9145eb45c9d9e51c.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/c71ae432f0474dca9145eb45c9d9e51c.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom:50%;" />
+
 <ul>
 <li>volatile读（必须要先确保拿到最新值）</li>
 </ul>
-<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f1d60d3f597c49a9b34c1f2e58177315.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f1d60d3f597c49a9b34c1f2e58177315.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom:50%;" />
+
 <h1 id="如何正确使用volatile（实际工作）"><a href="#如何正确使用volatile（实际工作）" class="headerlink" title="如何正确使用volatile（实际工作）"></a>如何正确使用volatile（实际工作）</h1><h2 id="单一赋值可以，但是含有符合运算赋值不可以（比如i-）"><a href="#单一赋值可以，但是含有符合运算赋值不可以（比如i-）" class="headerlink" title="单一赋值可以，但是含有符合运算赋值不可以（比如i++）"></a>单一赋值可以，但是含有符合运算赋值不可以（比如i++）</h2><ul>
 <li>下面这两个单一赋值可以的</li>
 </ul>
@@ -726,9 +728,10 @@
 <ul>
 <li>写指令</li>
 </ul>
-<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/cc2f8b5717fe400fb99c17a5a146c904.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/cc2f8b5717fe400fb99c17a5a146c904.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom: 67%;" />
+
 <ul>
-<li>读指令<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f64d435f39304e69825c4fe1c893be20.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></li>
+<li>读指令<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/f64d435f39304e69825c4fe1c893be20.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom:67%;" /></li>
 </ul>
 </li>
 </ul>
@@ -737,7 +740,7 @@
 <li>凭什么我们java写了一个volatile关键字系统底层加入内存屏障？两者关系怎么勾搭上的？</li>
 </ul>
 <p>字节码层面<code>javap -c xx.class</code></p>
-<p>它其实添加了一个ACC_VOLATILE<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/78ccd5bb4411447980ee699de7df2791.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>它其实添加了一个ACC_VOLATILE<img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/78ccd5bb4411447980ee699de7df2791.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom: 33%;" /></p>
 <hr>
 <ul>
 <li>内存屏障是什么？</li>
@@ -749,7 +752,7 @@
 <p>\2. 写数据时假如屏障，强制将线程私有工作内存的数据刷回主物理内存</p>
 <p>\3. 读数据时加入屏障，线程私有工作内存的数据失效，重新到主物理内存中获取最新数据</p>
 <hr>
-<p>内存屏障的四大指令<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2c535dd856a74133bedaeb76d7ef1d5f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>内存屏障的四大指令<br><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2c535dd856a74133bedaeb76d7ef1d5f.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述" style="zoom:50%;" /></p>
 <p>3句话总结</p>
 <p>volatile写之前的的操作，都禁止重排到volatile之后</p>
 <p>volatile读之后的操作，都禁止重排到volatile之前</p>
