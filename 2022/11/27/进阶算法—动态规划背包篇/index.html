@@ -43,16 +43,16 @@
 <meta property="og:site_name" content="王振国的个人博客">
 <meta property="og:description" content="01背包问题 有n件物品和一个最多能背重量为w 的背包。第i件物品的重量是weight[i]，得到的价值是value[i] 。每件物品只能用一次，求解将哪些物品装入背包里物品价值总和最大。 例子： 背包最大重量为4。 物品为：     重量 价值    物品0 1 15   物品1 3 20   物品2 4 30   问背包能背的物品最大价值是多少？ 二维dp数组01背包1.确定dp数组以及下标的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210117171307407.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210110103003361.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2021011010304192.png">
-<meta property="og:image" content="https://code-thinking-1253855093.file.myqcloud.com/pics/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%981.jpeg">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20210117171307407.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20210110103003361.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2021011010304192.png">
+<meta property="og:image" content="https://image.baidu.com/search/down?url=https://code-thinking-1253855093.file.myqcloud.com/pics/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%981.jpeg">
 <meta property="article:published_time" content="2022-11-27T07:03:53.000Z">
-<meta property="article:modified_time" content="2023-03-09T02:52:36.716Z">
+<meta property="article:modified_time" content="2023-04-07T01:39:27.543Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210117171307407.png">
+<meta name="twitter:image" content="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20210117171307407.png">
   
   
   
@@ -306,7 +306,7 @@
             
             <div class="markdown-body">
               
-              <h1 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h1><p><img src="https://img-blog.csdnimg.cn/20210117171307407.png" srcset="/img/loading.gif" lazyload alt="416.分割等和子集1"></p>
+              <h1 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h1><p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20210117171307407.png" srcset="/img/loading.gif" lazyload alt="416.分割等和子集1"></p>
 <p>有n件物品和一个最多能背重量为w 的背包。第i件物品的重量是weight[i]，得到的价值是value[i] 。<strong>每件物品只能用一次</strong>，求解将哪些物品装入背包里物品价值总和最大。</p>
 <p>例子：</p>
 <p>背包最大重量为4。</p>
@@ -338,7 +338,7 @@
 <p>问背包能背的物品最大价值是多少？</p>
 <h2 id="二维dp数组01背包"><a href="#二维dp数组01背包" class="headerlink" title="二维dp数组01背包"></a>二维dp数组01背包</h2><p><strong>1.确定dp数组以及下标的含义</strong></p>
 <p>对于背包问题，有一种写法， 是使用二维数组，即<strong>dp[i][j] 表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少</strong>。</p>
-<p><img src="https://img-blog.csdnimg.cn/20210110103003361.png" srcset="/img/loading.gif" lazyload alt="动态规划-背包问题1"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/20210110103003361.png" srcset="/img/loading.gif" lazyload alt="动态规划-背包问题1"></p>
 <p><strong>2.确定递推公式</strong></p>
 <p>再回顾一下dp[i][j]的含义：从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少。</p>
 <p>那么可以有两个方向推出来dp[i][j]，</p>
@@ -349,7 +349,7 @@
 <p>所以递归公式： dp[i][j] &#x3D; max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i]);</p>
 <p><strong>3.dp数组如何初始化</strong></p>
 <p>如果背包容量j为0的话，即dp[i][0]，无论是选取哪些物品，背包价值总和一定为0。如图：</p>
-<p><img src="https://img-blog.csdnimg.cn/2021011010304192.png" srcset="/img/loading.gif" lazyload alt="动态规划-背包问题2"></p>
+<p><img src="https://image.baidu.com/search/down?url=https://img-blog.csdnimg.cn/2021011010304192.png" srcset="/img/loading.gif" lazyload alt="动态规划-背包问题2"></p>
 <p>dp[0][j]，即：i为0，存放编号0的物品的时候，各个容量的背包所能存放的最大价值。</p>
 <p>那么很明显当 j &lt; weight[0]的时候，dp[0][j] 应该是 0，因为背包容量比编号0的物品重量还小。</p>
 <p>当j &gt;&#x3D; weight[0]时，dp[0][j] 应该是value[0]，因为背包容量放足够放编号0物品。</p>
@@ -418,7 +418,7 @@
 <h4 id="279-完全平方数"><a href="#279-完全平方数" class="headerlink" title="279. 完全平方数"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/perfect-squares/">279. 完全平方数</a></h4><h4 id="思路-7"><a href="#思路-7" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/perfect-squares/solution/279-wan-quan-ping-fang-shu-by-yztldxdz-6-uuln/">279. 完全平方数 </a></p>
 <h4 id="139-单词拆分"><a href="#139-单词拆分" class="headerlink" title="139. 单词拆分"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/word-break/">139. 单词拆分</a></h4><h4 id="思路-8"><a href="#思路-8" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/word-break/solution/139-dan-ci-chai-fen-by-yztldxdz-6-qby4/">139. 单词拆分</a></p>
 <h4 id="1449-数位成本和为目标值的最大数字"><a href="#1449-数位成本和为目标值的最大数字" class="headerlink" title="1449. 数位成本和为目标值的最大数字"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/form-largest-integer-with-digits-that-add-up-to-target/">1449. 数位成本和为目标值的最大数字</a></h4><h4 id="思路-9"><a href="#思路-9" class="headerlink" title="思路"></a>思路</h4><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/form-largest-integer-with-digits-that-add-up-to-target/solution/gong-shui-san-xie-fen-liang-bu-kao-lu-we-uy4y/">数位成本和为目标值的最大数字</a></p>
-<h4 id=""><a href="#" class="headerlink" title=""></a><img src="https://code-thinking-1253855093.file.myqcloud.com/pics/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%981.jpeg" srcset="/img/loading.gif" lazyload alt="img"></h4>
+<h4 id=""><a href="#" class="headerlink" title=""></a><img src="https://image.baidu.com/search/down?url=https://code-thinking-1253855093.file.myqcloud.com/pics/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%981.jpeg" srcset="/img/loading.gif" lazyload alt="img"></h4>
               
             </div>
             <hr/>
