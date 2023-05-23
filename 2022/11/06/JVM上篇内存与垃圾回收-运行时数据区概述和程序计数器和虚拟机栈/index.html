@@ -36,12 +36,12 @@
   <meta name="author" content="Dambisa Moyo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="JVM上篇内存与垃圾回收-运行时数据区概述 当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对">
+    <meta name="description" content="JVM上篇内存与垃圾回收-运行时数据区概述  当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM上篇内存与垃圾回收-运行时数据区概述和程序计数器和虚拟机栈">
 <meta property="og:url" content="https://yztldxdz.top/2022/11/06/JVM%E4%B8%8A%E7%AF%87%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%E5%92%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/index.html">
 <meta property="og:site_name" content="王振国的个人博客">
-<meta property="og:description" content="JVM上篇内存与垃圾回收-运行时数据区概述 当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对">
+<meta property="og:description" content="JVM上篇内存与垃圾回收-运行时数据区概述  当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区  Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkc21eg1j30ni0egae3.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkcewa8oj30u10dd7fl.jpg">
@@ -50,13 +50,13 @@
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkd1ykm5j30l20b7abj.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkdar3vkj30q109i40m.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkdihfnxj30hj0fgdiu.jpg">
-<meta property="og:image" content="http://cdn.processon.com/5ed986f4f346fb1712e10524?e=1591317764&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:YE_nIZgKRBb0EvHJFHuHyMgDQtQ=">
-<meta property="og:image" content="http://cdn.processon.com/5ed987a11e0853199b509ad0?e=1591317937&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:ZgxAdvwmcJNyzQzoYr81vcZ1FaU=">
-<meta property="og:image" content="http://cdn.processon.com/5ed98b6b6376891862184dd7?e=1591318907&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:HOXL24aD0riV03MrUP0vx8p53F4=">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D4vLD.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D5CFA.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D5iWt.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8ap6yr4a5j30rz0d8gpb.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8apeq8zeij30m30eb0y9.jpg">
 <meta property="article:published_time" content="2022-11-06T07:19:40.000Z">
-<meta property="article:modified_time" content="2023-03-11T02:55:29.459Z">
+<meta property="article:modified_time" content="2023-05-15T01:06:17.755Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -314,7 +314,8 @@
             
             <div class="markdown-body">
               
-              <h2 id="JVM上篇内存与垃圾回收-运行时数据区概述"><a href="#JVM上篇内存与垃圾回收-运行时数据区概述" class="headerlink" title="JVM上篇内存与垃圾回收-运行时数据区概述"></a>JVM上篇内存与垃圾回收-运行时数据区概述</h2><p><img src="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkc21eg1j30ni0egae3.jpg" srcset="/img/loading.gif" lazyload></p>
+              <h2 id="JVM上篇内存与垃圾回收-运行时数据区概述"><a href="#JVM上篇内存与垃圾回收-运行时数据区概述" class="headerlink" title="JVM上篇内存与垃圾回收-运行时数据区概述"></a>JVM上篇内存与垃圾回收-运行时数据区概述</h2><img src="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkc21eg1j30ni0egae3.jpg" srcset="/img/loading.gif" lazyload style="zoom: 80%;" />
+
 <p>当我们通过前面的：类的加载-&gt; 验证 -&gt; 准备 -&gt; 解析 -&gt; 初始化 这几个阶段完成后，就会用到执行引擎对我们的类进行使用，同时执行引擎将会使用到我们运行时数据区</p>
 <p><img src="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkcewa8oj30u10dd7fl.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。</p>
@@ -418,8 +419,8 @@
 <li>如果当前帧是由构造方法或者实例方法创建的，那么该对象引用this，会存放在index为0的slot处，其余的参数表顺序继续排列</li>
 <li>栈帧中的局部变量表中的槽位是可以重复的，如果一个局部变量过了其作用域，那么其作用域之后申明的新的局部变量就有可能会复用过期局部变量的槽位，从而达到节省资源的目的</li>
 </ul>
-<p><img src="http://cdn.processon.com/5ed986f4f346fb1712e10524?e=1591317764&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:YE_nIZgKRBb0EvHJFHuHyMgDQtQ=" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p><img src="http://cdn.processon.com/5ed987a11e0853199b509ad0?e=1591317937&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:ZgxAdvwmcJNyzQzoYr81vcZ1FaU=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D4vLD"><img src="https://s1.ax1x.com/2023/05/10/p9D4vLD.jpg" srcset="/img/loading.gif" lazyload alt="p9D4vLD.jpg" style="zoom:67%;" /></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D5CFA"><img src="https://s1.ax1x.com/2023/05/10/p9D5CFA.jpg" srcset="/img/loading.gif" lazyload alt="p9D5CFA.jpg"></a></p>
 <h4 id="静态变量与局部变量对比及小结"><a href="#静态变量与局部变量对比及小结" class="headerlink" title="静态变量与局部变量对比及小结"></a>静态变量与局部变量对比及小结</h4><ul>
 <li><p>按照数据类型分</p>
 <ul>
@@ -457,7 +458,7 @@
 <li>某些字节码指令将值压入操作数栈，其余的字节码指令将操作数取出栈。使用它们后再把结果压入栈</li>
 <li>比如：执行复制、交换、求和等操作</li>
 </ul>
-<p><img src="http://cdn.processon.com/5ed98b6b6376891862184dd7?e=1591318907&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:HOXL24aD0riV03MrUP0vx8p53F4=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D5iWt"><img src="https://s1.ax1x.com/2023/05/10/p9D5iWt.jpg" srcset="/img/loading.gif" lazyload alt="p9D5iWt.jpg"></a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAddOperation</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-type">byte</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">15</span>; <br>    <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">8</span>; <br>    <span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> i + j;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>字节码指令信息</p>

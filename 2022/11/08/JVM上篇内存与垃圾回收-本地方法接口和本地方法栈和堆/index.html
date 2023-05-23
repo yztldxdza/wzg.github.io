@@ -53,11 +53,11 @@
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkm62b5lj30n907tta6.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkmiocxgj30r40dk0uu.jpg">
 <meta property="og:image" content="https://image.baidu.com/search/down?url=http://tva1.sinaimg.cn/large/0078cgLnly1h8bkmpojz4j30se0d0jux.jpg">
-<meta property="og:image" content="http://cdn.processon.com/5ee17ee61e085326371f38df?e=1591839990&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:n6pq8Hw9wdbZj44w6-V1x31VkBk=">
-<meta property="og:image" content="http://cdn.processon.com/5ee180e607912929cb397a9c?e=1591840502&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:fcWrG7_oKXRFBoFzLJNCa1h0tgw=">
-<meta property="og:image" content="http://cdn.processon.com/5ee18195f346fb1ae559526c?e=1591840677&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:5Jlee7EFKbEO0Vi6w4JfwnliYak=">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D5dYR.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D5wf1.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2023/05/10/p9D5Dl6.jpg">
 <meta property="article:published_time" content="2022-11-08T01:15:23.000Z">
-<meta property="article:modified_time" content="2023-03-12T01:04:21.412Z">
+<meta property="article:modified_time" content="2023-05-10T11:16:58.416Z">
 <meta property="article:author" content="Dambisa Moyo">
 <meta property="article:tag" content="八股文">
 <meta name="twitter:card" content="summary_large_image">
@@ -514,15 +514,15 @@
 <li>当一个对象在方法中被定义后，对象只在方法内部使用，则认为没有发生逃逸。</li>
 <li>当一个对象在方法中被定义后，它被外部方法所引用，则认为发生逃逸。例如作为调用参数传递到其他地方中。</li>
 </ul>
-<p><img src="http://cdn.processon.com/5ee17ee61e085326371f38df?e=1591839990&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:n6pq8Hw9wdbZj44w6-V1x31VkBk=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D5dYR"><img src="https://s1.ax1x.com/2023/05/10/p9D5dYR.jpg" srcset="/img/loading.gif" lazyload alt="p9D5dYR.jpg"></a></p>
 <h4 id="栈上分配"><a href="#栈上分配" class="headerlink" title="栈上分配"></a><strong>栈上分配</strong></h4><p>将堆分配转为栈分配，如果一个对象在子程序中被分配，要使指向该对象的指针永远不会逃逸，对象可能是栈分配的候选，而不是堆分配</p>
 <h4 id="同步省略"><a href="#同步省略" class="headerlink" title="同步省略"></a><strong>同步省略</strong></h4><p>线程同步的代价是相当高的，同步的后果是降低并发性和性能。</p>
 <p>在动态编译同步块的时候，JIT编译器可以借助逃逸分析来判断同步块所使用的锁对象是否只能够被一个线程访问而没有被发布到其他线程。如果没有，那么JIT编译器在编译这个同步块的时候就会取消对这部分代码的同步。这样就能大大提高并发性和性能。这个取消同步的过程就叫同步省略，也叫锁消除。</p>
-<p><img src="http://cdn.processon.com/5ee180e607912929cb397a9c?e=1591840502&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:fcWrG7_oKXRFBoFzLJNCa1h0tgw=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D5wf1"><img src="https://s1.ax1x.com/2023/05/10/p9D5wf1.jpg" srcset="/img/loading.gif" lazyload alt="p9D5wf1.jpg"></a></p>
 <h4 id="分离对象或标量替换"><a href="#分离对象或标量替换" class="headerlink" title="分离对象或标量替换"></a>分离对象或标量替换</h4><p>标量（scalar）是指一个无法再分解成更小的数据的数据。Java中的原始数据类型就是标量。</p>
 <p>相对的，那些还可以分解的数据叫做聚合量（Aggregate），Java中的对象就是聚合量，因为他可以分解成其他聚合量和标量。</p>
 <p>在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替。这个过程就是标量替换。</p>
-<p><img src="http://cdn.processon.com/5ee18195f346fb1ae559526c?e=1591840677&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:5Jlee7EFKbEO0Vi6w4JfwnliYak=" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/p9D5Dl6"><img src="https://s1.ax1x.com/2023/05/10/p9D5Dl6.jpg" srcset="/img/loading.gif" lazyload alt="p9D5Dl6.jpg"></a></p>
 <h4 id="小结：逃逸分析并不成熟"><a href="#小结：逃逸分析并不成熟" class="headerlink" title="小结：逃逸分析并不成熟"></a><strong>小结</strong>：逃逸分析并不成熟</h4><p>其根本原因就是无法保证逃逸分析的性能消耗一定能高于他的消耗。虽然经过逃逸分析可以做标量替换、栈上分配、和锁消除。但是逃逸分析自身也是需要进行一系列复杂的分析的，这其实也是一个相对耗时的过程。 </p>
 <p>一个极端的例子，就是经过逃逸分析之后，发现没有一个对象是不逃逸的。那这个逃逸分析的过程就白白浪费掉了。</p>
 <p>虽然这项技术并不十分成熟，但是它也是即时编译器优化技术中一个十分重要的手段。</p>
